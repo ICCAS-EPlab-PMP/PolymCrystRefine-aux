@@ -118,7 +118,7 @@ ipcMain.handle('app:open-external', (_event, url) => {
 // Check for updates: query the latest GitHub release and compare it with the
 // running app version. Only https and only the GitHub API host are ever
 // contacted (the release page URL is handed to the browser via open-external).
-const UPDATE_REPO = 'ICCAS-EPlab-PMP/PolymCrystRefine';
+const UPDATE_REPO = 'ICCAS-EPlab-PMP/PolymCrystRefine-aux';
 const UPDATE_API = `https://api.github.com/repos/${UPDATE_REPO}/releases/latest`;
 const UPDATE_PAGE = `https://github.com/${UPDATE_REPO}/releases/latest`;
 

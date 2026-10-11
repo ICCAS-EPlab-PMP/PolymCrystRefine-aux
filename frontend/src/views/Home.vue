@@ -541,7 +541,7 @@ const workflowStages = computed(() => [
 // the preload bridge; in a plain browser just window.open.
 const DOI_URL = 'https://doi.org/10.1107/S1600576726008290'
 const PYFAI_DOCS_URL = 'https://pyfai.readthedocs.io/en/stable/pyFAI.html'
-const RELEASES_URL = 'https://github.com/ICCAS-EPlab-PMP/PolymCrystRefine/releases/latest'
+const RELEASES_URL = 'https://github.com/ICCAS-EPlab-PMP/PolymCrystRefine-aux/releases/latest'
 
 function openExternal(url) {
   if (window.electronAPI?.openExternal) {
