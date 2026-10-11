@@ -111,7 +111,7 @@ If this software is useful in your research, please cite:
 - 中国科学院化学研究所 / Institute of Chemistry, Chinese Academy of Sciences
 - 工程塑料实验室 / Engineering Plastics Laboratory
 - 高分子形态加工课题组 / Polymer Morphology Processing Group
-- HEPS 北京怀柔高能同步辐射光源 ID08 / HEPS Beamline ID08
+- HEPS 北京怀柔高能同步辐射光源 ID05 / HEPS Beamline ID05
 - SSRF 上海同步辐射光源 16B/10U / SSRF Beamlines 16B/10U
 - [pyFAI](https://pyfai.readthedocs.io/en/stable/pyFAI.html) 与 fabIO 开发团队 / the pyFAI and fabIO development teams
 
