@@ -1,0 +1,14 @@
+# Nota: C-Order, 1 refers to the Y axis, 2 to the X axis
+# Calibration done on Mon Jan 19 20:27:04 2026
+poni_version: 2.1
+Detector: Pilatus2M
+Detector_config: {"orientation": 3}
+Distance: 0.17125688183353802
+Poni1: 0.163456301855194
+Poni2: 0.12542485381987734
+Rot1: 0.0
+Rot2: 0.0
+Rot3: 0.0
+Wavelength: 1.2398419843320025e-10
+# Calibrant: CeO2
+# Image: fabio:///G:/synssrf20260119/MATIANYI/standrad/CEO2-STANDARD-sd1-1s_00033.tif

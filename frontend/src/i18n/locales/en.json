@@ -1,0 +1,1718 @@
+{
+  "common": {
+    "home": "Home",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "idle": "Idle",
+    "running": "Running...",
+    "completed": "Completed",
+    "failed": "Failed",
+    "loaded": "Loaded",
+    "export": "Export",
+    "upload": "Upload",
+    "download": "Download",
+    "run": "Run",
+    "stop": "Stop",
+    "reset": "Reset",
+    "add": "Add",
+    "remove": "Remove",
+    "edit": "Edit",
+    "view": "View",
+    "yes": "Yes",
+    "no": "No",
+    "on": "ON",
+    "off": "OFF",
+    "none": "None",
+    "auto": "Auto",
+    "manual": "Manual",
+    "language": "Language"
+  },
+  "app": {
+    "name": "PolymCrystRefine",
+    "versionTag": "Aux",
+    "module": "Data Processing Module · Auxiliary"
+  },
+  "home": {
+    "eyebrow": "Desktop Toolkit",
+    "kicker": "PolymCrystRefine",
+    "title": "PolymCrystRefine",
+    "subtitle": "Polymer Crystal Refinement · Data Processing Module · Aux",
+    "pills": {
+      "integration": "2D Integration",
+      "calibration": "Image Merging",
+      "simulation": "Diffraction Simulation",
+      "analysis": "Intensity Extraction"
+    },
+    "aboutEyebrow": "About",
+    "aboutTitle": "PolymCrystRefine Data-Processing Desktop Suite (PREGUI)",
+    "aboutBody": "PolymCrystRefine-aux (the PRE auxiliary edition) is a graphical desktop application built to assist the PolymCrystRefine refinement pipeline: from 2D WAXS integration and merged-intensity extraction, through OPLSAA force-field extraction and refinement input generation, to CIF parsing with hydrogen addition, space-group detection and single/dual-phase fiber diffraction simulation — plus DFT-side helpers such as the diffraction-section generator of our CP2K plugin and structure deviation analysis — covering the complete workflow from raw detector images to refined structures and on to DFT optimization.",
+    "aboutSection": {
+      "citationEyebrow": "Citation",
+      "citationTitle": "How to Cite",
+      "citationLead": "If PolymCrystRefine contributes to your research, please cite the following paper:",
+      "citationAuthors": "Ma, Tianyi, Liu, Guoming & Wang, Dujin (2026).",
+      "citationTitleLine": "PolymCrystRefine: a workflow for diffraction analysis of polymer crystals.",
+      "citationJournalLine": "Journal of Applied Crystallography, 59, 1630-1644.",
+      "citationMeta": "Vol. 59, No. 5 (2026-09) · International Union of Crystallography (IUCr) · pp. 1630-1644",
+      "citationDoi": "DOI: 10.1107/s1600576726008290",
+      "viewPaper": "View Original Paper",
+      "bibtexLabel": "BibTeX entry",
+      "copyBibtex": "Copy BibTeX",
+      "copied": "Copied",
+      "ackEyebrow": "Acknowledgments",
+      "ackTitle": "Support & Acknowledgments",
+      "ack1": "Institute of Chemistry, Chinese Academy of Sciences (ICCAS)",
+      "ack2": "Engineering Plastics Laboratory",
+      "ack3": "Polymer Morphology & Processing Group",
+      "ack4": "HEPS — High Energy Photon Source, Beijing Huairou, beamline ID08",
+      "ack5": "SSRF — Shanghai Synchrotron Radiation Facility, beamlines 16B/10U",
+      "ack6": "The pyFAI and fabIO development teams (azimuthal integration tools)",
+      "linksEyebrow": "Links",
+      "linksTitle": "Friendly Links",
+      "linksLead": "Institutions and open-source tools related to this workflow.",
+      "visit": "Visit",
+      "linkNames": {
+        "polymcrystal": "PolymCryst Program Suite",
+        "iccas": "Institute of Chemistry, CAS",
+        "eplab": "Engineering Plastics Laboratory",
+        "pmp": "Polymer Morphology & Processing Group",
+        "polymcrystalindex": "PolymCrystIndex",
+        "xfais": "XFAIS"
+      },
+      "linkDescs": {
+        "polymcrystal": "Home of the PolymCryst suite of polymer crystallography programs.",
+        "iccas": "Institute of Chemistry, Chinese Academy of Sciences.",
+        "eplab": "Engineering Plastics Laboratory, ICCAS.",
+        "pmp": "Polymer Morphology & Processing Group, ICCAS.",
+        "polymcrystalindex": "Fiber diffraction pattern indexing",
+        "xfais": "WAXS/SAXS data processing suite"
+      },
+      "checkUpdate": "Check for Updates",
+      "checking": "Checking…",
+      "upToDate": "Up to date (v{version})",
+      "newVersion": "New version v{version} available",
+      "fetchFailed": "Could not check for updates — please check your network",
+      "viewRelease": "Get it"
+    },
+    "badges": {
+      "new": "New",
+      "preview": "Preview"
+    },
+    "modules": {
+      "integration": {
+        "title": "2D Intensity Integration",
+        "desc": "pyFAI / PONI-based 2D intensity integration and masking with batch image support."
+      },
+      "waxs": {
+        "title": "2D Integration Processing",
+        "desc": "Batch-import images, merge integration results and export 1D WAXS curves."
+      },
+      "giwaxs": {
+        "title": "GIWAXS Fiber Integration Merge",
+        "desc": "Per-image rot3 fiber integration → pixel-wise merge on a shared grid; exports npy / processing_info / PNG."
+      },
+      "xrd": {
+        "title": "Diffraction Simulation",
+        "desc": "Gaussian-peak XRD pattern simulation with adjustable peak position, FWHM and intensity."
+      },
+      "cif": {
+        "title": "CIF Structure Parser",
+        "desc": "Parse a CIF to generate theoretical fiber diffraction peaks (with azimuth ψ) and export peak_result.txt for the simulator."
+      },
+      "analysis": {
+        "title": "Intensity Extraction",
+        "desc": "Box-select ROIs on the 2D cake to extract and export integrated intensities, with Miller-index matching."
+      },
+      "viewer": {
+        "title": "2D Integration Image Export",
+        "desc": "Load and export 2D integration (cake) images in multiple formats."
+      },
+      "inputGen": {
+        "title": "Refine Input Generator",
+        "desc": "Build the complete input.txt configuration for the Fortran refinement engine — fill in all parameters, preview and download."
+      },
+      "lmpExtractor": {
+        "title": "OPLSAA Force Field Extractor",
+        "desc": "Upload a structure (PDB/MOL/GRO etc.) + LAMMPS (OPLSAA) data file, check element/mass correspondence, and extract force field parameters as CSV via an old→new atom-ID map."
+      },
+      "qzSlice": {
+        "title": "qz Band Integration",
+        "desc": "Slice a GIWAXS fiber-merge map into qz bands (centers at n×qz, width 2×interval), average each band into an I(q∥) curve, and preview the bands as gray overlays."
+      },
+      "cifH": {
+        "title": "CIF Hydrogenation",
+        "desc": "Perceive polymer bonds under PBC, add hydrogens to fill every valence, fix bonds interactively in 3D, and export a CP2K-ready CIF."
+      },
+      "cp2k": {
+        "title": "CP2K Diffraction Section",
+        "desc": "Generate the &FIBER_DIFFRACTION fiber-diffraction bias section for our custom CP2K-Polymcryst-Refine (v1.1) — diffraction part only; paste it inside &FORCE_EVAL of your CP2K input."
+      },
+      "symmetry": {
+        "title": "Space Group Detection",
+        "desc": "Identify the space group with the cell kept unchanged: number, H-M symbol, symmetry operations and asymmetric units, exportable."
+      },
+      "deviation": {
+        "title": "Structure Deviation Report",
+        "desc": "Compare a DFT-relaxed structure (CIF / CP2K PDB) against the reference: per-atom deviations, average and maximum deviation and cell changes, exportable as Markdown / CSV."
+      }
+    },
+    "groups": {
+      "integration2d": "2D Integration",
+      "extraction": "Intensity Extraction",
+      "simulation": "Diffraction Simulation",
+      "refinement": "Refinement",
+      "localAux": "Local Auxiliary",
+      "fiberIntegration": "Fiber Integration"
+    },
+    "quickNav": {
+      "title": "Quick Nav",
+      "backToTop": "Back to top",
+      "updates": "Recent updates",
+      "about": "About",
+      "citation": "Citation",
+      "acknowledgments": "Acknowledgments",
+      "friendlyLinks": "Friendly Links",
+      "particles": "Particle background"
+    },
+    "updates": {
+      "eyebrow": "Recent Updates",
+      "title": "Recent Updates",
+      "viewLabel": "Open",
+      "empty": "Recent updates will appear here…",
+      "items": {
+        "cp2k": {
+          "version": "v1.1",
+          "date": "2025-08-18",
+          "title": "CP2K Diffraction Section",
+          "desc": "Generate the &FIBER_DIFFRACTION fiber-diffraction bias section for our CP2K-Polymcryst-Refine; paste it into &FORCE_EVAL to optimize."
+        },
+        "cifH": {
+          "version": "v1.0",
+          "date": "2025-07-22",
+          "title": "CIF Hydrogenation",
+          "desc": "Perceive polymer bonds under PBC, add hydrogens to fill every valence, edit bonds in 3D, and export a CP2K-ready CIF."
+        },
+        "v120": {
+          "title": "1.2.0 released · first open-source version",
+          "desc": "The first open-source release of PolymCrystRefine Aux, with source code hosted on GitHub."
+        }
+      }
+    },
+    "workflow": {
+      "eyebrow": "Core Workflow",
+      "title": "From Diffraction Images to Refinement & DFT",
+      "s1": {
+        "title": "Pre-processing",
+        "lead": "Images → usable intensity data",
+        "step1": "2D Integration",
+        "step2": "Image Merging",
+        "step3": "Background Removal"
+      },
+      "s2": {
+        "title": "Refinement Prep",
+        "lead": "Data & inputs ready",
+        "step1": "Intensity Extraction",
+        "step2": "Force-field Prep",
+        "step3": "Input Preparation"
+      },
+      "s3": {
+        "title": "Post-processing",
+        "lead": "Structure validation & simulation",
+        "step1": "DFT Run Prep",
+        "step2": "Crystal Structure Checks",
+        "step3": "Diffraction Simulation"
+      }
+    }
+  },
+  "lmp": {
+    "notices": {
+      "title": "Force field: OPLSAA (LigParGen recommended)",
+      "body": "This tool mainly handles OPLSAA force fields (LAMMPS data format). We recommend generating your files with LigParGen (Yale University): upload your small molecule there, choose the OPLSAA force field, and download the .gro structure file plus the LAMMPS force field file (.lmp / .data), then upload both here.",
+      "link": "Get .gro + LAMMPS force field files from LigParGen",
+      "url": "https://zarbi.chem.yale.edu/ligpargen/"
+    },
+    "sections": {
+      "upload": "Upload Files",
+      "atoms": "Atom List & ID Mapping",
+      "viewer": "3D Structure",
+      "validateResult": "Validation Details",
+      "mapping": "Atom ID Mapping"
+    },
+    "descs": {
+      "upload": "Upload a structure file (PDB, MOL, SDF, XYZ, CIF, or GRO) and a LAMMPS data file (.data / .lmp). The tool checks that the element/mass composition of both matches.",
+      "viewer": "Ball-and-stick view of the uploaded molecule. Each atom is labelled with its number; click an atom to toggle its assignment (red ring = assigned). Bonds are recomputed from distances (the file-internal Bonds section is NOT used, so periodic-image bonds don't render as tangled long lines); atoms in a periodic interaction get a cyan ring.",
+      "mapping": "Assign each atom a new ID column-by-column (Old ID → New ID); leave New ID blank to skip an atom. \"Auto sequence\" (1 / 2 / -1 markers) numbers the intermediate atoms along the bonded chain automatically. The \"Period\" column is an integer: 0 = non-periodic, ≥1 = the atom spans N periodic images (seeded from the LAMMPS topology # marker, editable)."
+    },
+    "subsections": {
+      "structFile": "Structure File (PDB / MOL / GRO)",
+      "lmpFile": "LAMMPS Data File",
+      "typeElement": "LAMMPS Type → Element",
+      "elementDiff": "Element Composition Comparison",
+      "preview": "CSV Preview"
+    },
+    "labels": {
+      "dropStruct": "Drop structure file here (.pdb / .mol / .sdf / .xyz / .cif / .gro)",
+      "dropLmp": "Drop LAMMPS data file here (.data / .lmp / .txt)",
+      "newIdStart": "New ID starts at"
+    },
+    "actions": {
+      "validate": "Validate Correspondence",
+      "validating": "Validating...",
+      "hideH": "Hide hydrogens",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "selectNonH": "Select Non-H",
+      "extract": "Extract CSV",
+      "extracting": "Extracting...",
+      "downloadCsv": "Download CSV",
+      "showNumbers": "Show atom numbers",
+      "autoAssign": "Fill new = old",
+      "clearNew": "Clear new IDs",
+      "autoSequence": "Auto sequence",
+      "insertH": "Insert hydrogens when sequencing",
+      "floatViewer": "Float viewer",
+      "dockViewer": "Dock inline"
+    },
+    "hints": {
+      "selectedCount": "{n} of {total} atoms selected",
+      "noAtoms": "No atoms to display.",
+      "records": "records",
+      "bonds": "{n} bonds ({p} periodic #)",
+      "bondsAuto": "Bonds auto-detected from distances (recomputed each upload)",
+      "bondNormal": "Normal bond",
+      "bondPeriodic": "Periodic bond (#)",
+      "assignedCount": "{n} of {total} atoms assigned",
+      "periodicAtoms": "{n} periodic atoms",
+      "periodicTip": "The \"Period\" column is an integer: 0 = non-periodic, ≥1 = spans N periodic images. It is written into the topology output (e.g. newID#N); records where every atom is periodic (>0) are skipped on extract.",
+      "periodicToggle": "Period count (integer: 0 = non-periodic, ≥1 = spans N periodic images)",
+      "periodicFile": "LAMMPS file detected periodicity — click to additionally set a manual flag",
+      "periodicFileN": "LAMMPS file detected {n} period(s) for this atom — editable here",
+      "periodicAtomRing": "Periodic atom (cyan ring)",
+      "matchOk": "match",
+      "matchFail": "mismatch",
+      "noCompare": "(structure or LAMMPS missing element info — no comparison)",
+      "newIdPh": "new",
+      "moreAtoms": "Showing first {shown} of {total} atoms",
+      "autoSeqHelp": "Auto sequence usage: mark the chain first — enter 1 as the New ID of the start atom, 2 on the second atom (direction), and -1 on the end atom, then click \"Auto sequence\". The tool numbers the intermediate atoms along the bonded path; the -1 atom receives the final number. Atoms off the chain stay blank for you to choose manually.",
+      "autoSeqOk": "Auto sequence done: {n} chain atoms, {total} atoms numbered in total ({h} hydrogens).",
+      "autoSeqViaH": "Note: the chain path passes through hydrogen atoms — please double-check.",
+      "autoSeqErrMark": "Mark three atoms first: New ID = 1 (start), 2 (second atom), and -1 (end), then click \"Auto sequence\".",
+      "autoSeqErrDup": "The 1, 2 and -1 markers must be on three different atoms.",
+      "autoSeqErrPath": "No bonded path from the atom marked 2 to the atom marked -1 — check your markers or the structure.",
+      "negIdWarn": "Negative New IDs present (-1 is the end marker): run \"Auto sequence\" or fix them manually before extracting.",
+      "floatTip": "In float mode the 3D structure stays pinned in a corner and can be dragged by its title bar — handy for consulting it while picking atoms in the table below."
+    },
+    "cols": {
+      "select": "Sel",
+      "index": "Index",
+      "element": "Elem",
+      "coords": "Coordinates (x, y, z)",
+      "oldId": "Old ID",
+      "newId": "New ID",
+      "periodic": "Period",
+      "typeId": "Type",
+      "mass": "Mass",
+      "structCount": "Struct",
+      "lmpCount": "LAMMPS",
+      "status": "Status"
+    },
+    "logs": {
+      "parsingStruct": "Parsing structure file...",
+      "structParsed": "Structure parsed: {n} atoms, formula = {formula}.",
+      "parsingLmp": "Parsing LAMMPS data file...",
+      "lmpParsed": "LAMMPS data parsed: {n} atoms.",
+      "validating": "Validating structure↔LAMMPS correspondence...",
+      "extracting": "Extracting force field parameters...",
+      "extracted": "Extraction complete: {n} records."
+    }
+  },
+  "inputGen": {
+    "sections": {
+      "basic": "Basic Parameters",
+      "coordinate": "Coordinate Block",
+      "cell": "Cell Parameters",
+      "chains": "Chains & Space Groups",
+      "helix": "Helix & Geometry",
+      "thermal": "Temperature & LM",
+      "modes": "Mode Switches",
+      "experimental": "Experimental / Correction",
+      "ga": "GA Parameters",
+      "output": "Generate & Download",
+      "equatorial": "Equatorial Module",
+      "advanced": "Advanced Multi-Molecule"
+    },
+    "descs": {
+      "basic": "Core parameters required by the Fortran refinement engine: wavelength, generation count, atom count, and diffraction intensity weight.",
+      "coordinate": "Define the asymmetric-unit atoms: element symbol, r random range, and z position index. Row count must match num_atoms.",
+      "cell": "Unit-cell parameters a, b, c (Å) and α, β, γ (°). Note: actual c is determined by z_add × period_num during refinement.",
+      "chains": "Chain count, space-group symmetry operations, chain centres, and symmetry operators.",
+      "helix": "Period count, helix number, adjacent-period rotation angle, and Python-side build parameters (required for init-helix / GA).",
+      "pythonBuild": "Required by the Python init-helix and GA pipeline: per-period z range, expected full-period c-axis length, and main-chain monomer count.",
+      "thermal": "Temperature (B) factor settings: isotropic only (anisotropic not yet implemented).",
+      "lm": "Levenberg-Marquardt optimizer settings. Keep status_LM = NO for most workflows.",
+      "modes": "Mode switches controlling single-chain construction, X-ray source type, stable z, and mirror chain.",
+      "phase2": "Independent chains and pseudo-symmetry: n_independent_chains, theta_ini_map, build_order, pseudo_symmetry_mode.",
+      "experimental": "Absorption / air-scatter corrections, HKL indexing range, low-q filter, and background contribution.",
+      "ga": "Genetic Algorithm configuration: mode (basic/flash/pro), step count, and output directory.",
+      "output": "Output verbosity level and optional chemical formula. Generate preview and download input.txt.",
+      "equatorial": "Equatorial (l=0) enhancements [260814]: option 1 sets a separate weight for l=0 blank reflections (replaces blank_contribution); option 2 enables a 1D Rietveld-like profile fit (activated by the profile file). All optional — omit for fully legacy behaviour.",
+      "advanced": "Advanced multi-molecule mode [260815]: two independent molecular entities in one cell (case_a fixed positions / case_b shared-position 3-domain mixture). Edit molecule coordinates & forcefields in the Coordinate section; chain_num is implied as 2 and not emitted.",
+      "chainsAdvanced": "In advanced mode chain_num is implied (fixed 2) and must NOT appear; chain centers are still used (case_a one center per molecule, case_b shared). P1 only (space_group_num = 0)."
+    },
+    "subsections": {
+      "chainCenters": "Chain Centers",
+      "spaceGroups": "Space Group Operations",
+      "pythonBuild": "Python Build Parameters (init-helix / GA)",
+      "lm": "Levenberg-Marquardt (LM)",
+      "phase2": "Phase 2 — Independent Chains / Pseudo-symmetry",
+      "flashParams": "Flash Mode Parameters",
+      "proParams": "Pro Mode Parameters",
+      "preview": "Preview",
+      "eqProfile": "Option 2: Equatorial 1D Profile Fit",
+      "molecule": "Molecule {n}",
+      "mixture": "case_b mixture fractions",
+      "deepSearch": "DeepSearch Post-Refinement"
+    },
+    "actions": {
+      "addAtom": "+ Add Atom",
+      "removeAtom": "− Remove Last",
+      "addRow": "+ Add Row",
+      "removeRow": "− Remove Last",
+      "addOp": "+ Add Operation",
+      "removeOp": "− Remove Last",
+      "generate": "Generate Preview",
+      "generating": "Generating...",
+      "download": "Download input.txt"
+    },
+    "hints": {
+      "coordCount": "{n} of {total} atoms",
+      "noAtoms": "No atoms defined. Click '+ Add Atom' to start.",
+      "molCount": "{n} atoms",
+      "xraylibAuto": "xraylib = on: molecular_mass / sample_absorption_coeff / air_absorption_coeff are auto-derived from composition + wavelength (not emitted); chemical_formula is required (repeat-unit formula).",
+      "advancedNote": "Advanced-mode conventions: chain_num must not appear (fixed 2); single_chain_mod / stable_z_chain / mirror_chain / build_order must be 0; P1 only; theta bucket & pseudo-symmetry disabled; GA supports basic / flash only (pro → error stop). Position 2 = mirrored placement of position 1 (antiparallel stacking, θ→−θ, z→−z). One forcefield file per molecule (forcefield.txt no longer needed).",
+      "mustZeroAdvanced": "Must be 0 in advanced mode",
+      "numAtomsAdvanced": "In advanced mode this is auto-set to the sum of both molecule blocks and ignored",
+      "advGaNote": "Advanced mode supports GA basic / flash only; pro → error stop",
+      "deepSearchNote": "Only available with ga_mode=basic, chain_num=2, stable_z_chain=0 and standard mode; splits the best structure into a case_a dual-molecule refinement, archived to result/deepsearch/",
+      "required": "required",
+      "cellMissing": "Unit cell incomplete: fill all 6 values (a b c alpha beta gamma), or use paste-to-fill",
+      "cellLenPositive": "Cell lengths a, b, c must be > 0",
+      "cellAngleRange": "Cell angles alpha, beta, gamma must lie in 0-180 degrees",
+      "coordCountMismatch": "coordinate rows ({n}) != num_atoms ({total}) - fix before generating",
+      "chainCentersMismatch": "chain-center rows ({n}) != chain_num ({total})",
+      "spaceGroupMismatch": "symmetry ops ({n}) != space_group_num ({total})",
+      "molCoordEmpty": "In advanced mode both molecule coordinate blocks need at least one row",
+      "advNoSpaceGroup": "Space groups are not supported in advanced multi-molecule mode (V1: P1 only); pasted ops were ignored"
+    },
+    "cols": {
+      "element": "Element",
+      "rMin": "r_min",
+      "rMax": "r_max",
+      "zIdx": "z_idx",
+      "transdirect": "Transdirect",
+      "centerMove": "Center Move"
+    },
+    "logs": {
+      "generating": "Generating input.txt...",
+      "generated": "input.txt generated successfully."
+    },
+    "paste": {
+      "coordTitle": "Paste to fill (you can copy directly from an existing input.txt)",
+      "coordPlaceholder": "One atom per line: element r_min r_max z_idx\nExample:\nO 0 2 1\nC 0 1 1\nH 0 2 3\n(A num_atoms = 22 line is accepted and syncs the atom count)",
+      "coordBtn": "Parse & fill coordinate table",
+      "chainsTitle": "Paste to fill (copy a fragment from an existing input.txt)",
+      "chainsPlaceholder": "Supports chain_center / space_group blocks, e.g.:\nchain_center_begin\n0.0 0.0 0.0\nchain_center_end\nspace_group_begin\n-1 -1 1\n0.25 0.25 0\nspace_group_end\nWithout markers: 3 numbers per line = chain center; 6 numbers = one symmetry op (Transdirect + center_move).\nchain_num = / space_group_num = lines are applied too.",
+      "chainsBtn": "Parse & fill chains / space group",
+      "cellTitle": "Paste to fill",
+      "cellPlaceholder": "Paste 6 numbers: a b c alpha beta gamma\nExample:\n5.9897 4.5159 10.7076 61.9291 121.3998 113.4930",
+      "cellBtn": "Parse & fill unit cell",
+      "parsedCoord": "Coordinate parse done: {n} atoms (num_atoms synced)",
+      "parsedMol": "Molecule {mol} coordinate parse done: {n} atoms",
+      "parsedChains": "Parse done: {c} chain center(s), {o} symmetry op(s)",
+      "parsedCell": "Cell parse done: {v}",
+      "errPrefix": "Parse failed: ",
+      "errEmpty": "No valid data rows found",
+      "errCoordCols": "each row needs 4 columns (element r_min r_max z_idx); this row has {n}",
+      "errCoordElement": "column 1 must be an element symbol, not a number",
+      "errChainsCols": "each row needs 3 numbers (chain center) or 6 numbers (symmetry op); this row has {n}",
+      "errCellCount": "cell needs exactly 6 numbers (a b c alpha beta gamma); got {n}",
+      "errNum": "contains a value that cannot be parsed as a number"
+    },
+    "toggles": {
+      "equatorial": "Enable equatorial module [260814]"
+    },
+    "help": {
+      "wavelength": "X-ray wavelength (A), must be > 0",
+      "generation_num": "Population / generation count, must be > 0; also the block count of output.rphi",
+      "num_atoms": "Atoms per asymmetric unit; must match the coordinate row count",
+      "intensity_contribution": "Diffraction residual weight; 0 = ignore diffraction data entirely, typically a positive number (e.g. 400)",
+      "z_min": "Per-period z random range lower bound (A); required by init-helix / GA",
+      "z_max": "Per-period z random range upper bound (A); required by init-helix / GA",
+      "c_length": "Expected full-period c-axis length (A); required by init-helix / GA",
+      "main_chain_num": "Main-chain monomer count, used to scale z onto each atom",
+      "temperature_factor_stat": "B-factor type: 0 = isotropic (the only supported value)",
+      "temperature_factor_min": "B-factor lower bound (default 0.15)",
+      "temperature_factor_max": "B-factor upper bound; falls back to 0.10-0.35 if below the minimum",
+      "status_LM": "Enable LM override settings; NO = tol / maxcall are ignored",
+      "tol": "LM convergence tolerance (only when LM = YES, default 1e-3)",
+      "maxcall": "LM max iterations (only when LM = YES, default 500)",
+      "period_num": "Period count, must be > 0; actual c = z_add x period_num",
+      "helix_num": "Helix number (>= 0), Fortran only (writes out_helix.xyz)",
+      "theta_add": "Adjacent-period rotation angle (degrees)",
+      "single_chain_mod": "Build single chain in inversion-center mode (0/1)",
+      "xray_source_mod": "X-ray source: 0 = synchrotron, 1 = lab source, 2 = polarization factor 1",
+      "stable_z_chain": "1 = force all z_ini to 0; also changes the rphi header format",
+      "mirror_chain": "Chain mirror mode (0/1/2); auto 0 with a warning when chain_num >= 2 and unset",
+      "chain_num": "Helical chain count, must be > 0; must match the chain-center row count",
+      "space_group_num": "Number of non-identity symmetry ops; > 0 requires the ops table below",
+      "pseudo_symmetry_mode": "Pseudo-symmetry: 0 off, 1 pass-through, 2 bc mirror, 3 ac mirror (>1 needs gating)",
+      "n_independent_chains": "Independent theta_ini parameters (1..chain_num); < chain_num requires theta_ini_map",
+      "theta_ini_map": "Chain-to-bucket mapping, length = chain_num, e.g. 1 2 1 2",
+      "build_order": "Build order: 0 = position then symmetry, 1 = symmetry then position",
+      "use_xraylib": "on = mu/rho, M_cell and f0 computed by xraylib from composition + wavelength; off = legacy values",
+      "chemical_formula": "Repeat-unit formula (e.g. C4H10O2); required when use_xraylib = on",
+      "molecular_mass": "Whole-cell mass (g/mol); auto-derived when xraylib on and unset",
+      "sample_absorption_coeff": "Sample mass absorption coefficient mu/rho (cm2/g)",
+      "air_absorption_coeff": "Air mass absorption coefficient mu/rho (cm2/g)",
+      "sample_thickness_cm": "Sample thickness (cm)",
+      "air_density": "Air density (g/cm3)",
+      "detector_distance_cm": "Detector distance (cm)",
+      "h_max": "Max h index (>= 0)",
+      "k_max": "Max k index (>= 0)",
+      "l_max": "Max l index (>= 0)",
+      "max_hkl_per_peak": "Max HKL count per diffraction peak (> 0)",
+      "max_blank_hkl": "Max HKL count for blank reflections (> 0)",
+      "blank_contribution": "Background contribution (>= 0, default 0.20)",
+      "q_min": "Low-q filter threshold; 0 = off, > 0 drops points with q < q_min",
+      "equatorial_module_on": "Off by default; equatorial_* keys are only written when enabled (unset = legacy behavior)",
+      "equatorial_blank_contribution": "Separate weight for l=0 blank reflections; unset = follow blank_contribution",
+      "equatorial_profile_file": "Equatorial 1D observed profile file (workdir-relative); empty = profile fitting off",
+      "equatorial_profile_contribution": "Profile residual weight (independent scaling, not multiplied by intensity_contribution)",
+      "equatorial_peak_fwhm": "pseudo-Voigt peak FWHM (q units A^-1, default 0.04)",
+      "equatorial_pv_eta": "Lorentzian fraction eta (0-1)",
+      "equatorial_background": "Constant background (same units as the curve; subtract background first and keep 0)",
+      "equatorial_h_max": "hk0 enumeration h limit; unset = follow h_max",
+      "equatorial_k_max": "hk0 enumeration k limit; unset = follow k_max",
+      "advanced_multi_molecule": "off = standard; case_a = fixed positions; case_b = shared positions 3-domain mixture (default off)",
+      "molecular_mass_mol1": "Molecule 1 molar mass (g/mol, density/absorption)",
+      "molecular_mass_mol2": "Molecule 2 molar mass (g/mol, density/absorption)",
+      "data_param_ratio_warn": "Info/parameter ratio red-line (must be > 1; hard gate 1 is fixed)",
+      "axis_penalty_weight": "Axial-offset penalty weight (0 = off; try 1.0 first)",
+      "mixture_fractions": "case_b fractions p1 p2 p12, each > 0 summing to 1; empty = random init",
+      "mixture_fractions_fixed": "yes = fractions fixed during LM (requires explicit fractions)",
+      "forcefield": "Forcefield file name for this molecule (e.g. forcefield_mol1.txt)",
+      "print_level": "Output verbosity: low / medium / high",
+      "ga_mode": "GA mode: basic default / flash speed-first / pro exploration-first (advanced mode: basic/flash only)",
+      "ga_steps": "GA iteration steps (default 100)",
+      "ga_result_dir": "GA output directory name (default result)",
+      "deep_search": "After the basic loop, split the best structure into a case_a dual-molecule refinement (default off)",
+      "deepsearch_steps": "Post-refinement steps (>= 1)",
+      "deepsearch_start_topk": "Post population source top-K (only 1 supported)",
+      "freeze_threshold_r": "Freeze detection: r change threshold",
+      "freeze_threshold_phi": "Freeze detection: phi change threshold (degrees)",
+      "freeze_threshold_z": "Freeze detection: z change threshold",
+      "freeze_threshold_sq": "Freeze detection: total_sq change threshold",
+      "freeze_streak_k": "Freeze after K consecutive stable generations (skip LM)",
+      "warmup_percent": "Warmup fraction of total steps (energy-only optimization)",
+      "warmup_generations": "Warmup generations; 0 = compute from percentage",
+      "pro_max_age": "Max survival generations for aggressive-pool candidates",
+      "elite_ratio": "Elite pool fraction (0-1)",
+      "pro_aggressive_ratio_early": "Early aggressive pool fraction",
+      "pro_aggressive_ratio_late": "Late aggressive pool fraction",
+      "pro_schedule_crossover_point": "Early-to-late switch point (fraction of ga_steps)",
+      "dedup_threshold_r": "Weak-isomorphism dedup: r binning threshold",
+      "dedup_threshold_phi": "Weak-isomorphism dedup: phi binning threshold (degrees)",
+      "dedup_threshold_z": "Weak-isomorphism dedup: z binning threshold",
+      "cell_a": "Cell edge a (A, > 0, required)",
+      "cell_b": "Cell edge b (A, > 0, required)",
+      "cell_c": "Cell edge c (A, > 0, required; actual c comes from z_add x period_num)",
+      "cell_alpha": "Cell angle alpha (degrees, 0-180, required)",
+      "cell_beta": "Cell angle beta (degrees, 0-180, required)",
+      "cell_gamma": "Cell angle gamma (degrees, 0-180, required)"
+    }
+  },
+  "integration": {
+    "title": "2D Intensity Integration",
+    "header": "pyFAI / PONI-based 2D intensity integration and masking",
+    "tabs": {
+      "detector": "Raw Image",
+      "cake": "Pre-integrated Cake"
+    },
+    "detector": {
+      "title": "Raw Image + PONI",
+      "desc": "Upload raw image(s) and a PONI calibration file; pyFAI integrate2d_ng performs azimuthal integration. Multiple images can be imported and integrated in batch.",
+      "imageLabel": "Import Raw Image(s)",
+      "imageCount": "{n} image(s) selected",
+      "clearAll": "Clear all",
+      "removeOne": "Remove",
+      "poniLabel": "Drop a PONI calibration file here (.poni)",
+      "poniParsed": "PONI parameters loaded"
+    },
+    "cake": {
+      "title": "Pre-integrated Cake (.npy)",
+      "desc": "Process a pre-integrated 2D cake (azimuth × q) directly — masking only.",
+      "imageLabel": "Drop a pre-integrated cake here (.npy)",
+      "axisLabel": "Axis ranges (applied to all images)",
+      "qMin": "q minimum",
+      "qMax": "q maximum",
+      "chiMin": "chi minimum (deg)",
+      "chiMax": "chi maximum (deg)",
+      "unit": "X-axis unit",
+      "importInfo": "Import NPY info file",
+      "infoApplied": "Axis ranges applied from NPY info file",
+      "infoError": "Failed to parse NPY info file",
+      "infoEmpty": "NPY info file contained no recognizable axis ranges"
+    },
+    "mask": {
+      "title": "Mask Settings",
+      "desc": "Threshold-based masking with an optional custom mask. Pixels below the minimum or above the maximum are masked.",
+      "auto": "Auto-detect",
+      "manual": "Manual",
+      "lowPct": "Low percentile",
+      "highPct": "High percentile",
+      "min": "Minimum threshold",
+      "max": "Maximum threshold",
+      "recalc": "Recalculate thresholds",
+      "customLabel": "Custom mask (optional, .npy/.tif)",
+      "ratio": "Mask fraction",
+      "fillValue": "Mask fill value"
+    },
+    "params": {
+      "title": "Integration Parameters",
+      "nptRadial": "Radial points (q)",
+      "nptAzimuthal": "Azimuthal points (χ)",
+      "unit": "X-axis unit",
+      "method": "Integration method",
+      "polarization": "Polarization factor",
+      "summary": "Parameter summary"
+    },
+    "actions": {
+      "run": "Run Integration",
+      "export": "Export Current (ZIP)",
+      "exportAll": "Export All (ZIP) · {n}",
+      "exportPoni": "Export PONI",
+      "reset": "Reset"
+    },
+    "result": {
+      "title": "Integration Result",
+      "imageSelect": "Image",
+      "colFile": "File",
+      "thumbsTitle": "Thumbnails · click to switch",
+      "maskRatio": "Mask fraction",
+      "min": "Min intensity",
+      "max": "Max intensity",
+      "contrastMin": "Contrast min",
+      "contrastMax": "Contrast max",
+      "contrastReset": "Reset contrast",
+      "refLine": "Reference Line (0°)",
+      "refLineOffset": "Ref. Line Offset (°)"
+    },
+    "status": {
+      "uploading": "Uploading files...",
+      "parsingPoni": "Parsing PONI...",
+      "integrating": "Running 2D integration...",
+      "done": "Integration complete.",
+      "exporting": "Packing export...",
+      "exported": "Results exported.",
+      "exportedBatch": "Exported {n} results (flat ZIP, shared q/chi axes).",
+      "needInput": "Please upload an image file first.",
+      "needPoni": "Raw image mode requires a PONI file."
+    }
+  },
+  "waxs": {
+    "tabs": {
+      "batchImport": "Batch Import",
+      "background": "Background",
+      "merge": "Merge"
+    },
+    "batchImport": {
+      "title": "Batch Import",
+      "desc": "Drop already-integrated cakes (.npy) or detector images (.tif/.tiff/.edf/.h5) to batch-upload them. Optionally import a single NPY info file (.json or legacy .txt) as axis/parameter info shared by all files — used for display, alignment interpolation and round-trip on export.",
+      "dropLabel": "Drop data files here (.npy/.tif/.tiff/.edf/.h5)",
+      "jsonLabel": "Drop NPY info file here (single file, .json / .txt)",
+      "btnLoad": "Upload & Load",
+      "tableTitle": "File Info",
+      "colFile": "File",
+      "colXAxis": "X-axis range",
+      "colYAxis": "Y-axis range (°)",
+      "colPoints": "Integration points",
+      "colPolar": "Polarization",
+      "noInfo": "—",
+      "loaded": "Loaded {n} file(s)",
+      "infoOk": "✓ NPY info file parsed ({fields})",
+      "infoEmpty": "⚠ Read {file} but no recognized fields (expected xAxisRange / yAxisRangeDeg / integrationPoints). Check the file format.",
+      "infoError": "⚠ NPY info file parse failed: {msg}"
+    },
+    "background": {
+      "title": "Background Subtraction",
+      "desc": "Rolling-ball background subtraction applied to each imported cake to remove amorphous halo, air scatter and other slowly-varying backgrounds. Subtracted results can be used as the merge input (toggle in the Merge step).",
+      "btnRun": "Run Subtraction",
+      "ballRadius": "Rolling Ball Radius",
+      "rollingBallType": "Rolling Ball Type",
+      "typeOptions": {
+        "classic": "Classic (minimum filter)",
+        "smooth": "Smooth (morphological opening)"
+      },
+      "method": "Implementation",
+      "versionOptions": {
+        "scipy": "scipy",
+        "skimage": "scikit-image"
+      },
+      "smoothingSigma": "Result Smoothing σ",
+      "fillValue": "Clip floor",
+      "maskZeros": "Mask zeros (ignore zero-valued pixels during background estimation)",
+      "resultTitle": "Background Subtraction Result",
+      "needImport": "Upload files in Batch Import first.",
+      "thumbsTitle": "Thumbnails (click to switch)",
+      "contrastMin": "Contrast min",
+      "contrastMax": "Contrast max",
+      "contrastReset": "Reset contrast",
+      "done": "✅ Subtracted {n} image(s); results are the default merge input (toggle in the Merge step).",
+      "inputSource": "Input source",
+      "sourceOriginalPerItem": "Original data (per-image)",
+      "sourceMerge": "Merge result (single)",
+      "useMergeForBg": "Use merge result as background input",
+      "usesMerge": "Background input: merge result",
+      "usesOriginalPerItem": "Background input: original data (per-image)",
+      "mergeNotRun": "No merge run yet — background will use original data (per-image).",
+      "exportStep": "Export this step",
+      "exportAll": "Export all steps ({n})",
+      "historyTitle": "Step history",
+      "stepBackground": "Background #{n}",
+      "noResult": "No background run yet.",
+      "view": "View",
+      "exportedStep": "Step result exported.",
+      "exportedAll": "All {n} step(s) exported."
+    },
+    "merge": {
+      "title": "Merge",
+      "desc": "Align and merge multiple cakes by interpolating onto a common q axis derived from the xAxisRange in the imported NPY info file. Import NPY info file (.json/.txt) to enable q-axis alignment; otherwise a chi-shift merge is used. A per-image chi offset can be set for each cake.",
+      "btnRun": "Run Merge",
+      "mergeMethod": "Merge Method",
+      "methodOptions": {
+        "mean": "Mean",
+        "median": "Median",
+        "weighted": "Weighted (1/var)",
+        "sequential": "Sequential (first valid)"
+      },
+      "maskLowerBound": "Mask lower bound",
+      "maskLowerBoundPlaceholder": "Leave empty to disable",
+      "maskLowerBoundHelp": "Pixels below this bound (and non-finite pixels) never contribute to the merge; pixels invalid in every input are filled with (bound − 1). In sequential mode each pixel keeps the first valid value.",
+      "chiOffsetTitle": "Per-image chi offset",
+      "chiOffsetCol": "chi offset (°)",
+      "chiOffset": "chi offset (deg)",
+      "inputSource": "Input source",
+      "sourceOriginal": "Original data",
+      "sourceBg": "Background-subtracted data (per-image)",
+      "useBgForMerge": "Use background-subtracted results (per-image) as merge input",
+      "usesBg": "Merge input: background-subtracted data",
+      "usesOriginal": "Merge input: original data",
+      "bgNotRun": "Background subtraction not run yet — merge will use original data.",
+      "exportStep": "Export this step",
+      "exportAll": "Export all steps ({n})",
+      "historyTitle": "Step history",
+      "stepMerge": "Merge #{n}",
+      "noResult": "No merge run yet.",
+      "view": "View",
+      "exportedStep": "Step result exported.",
+      "exportedAll": "All {n} step(s) exported.",
+      "btnExport": "Export Merge (ZIP)",
+      "resultTitle": "Merge Result",
+      "exported": "Merge result exported.",
+      "needImport": "Upload files in Batch Import first.",
+      "contrastMin": "Contrast min",
+      "contrastMax": "Contrast max",
+      "contrastReset": "Reset contrast"
+    }
+  },
+  "giwaxs": {
+    "title": "GIWAXS Fiber Integration Merge",
+    "header": "Integrate several raw detector images with pyFAI fiber (grazing-incidence) integration — each with its own rot3 override (rot1/rot2 always inherit the PONI) — onto one shared (in-plane, out-of-plane) grid, then merge them pixel-wise into a single fiber-corrected GIWAXS map and export npy + processing_info (optionally with a PNG).",
+    "data": {
+      "title": "Data & Calibration",
+      "desc": "Upload several raw detector images and one PONI calibration file; an optional custom mask (nonzero = masked) is supported. The PONI beam center (poni1/poni2 → pixel coordinates) and rotations act as the inherited defaults for the per-image rot overrides.",
+      "imagesLabel": "Detector images (multiple)",
+      "poniLabel": "PONI calibration file",
+      "maskLabel": "Custom mask (optional)",
+      "imageCount": "{n} image(s) loaded",
+      "removeOne": "Remove image",
+      "clearAll": "Clear all",
+      "loaded": "✓ Uploaded {n} image(s)",
+      "poniSummary": {
+        "title": "PONI summary",
+        "distance": "Distance",
+        "pixel": "Pixel",
+        "beamCenter": "Beam center"
+      }
+    },
+    "rot": {
+      "title": "Per-image rot3 settings",
+      "desc": "Detector rotation about the beam axis (rot3, degrees) for each image. Leave a field empty to inherit the PONI file value; rot1/rot2 always inherit the PONI. Every image is integrated onto the same (in-plane, out-of-plane) grid before merging — the essential difference from the 2D integration processing's integrate-then-stitch flow.",
+      "name": "File",
+      "inherit": "inherit PONI",
+      "poni": "PONI",
+      "needImages": "Upload detector images first.",
+      "batchTitle": "Arithmetic series for rot3:",
+      "batchApply": "Apply to all",
+      "applied": "✓ rot3 filled",
+      "appliedCol": "Applied rot3",
+      "batchStart": "Start",
+      "batchStep": "Step",
+      "batchGenerate": "Generate & fill",
+      "batchHint": "Image i (0-based) gets rot3 = start + i × step. E.g. start 0, step 5, 4 images → 0, 5, 10, 15; step 0 fills the same value everywhere."
+    },
+    "geom": {
+      "title": "Geometry & Corrections (X-FAIS settings)",
+      "sampleOrientation": "Sample orientation (EXIF 1–8)",
+      "ori_1": "unchanged (default)",
+      "ori_2": "mirrored horizontal",
+      "ori_3": "rotated 180°",
+      "ori_4": "mirrored vertical + 180°",
+      "ori_5": "mirrored + CCW 90°",
+      "ori_6": "CCW 90°",
+      "ori_7": "mirrored + CW 90°",
+      "ori_8": "CW 90°",
+      "incidentAngle": "Incident angle αᵢ (°)",
+      "tiltAngle": "Sample tilt angle (°)",
+      "polarization": "Polarization factor",
+      "polarizationPh": "empty = no correction; 0.99 = horizontal",
+      "correctSolidAngle": "Solid-angle correction"
+    },
+    "integ": {
+      "title": "Integration Parameters",
+      "unitIp": "In-plane unit (X)",
+      "unitOop": "Out-of-plane unit (Y)",
+      "autoRange": "Auto range",
+      "manualRange": "Manual range",
+      "autoRangeHint": "Auto mode: the first successfully integrated image fixes the shared (in-plane, out-of-plane) range; all images are integrated onto that grid so the axes are identical.",
+      "ipMin": "IP min",
+      "ipMax": "IP max",
+      "oopMin": "OOP min",
+      "oopMax": "OOP max",
+      "nptIp": "In-plane points npt_ip",
+      "nptOop": "Out-of-plane points npt_oop",
+      "method": "Method",
+      "methodAuto": "auto (pyFAI default)"
+    },
+    "merge": {
+      "title": "Merge Settings",
+      "desc": "Same merge semantics as the 2D integration processing: pixel-wise merge of aligned maps. NaN (no-data bins) never contributes.",
+      "method": "Merge method",
+      "methods": {
+        "mean": "Mean",
+        "median": "Median",
+        "weighted": "Weighted (inverse variance)",
+        "sequential": "Sequential"
+      },
+      "maskLowerBound": "Mask lower bound",
+      "maskLowerBoundPh": "empty = disabled",
+      "maskLowerBoundHelp": "Pixels below this value (and non-finite ones) do not contribute; pixels with no valid contribution stay NaN (no data). Sequential mode takes the first valid value per pixel."
+    },
+    "actions": {
+      "run": "Integrate & Merge",
+      "reset": "Reset"
+    },
+    "status": {
+      "running": "Integrating & merging…",
+      "empty": "Upload images and a PONI, then click 'Integrate & Merge'",
+      "runningLog": "▶ Start: {n} images · {npt}×{npt} grid · fiber integration → merge…",
+      "doneLog": "✅ Merge done ({method} · {n} valid images)"
+    },
+    "result": {
+      "title": "Merged result (fiber-corrected GIWAXS map)",
+      "grid": "Grid",
+      "images": "Valid images",
+      "uncovered": "Uncovered",
+      "min": "Min",
+      "max": "Max",
+      "perImageTitle": "Per-image fiber maps (click to switch)",
+      "contrastMin": "Contrast min",
+      "contrastMax": "Contrast max",
+      "contrastReset": "Reset contrast"
+    },
+    "exportSec": {
+      "title": "Export",
+      "btnZip": "Export ZIP (npy + axes + processing_info)",
+      "includePng": "Include PNG in ZIP",
+      "btnDownloadPng": "Download PNG",
+      "pngSettings": "PNG image export settings",
+      "cmap": "Colormap",
+      "titleField": "Title",
+      "dpi": "DPI",
+      "logFloor": "Log floor",
+      "climMin": "Color min",
+      "climMax": "Color max",
+      "useLog": "Log color scale",
+      "flipX": "Flip X",
+      "flipY": "Flip Y",
+      "showColorbar": "Show colorbar",
+      "auto": "Auto",
+      "manual": "Manual",
+      "btnRender": "Render PNG preview",
+      "rendering": "Rendering…",
+      "rendered": "✓ PNG preview rendered",
+      "exportedPng": "✓ PNG exported.",
+      "exportedZip": "✓ ZIP exported.",
+      "exportedZipPng": "✓ ZIP (with PNG) exported.",
+      "sendQzSlice": "Send to qz Band Integration"
+    }
+  },
+  "cif": {
+    "title": "CIF Structure Parser",
+    "desc": "Parse a CIF (Crystallographic Information File) and, via pymatgen, generate theoretical fiber diffraction peaks with Miller indices, q and azimuth ψ. Export peak_result.txt for the diffraction simulator.",
+    "uploadLabel": "Drop CIF file here",
+    "wavelength": "Wavelength (Å)",
+    "xrayMode": "Source mode",
+    "maxQ": "Max q (Å⁻¹)",
+    "maxQHelp": "Keep only peaks with q at or below this value; leave empty for no limit.",
+    "maxH": "Max h (absolute)",
+    "maxK": "Max k (absolute)",
+    "maxL": "Max l (absolute)",
+    "minIntensity": "Min output intensity",
+    "noLimit": "No limit",
+    "sortBy": "Sort order",
+    "sortOptions": {
+      "intensity": "Intensity (descending)",
+      "l": "l index (ascending)",
+      "none": "Original order"
+    },
+    "xrayModeOptions": {
+      "synchrotron": "Synchrotron",
+      "laboratory": "Laboratory"
+    },
+    "btnParse": "Parse & Generate Peaks",
+    "parsing": "Parsing...",
+    "resultTitle": "Theoretical Peaks",
+    "cols": {
+      "h": "h",
+      "k": "k",
+      "l": "l",
+      "q": "q (Å⁻¹)",
+      "psi": "ψ (°)",
+      "intensity": "Intensity"
+    },
+    "downloadPeakResult": "Download peak_result.txt",
+    "peaksDownloaded": "Exported {count} peaks to peak_result.txt.",
+    "needCif": "Please upload a CIF file first."
+  },
+  "xrd": {
+    "tabs": {
+      "single": "Single Phase",
+      "dual": "Dual Phase"
+    },
+    "single": {
+      "title": "Single Phase Fiber Diffraction",
+      "desc": "Simulate fiber diffraction from a peak_result.txt peak list (h k l q psi intensity). Choose Cake mode (azimuth χ vs. q, the original detector representation) or 2D Detector mode (a real pixel-space image via PONI geometry). Fiber four-fold symmetry can be expanded.",
+      "btnRun": "Run Simulation",
+      "simulating": "Simulating...",
+      "sigmaQ": "Sigma Q (A^-1)",
+      "sigmaChi": "Sigma Chi (deg)",
+      "mode": "Mode",
+      "kernel": "Compute kernel",
+      "kernels": {
+        "fast": "Fast (recommended)",
+        "legacy": "Legacy (per-peak numpy)"
+      },
+      "colorscale": "Colormap",
+      "symmetry": "4-fold fiber symmetry",
+      "symmetryHelp": "On by default. Each peak is mirrored to all four quadrants (4-fold symmetry), multiplying the peak count by 4; turn it off to show the original quadrant only, which is faster.",
+      "uploadPeakResult": "Upload peak_result.txt (generate & download it from the CIF Structure Parser)",
+      "modes": {
+        "cake": "Cake (q-χ)",
+        "detector": "2D Detector"
+      },
+      "result": {
+        "contrastTitle": "Contrast",
+        "contrastMin": "Min",
+        "contrastMax": "Max",
+        "contrastReset": "Reset contrast",
+        "cropHint": "Box-select on the image to crop the view",
+        "cropReset": "Reset crop",
+        "exportTiff": "Export .tiff",
+        "exportedTiff": "Exported {name} ({rows}×{cols})",
+        "exportNpy": "Export .npy",
+        "exportedNpy": "Exported {name} ({rows}×{cols})"
+      },
+      "cake": {
+        "title": "Cake Grid",
+        "processingInfoUpload": "Upload NPY info file (.json/.txt, auto-fills grid)",
+        "processingInfoParsed": "Grid applied: {name}",
+        "qMin": "q min (A^-1)",
+        "qMax": "q max (A^-1)",
+        "chiMin": "χ min (deg)",
+        "chiMax": "χ max (deg)",
+        "nQ": "q points",
+        "nChi": "χ points"
+      },
+      "detector": {
+        "title": "Detector Geometry",
+        "poniUpload": "Upload PONI (auto-fill)",
+        "poniParsed": "PONI parsed: {detector}",
+        "wavelength": "Wavelength (A)",
+        "sampleDistance": "Sample distance (mm)",
+        "beamCenterX": "Beam center X (px)",
+        "beamCenterY": "Beam center Y (px)",
+        "pixelSize": "Pixel size (μm)",
+        "imgWidth": "Image width (px)",
+        "imgHeight": "Image height (px)",
+        "presetsTitle": "Common detector pixel-size presets ▼"
+      },
+      "compare": {
+        "title": "Comparison",
+        "uploadExp": "Upload experimental data (.npy for cake, .tif/.edf for detector)",
+        "expLoaded": "Experimental data loaded",
+        "expLoadedLog": "Experimental data loaded for comparison.",
+        "displayTitle": "Comparison Settings",
+        "normalize": "Normalize experiment to simulation max",
+        "logScale": "Log scale",
+        "simTitle": "Simulation",
+        "expTitle": "Experiment",
+        "expContrastTitle": "Reference contrast",
+        "alignTitle": "Image alignment",
+        "flipV": "Flip vertical",
+        "flipH": "Flip horizontal",
+        "rot180": "Rotate 180°",
+        "alignHint": "Flip/rotate the experimental image to align it with the simulation (stackable; click again to undo)",
+        "uploadExpShort": "Upload experiment image (single)",
+        "off": "Turn off comparison",
+        "resetAll": "Reset settings",
+        "resetAllHint": "Reset the comparison display: colormap, normalization, log scale, alignment flips and experiment contrast",
+        "resetDone": "Comparison settings restored.",
+        "exportSimPng": "Export simulation PNG",
+        "exportExpPng": "Export experiment PNG",
+        "exportedPane": "Exported comparison image: {name}",
+        "placeholder": "Upload one experiment image to compare it with the current simulation"
+      }
+    },
+    "dual": {
+      "title": "Dual Phase Simulation",
+      "desc": "Simulate a two-phase mixture by blending individual phase simulations. Set the weight fraction for each phase and independently control broadening and texture parameters.",
+      "btnRun": "Run Dual Phase",
+      "phaseA": "Phase A",
+      "phaseB": "Phase B",
+      "weight": "Weight Fraction",
+      "sigma": "Sigma",
+      "outputMode": "Output Mode",
+      "resolution": "Resolution (px)",
+      "uploadLabelA": "Phase A peak_result.txt",
+      "uploadLabelB": "Phase B peak_result.txt",
+      "simulating": "Simulating...",
+      "needBothPhases": "Upload a peak_result.txt for both phase A and phase B."
+    }
+  },
+  "analysis": {
+    "tabs": {
+      "cake": "Cake Analysis",
+      "detector": "Detector Analysis"
+    },
+    "cake": {
+      "title": "Load Cake Image",
+      "uploadLabel": "Upload Image",
+      "btnLoad": "Load",
+      "displayTitle": "Cake Map (azimuth vs. q)",
+      "xAxisTitle": "q (Å⁻¹)",
+      "yAxisTitle": "χ (°)",
+      "placeholder": "Cake map display (azimuth vs. q)",
+      "placeholderHint": "Upload .npy/.tif/.edf to display",
+      "panels": {
+        "settings": "Settings",
+        "roi": "ROI Info"
+      }
+    },
+    "detector": {
+      "title": "Load Detector Image",
+      "uploadLabel": "Upload Image",
+      "btnLoad": "Load",
+      "displayTitle": "Raw Detector Image",
+      "placeholder": "Raw detector image",
+      "placeholderHint": "Upload .tif/.edf/.npy to display"
+    },
+    "controls": {
+      "title": "Display Controls",
+      "colormap": "Colormap",
+      "logScale": "Log Scale",
+      "aspectRatio": "Aspect Ratio",
+      "aspectAuto": "Auto",
+      "aspectEqual": "Equal",
+      "bgMode": "BG Mode",
+      "bgModes": {
+        "none": "None",
+        "radial": "Radial Median",
+        "azimuthal": "Azimuthal Median",
+        "polynomial": "2D Polynomial",
+        "frame": "Empty Frame"
+      },
+      "xAxis": "X-Axis",
+      "yAxis": "Y-Axis",
+      "frameIndex": "Frame Index",
+      "export": "Export"
+    },
+    "slice": {
+      "title": "Slice Plots (click main image)",
+      "clickPos": "Click pos",
+      "qSlice": "q-Slice (Intensity vs q)",
+      "azimuthSlice": "χ-Slice (Intensity vs χ)",
+      "integrationWidth": "Int. Width",
+      "displayRange": "Display Range",
+      "clickedPoint": "Clicked point",
+      "floatBtn": "Float",
+      "dockBtn": "Dock inline",
+      "hideBtn": "Hide slice plots",
+      "resizeHint": "Drag to resize",
+      "toggleShow": "Show slice plots",
+      "toggleHide": "Hide slice plots",
+      "toggleHint": "Open / close the slice plots here at any time",
+      "dockToolbarHint": "Dock the floating slice card back inline — use this if the card was dragged off-screen and cannot be reached",
+      "quickTitle": "Quick Settings (applied to newly recorded peaks)",
+      "quickRefineBtn": "Refine Box",
+      "quickRefineHint": "Arm refine-box drawing for the selected (or last) ROI (shortcut F)"
+    },
+    "contrast": {
+      "title": "Contrast",
+      "min": "Min",
+      "max": "Max",
+      "reset": "Reset"
+    },
+    "selection": {
+      "title": "Region Selection",
+      "rough": "Drag Select",
+      "precise": "Precise Select",
+      "record": "Record Area",
+      "recordKeyHint": "Records the quick settings (multiplier / background) into the new peak — shortcut R",
+      "clear": "Clear Selection",
+      "showLabels": "Show ROI numbers on plot"
+    },
+    "crop": {
+      "title": "χ-Axis Crop",
+      "enable": "Enable χ crop",
+      "chiMin": "χ Min (°)",
+      "chiMax": "χ Max (°)",
+      "reset": "Reset to χ range"
+    },
+    "background": {
+      "title": "Background",
+      "perPeakHint": "Background subtraction is configured per peak: this panel provides the defaults for newly created peaks. Changing the fixed value syncs to every peak in fixed-value mode; each peak can still be edited individually in the ROI table below.",
+      "mode": "Background Mode",
+      "modes": {
+        "none": "None",
+        "fixed": "Fixed Value",
+        "neighbor": "X-axis Neighbors",
+        "dbscan": "DBSCAN Cluster Estimate"
+      },
+      "fixedValue": "Per-pixel Value",
+      "side": "Background Side",
+      "sides": {
+        "left": "Left only",
+        "right": "Right only",
+        "both": "Both (average)"
+      },
+      "neighborWidth": "Neighbor Width (px cols)",
+      "dbscan": {
+        "thresholdPercentile": "Brightness Percentile (%)",
+        "minSamples": "Min Samples (minPts)",
+        "minClusterPixels": "Min Cluster Pixels",
+        "dilationPixels": "Peak Dilation (px)",
+        "backgroundPercentile": "Background Percentile (%)",
+        "btnEstimate": "Preview clusters & estimate",
+        "estimating": "Estimating…",
+        "btnApply": "Apply as fixed value",
+        "applyHint": "Fill the estimated background into fixed-value mode",
+        "showMask": "Show peak mask",
+        "backgroundLevel": "Background level",
+        "thresholdLabel": "Brightness threshold",
+        "clustersLabel": "Peak clusters",
+        "peakPx": "Peak px",
+        "bgPx": "Background px",
+        "hint": "DBSCAN clusters bright pixels into diffraction-peak clusters (red mask); every other pixel counts as background and its percentile becomes the level. Tune the parameters and re-preview until the mask matches the peaks in your image; recorded ROI regions are always treated as peaks."
+      }
+    },
+    "saturation": {
+      "title": "Saturation / Bad-pixel Mask",
+      "min": "Min intensity",
+      "max": "Saturation max",
+      "auto": "Auto (99.9%)",
+      "clear": "Off",
+      "hint": "Pixels above this value (e.g. saturated/dead) are excluded from intensity extraction"
+    },
+    "miller": {
+      "title": "Miller Index Overlay",
+      "uploadLabel": "Upload Miller Files",
+      "btnLoad": "Load & Match",
+      "convention": "Convention",
+      "azimuthOffset": "Azimuth offset (deg)",
+      "showPoints": "Show points",
+      "pointColor": "Point color",
+      "colorGray": "Gray",
+      "colorWhite": "White",
+      "qTolerance": "q tolerance (Å⁻¹)",
+      "chiTolerance": "χ tolerance (deg)"
+    },
+    "roi": {
+      "titleCake": "Regions of Interest",
+      "titleDetector": "Detector ROIs",
+      "titleRecords": "ROI Records",
+      "btnAdd": "+ Add ROI",
+      "btnExport": "Export ROIs (CSV)",
+      "btnImport": "Import ROIs",
+      "btnCalculate": "Calculate Intensity",
+      "btnExportMatched": "Export Matched Intensity",
+      "columns": {
+        "index": "#",
+        "qMin": "Q min",
+        "qMax": "Q max",
+        "azimuthMin": "Azimuth min",
+        "azimuthMax": "Azimuth max",
+        "xMin": "X min",
+        "xMax": "X max",
+        "yMin": "Y min",
+        "yMax": "Y max",
+        "multiplier": "Mult",
+        "bgMode": "Background",
+        "bgParams": "BG Params",
+        "intensity": "Intensity",
+        "pixels": "Pixels",
+        "label": "Label",
+        "match": "Match HKL",
+        "matchPsi": "Match ψ±",
+        "matchQ": "Match q±",
+        "refine": "Refine"
+      },
+      "btnSetRefine": "Set refine match box",
+      "refineShape": "Refine shape",
+      "refineShapeRect": "Rectangle",
+      "refineShapeLasso": "Lasso (freehand)",
+      "btnClearRefine": "Clear refine match box",
+      "refineHint": "Setting refine match box for ROI #{n} — drag a small box on the plot around the target Miller point.",
+      "refineCancel": "Cancel",
+      "refineHintLasso": "Setting refine region for ROI #{n} — circle the target Miller point with the lasso (its q/χ extremes become the match box).",
+      "editingHint": "Editing ROI #{n}: Record will UPDATE this row, not add a new one",
+      "btnCancelEdit": "Cancel edit",
+      "btnUpdate": "Update ROI #{n}",
+      "rowClickHint": "Click to load the ROI bounds into the slice plots (edit mode: Record = update this row)",
+      "bgSides": {
+        "left": "Left",
+        "right": "Right",
+        "both": "Both"
+      }
+    },
+    "intensity": {
+      "title": "ROI Intensity Profile",
+      "xaxis": "Frame",
+      "yaxis": "Intensity"
+    },
+    "export": {
+      "png": "Export PNG",
+      "pngFullHint": "Export the full image (unaffected by the current zoom); with the χ crop enabled, the full width over the cropped band"
+    }
+  },
+  "viewer": {
+    "tabs": {
+      "cake": "2D Cake Viewer",
+      "raw": "Raw Image Viewer"
+    },
+    "cake": {
+      "title": "NPY Files",
+      "uploadLabel": "Add NPY files",
+      "empty": "No NPY files loaded",
+      "displayTitle": "Cake Map",
+      "placeholder": "Cake map viewer",
+      "placeholderHint": "q (horizontal) vs. chi (vertical) axes",
+      "remove": "Remove",
+      "removeConfirm": "Remove \"{name}\"? The uploaded file will be deleted from the server.",
+      "removeAll": "Clear",
+      "removeAllConfirm": "Delete all {count} uploaded image(s)? They will be removed from the server."
+    },
+    "raw": {
+      "title": "Image Files",
+      "uploadLabel": "Add image files",
+      "empty": "No image files loaded",
+      "displayTitle": "Raw Image",
+      "placeholder": "Raw detector image",
+      "placeholderHint": "EDF / TIFF / H5 raw frame viewer"
+    },
+    "controls": {
+      "title": "Viewer Controls",
+      "colormap": "Colormap",
+      "logScale": "Log Scale",
+      "colorbar": "Colorbar",
+      "wavelength": "Wavelength λ (Å)",
+      "xAxis": "X-Axis",
+      "yAxis": "Y-Axis",
+      "frameIndex": "Frame Index",
+      "export": "Export",
+      "contrastMin": "Contrast Min",
+      "contrastMax": "Contrast Max",
+      "contrastMinShort": "Min",
+      "contrastMaxShort": "Max",
+      "contrastReset": "Reset Contrast",
+      "refLine": "Reference Line (0°)",
+      "refLineOffset": "Ref. Line Offset",
+      "resetAll": "Reset to initial state",
+      "resetAllHint": "Reset all display settings: colormap, log, colorbar, axes, reference line, q/χ ranges & crop, contrast (loaded files are kept)",
+      "resetDone": "Display settings restored to initial state."
+    },
+    "export": {
+      "png": "Export PNG",
+      "batch": "Batch Export ZIP",
+      "batchByFirst": "Batch export by first image",
+      "batchByFirstHint": "Export every image rendered with the first image's current display settings (pane A when comparing, otherwise the selected image)"
+    },
+    "bottom": {
+      "addNpy": "Add NPY",
+      "importInfo": "Import NPY info file"
+    },
+    "axis": {
+      "title": "Axis ranges / crop",
+      "hint": "Import NPY info file to auto-fill the q (Å⁻¹) and χ (°) extents so the heatmap shows real physical axes instead of pixel indices.",
+      "infoLabel": "Import NPY info file",
+      "infoApplied": "q / χ axis ranges applied from NPY info file",
+      "infoEmpty": "NPY info file contained no recognizable axis ranges",
+      "q": "q (Å⁻¹)",
+      "chi": "χ (deg)",
+      "qMin": "q min",
+      "qMax": "q max",
+      "chiMin": "χ min",
+      "chiMax": "χ max"
+    },
+    "crop": {
+      "enable": "Enable χ crop (vertical band)",
+      "chiMin": "Crop χ min",
+      "chiMax": "Crop χ max",
+      "reset": "Reset crop"
+    },
+    "compare": {
+      "toggle": "Compare",
+      "toggleHint": "Pick two images on the left to view side by side, each with its own contrast",
+      "slotA": "Image A",
+      "slotB": "Image B",
+      "emptyHint": "Click a file on the left to load it",
+      "contrastA": "Contrast A",
+      "contrastB": "Contrast B",
+      "resetA": "Reset A contrast",
+      "resetB": "Reset B contrast",
+      "exportA": "Export A PNG",
+      "exportB": "Export B PNG"
+    }
+  },
+  "status": {
+    "idle": "Idle",
+    "running": "Running...",
+    "completed": "Completed",
+    "failed": "Failed",
+    "loading": "Loading...",
+    "loaded": "Loaded",
+    "error": "Error"
+  },
+  "components": {
+    "fileUpload": {
+      "dropHere": "Drag & drop files here",
+      "browse": "or click to browse",
+      "remove": "Remove"
+    },
+    "console": {
+      "cancel": "Cancel",
+      "waiting": "Waiting for output...",
+      "started": "Started:",
+      "ended": "Ended:",
+      "duration": "Duration:"
+    },
+    "imageCanvas": {
+      "colormap": "Colormap",
+      "log": "Log",
+      "reset": "Reset",
+      "toggleLog": "Toggle log scale",
+      "resetZoom": "Reset zoom"
+    },
+    "plotViewer": {
+      "png": "PNG",
+      "downloadPng": "Download PNG",
+      "resetView": "Reset view",
+      "reset": "Reset"
+    },
+    "miller": {
+      "datasets": "Datasets",
+      "points": "pts",
+      "convention": "Convention",
+      "azimuthOffset": "Azimuth offset"
+    }
+  },
+  "logs": {
+    "common": {
+      "error": "Error: {message}"
+    },
+    "waxs": {
+      "starting": "Starting {step}...",
+      "stepCompleted": "{step} completed successfully.",
+      "failedPoll": "Failed to poll task status.",
+      "pipelineStart": "Starting full pipeline...",
+      "pipelineDone": "Full pipeline completed successfully.",
+      "cancelled": "Task cancelled by user."
+    },
+    "cif": {
+      "readingCif": "Reading CIF file...",
+      "generatingPeaks": "Generating theoretical peaks...",
+      "peaksGenerated": "Generated {count} theoretical peaks.",
+      "filtersApplied": "Filters applied: {filters}",
+      "hklLimitDropped": "hkl absolute-value limit removed {count} out-of-range peaks.",
+      "peaksDownloaded": "Exported {count} peaks to peak_result.txt."
+    },
+    "xrd": {
+      "singleSimStart": "Starting single phase simulation...",
+      "singleSimDone": "Single phase simulation completed.",
+      "dualSimStart": "Starting dual phase simulation...",
+      "dualSimDone": "Dual phase simulation completed.",
+      "processingInfoLoaded": "Applied q-χ grid from NPY info file (source unit: {unit})."
+    },
+    "analysis": {
+      "uploadingCake": "Uploading cake image...",
+      "imageLoaded": "Image loaded successfully.",
+      "infoApplied": "Applied info: {name} (image q/χ axis ranges updated).",
+      "uploadingMiller": "Uploading Miller index datasets...",
+      "millerLoaded": "Miller overlay loaded.",
+      "matchingMiller": "Matching Miller indices to ROIs...",
+      "matchDone": "Match complete: {found}/{total} ROIs matched.",
+      "roisExported": "ROIs exported successfully.",
+      "exportError": "Export error: {message}",
+      "calculatingIntensity": "Calculating intensity for ROIs...",
+      "intensityDone": "Intensity calculation completed.",
+      "bgEstimated": "DBSCAN background estimate: level ≈ {value}, {n} peak cluster(s).",
+      "bgApplied": "Applied estimated background {value} as the fixed value.",
+      "uploadingDetector": "Uploading detector image...",
+      "detectorLoaded": "Detector image loaded successfully.",
+      "exportNoImage": "No image loaded to export.",
+      "exportNoData": "No data available to export."
+    },
+    "viewer": {
+      "uploading": "Uploading {count} file(s)...",
+      "uploaded": "{count} file(s) uploaded.",
+      "skippedDuplicates": "Skipped {count} duplicate file(s) (already uploaded).",
+      "loading": "Loading {name}...",
+      "imageLoaded": "Image loaded.",
+      "loadError": "Error loading image: {message}",
+      "deleted": "Deleted {name}.",
+      "deletedAll": "Deleted all uploaded images.",
+      "deleteMissing": "{name} was not found on the server (already cleaned up); removed from the list.",
+      "deleteError": "Delete error: {message}",
+      "exportingBatch": "Exporting {count} image(s) as ZIP...",
+      "exportedBatch": "{count} image(s) exported to ZIP.",
+      "exportError": "Export error: {message}"
+    }
+  },
+  "cifh": {
+    "title": "CIF Hydrogenation",
+    "desc": "Add hydrogens to refined H-free polymer structures for CP2K optimization. Polymer bonds are perceived under periodic boundaries, H fills each atom's valence, and you can inspect and fix bonds in the 3D view before exporting a Materials-Studio-style CIF.",
+    "upload": "Upload refined CIF (H-free)",
+    "tolerance": "Bond tolerance (Å)",
+    "chDist": "C–H length (Å)",
+    "running": "Working...",
+    "rerun": "Re-run hydrogenation",
+    "view": {
+      "title": "Hydrogenated structure",
+      "cell": "Unit cell",
+      "h": "Hydrogens",
+      "double": "double bond",
+      "stretched": "re-entry bond",
+      "hint": "Click an atom to pick · click a bond midpoint to select · drag to rotate"
+    },
+    "edit": {
+      "title": "Bond editing",
+      "addBond": "Add bond",
+      "cancelAdd": "Cancel adding",
+      "picked": "{n} atom(s) picked",
+      "pickHint": "Click two atoms in the 3D view to bond them",
+      "confirmAdd": "Confirm bond",
+      "repick": "Re-pick",
+      "selected": "Selected bond",
+      "single": "single",
+      "toSingle": "Make single",
+      "toDouble": "Make double",
+      "restore": "Restore bond",
+      "delete": "Delete bond",
+      "pendingInfo": "{a}–{b} · {d} Å — confirm?"
+    },
+    "warnings": "Warnings",
+    "bonds": {
+      "title": "Bonds",
+      "showH": "incl. X–H",
+      "pair": "Pair",
+      "order": "Order"
+    },
+    "export": {
+      "hint": "Export the H-added CIF (P1 with a _geom_bond loop and symmetry codes), ready for CP2K.",
+      "btn": "Export CIF",
+      "exporting": "Exporting..."
+    },
+    "summary": "{name} · {atoms} heavy atoms · {cell} · {counts} → {h} H added · {formula}",
+    "logs": {
+      "uploadStart": "Uploading CIF...",
+      "uploaded": "CIF parsed: {n} atoms",
+      "done": "Hydrogenation done: {h} H total · formula {formula}",
+      "exported": "Exported {name} ({n} atoms)"
+    }
+  },
+  "cp2k": {
+    "sections": {
+      "basic": "Basic (minimal form)",
+      "experimental": "Experimental",
+      "hkl": "HKL Range",
+      "bfactor": "B Factor",
+      "overrides": "Explicit Overrides",
+      "output": "Generate & Download"
+    },
+    "descs": {
+      "basic": "Minimal form needs only 5 keywords: ENABLED, DIFFRACTION_FILE, WAVELENGTH, AUTO_SCALE, LAMBDA. Absorption / density / scattering factors are auto-derived by xraylib from the cell composition + wavelength.",
+      "experimental": "Sample thickness and detector distance (v1.1 thickness default 0.03 cm = 0.3 mm); XRAY_MODE 0=synchrotron, 1=lab source, other=no polarization factor.",
+      "hkl": "hkl search range and blank penalty. Note: with MULTIPLE_UNIT_CELL supercells H_MAX / K_MAX must be scaled to supercell indices (e.g. 10 for a 2x2 supercell).",
+      "bfactor": "B factors are fixed and not optimized. Without a B file all atoms use B_FACTOR_DEFAULT; a B file must match the CP2K particles in order and count (supercells need supercell-length files).",
+      "overrides": "Explicit overrides (defaults use xraylib auto-derivation): Cromer-Mann table override, pre-generated reflection table, per-atom B file, fixed SCALE_FACTOR.",
+      "output": "Generate and download the &FIBER_DIFFRACTION section. String keyword values must not carry trailing inline comments (they would become part of the filename) — this generator keeps comments on their own lines."
+    },
+    "actions": {
+      "generate": "Generate Preview",
+      "download": "Download fiber_diffraction.inc"
+    },
+    "logs": {
+      "generating": "Generating &FIBER_DIFFRACTION section...",
+      "generated": "&FIBER_DIFFRACTION section generated successfully."
+    },
+    "fields": {
+      "emitOverrides": "Enable explicit overrides"
+    },
+    "helps": {
+      "wavelength": "The only energy entry [Å], E = 12.3984/WAVELENGTH keV; write the plain number, no [angstrom] unit suffix",
+      "autoScale": "Recommended start with .TRUE. (per-step weighted LSQ re-fit of k); disable and set SCALE_FACTOR for a fixed k",
+      "scaleFactor": "Only effective with AUTO_SCALE .FALSE.; take k from the zero-coupling check (LAMBDA=0 + AUTO_SCALE)",
+      "lambda": "Coupling strength [hartree], start small; tune linearly via the FIBER| fiber/DFT ratio (λ_new ≈ λ × target / current)",
+      "hkl": "Supercell note: a 2x2 supercell needs H/K_MAX = 2x the primitive values (e.g. 10); L unchanged",
+      "bFactorFile": "Must match the structure atoms in order and count; supercells (e.g. 2x2) need supercell-length entries",
+      "overrides": "Provide ATOMIC_FACTOR_FILE only for ionic systems / custom parameters; default = xraylib FF_Rayl neutral atoms",
+      "atomicFactor": "Cromer-Mann table (same format as refine.f90), read only as an explicit override"
+    },
+    "usage": {
+      "title": "Recommended workflow",
+      "step1": "1) Run a zero-coupling check with LAMBDA = 0.0 + AUTO_SCALE .TRUE. and copy the auto-calibrated SCALE_FACTOR from the FIBER| LAMBDA output line;",
+      "step2": "2) Fix k (AUTO_SCALE .FALSE. + SCALE_FACTOR), start GEO_OPT from a small LAMBDA, watch the FIBER| fiber/DFT ratio (0.01~0.5 is a good start);",
+      "step3": "3) Do not judge λ by the R factor alone — a slight R increase can be legitimate; tune λ by the fiber/DFT force ratio."
+    }
+  },
+  "deviation": {
+    "title": "Structure Deviation Report",
+    "desc": "Compare a DFT-relaxed structure (CIF, or the PDB that CP2K writes) against the pre-optimisation reference: per-atom displacements under the periodic minimum image, average / RMS / maximum deviation and cell changes, with Markdown / CSV report export.",
+    "refSlot": "Reference structure (before)",
+    "dftSlot": "DFT-relaxed structure",
+    "refUpload": "Upload reference CIF / PDB",
+    "dftUpload": "Upload relaxed CIF / PDB",
+    "nModels": "{n} frames (last used)",
+    "warningsTitle": "Notes",
+    "sections": {
+      "input": "Input Structures",
+      "result": "Deviations",
+      "report": "Report Export"
+    },
+    "uploadInfo": {
+      "file": "File",
+      "format": "Format",
+      "cell": "Cell",
+      "atoms": "Atoms"
+    },
+    "fields": {
+      "match": "Atom pairing",
+      "matchHelp": "Nearest pairs atoms by element at their closest positions (recommended — tolerates CP2K reordering); 'by file order' requires identical atom order in both files.",
+      "basis": "Lattice basis for Å",
+      "basisHelp": "Which lattice converts fractional displacements to Å — matters when the cell relaxed slightly. Default: reference cell."
+    },
+    "matchOpts": {
+      "nearest": "Nearest match (recommended)",
+      "order": "By file order"
+    },
+    "basisOpts": {
+      "ref": "Reference cell",
+      "dft": "DFT cell",
+      "avg": "Average of both"
+    },
+    "actions": {
+      "compare": "Compute deviations",
+      "comparing": "Computing...",
+      "genMd": "Generate Markdown report",
+      "genCsv": "Generate CSV table",
+      "download": "Download report",
+      "generating": "Generating..."
+    },
+    "logs": {
+      "uploaded": "{slot}: uploaded {name} ({n} atoms)",
+      "comparing": "Pairing atoms and computing deviations...",
+      "done": "Done: mean {mean} Å, max {max} Å ({atom})",
+      "reportDone": "Report generated: {name}"
+    },
+    "result": {
+      "title": "Deviation Results",
+      "empty": "Upload both structures in 'Input Structures' and click 'Compute deviations' first.",
+      "mean": "Mean deviation",
+      "rms": "RMS deviation",
+      "max": "Max deviation",
+      "median": "Median",
+      "pairing": "Pairing",
+      "basis": "Basis",
+      "nAtoms": "Atoms",
+      "cellTitle": "Cell comparison",
+      "cellParam": "Parameter",
+      "ref": "Reference",
+      "elTitle": "Per-element statistics",
+      "atomsTitle": "Per-atom deviations",
+      "allElements": "All elements",
+      "cols": {
+        "refLabel": "Ref label",
+        "dftLabel": "DFT label",
+        "element": "Element"
+      }
+    },
+    "report": {
+      "title": "Report Export",
+      "hint": "Render this comparison as a Markdown report (summary + cell comparison + per-atom table) or a CSV data table for archiving and further analysis.",
+      "mean": "mean",
+      "max": "max"
+    },
+    "usage": {
+      "title": "How to use",
+      "step1": "1) Upload the pre-optimisation reference structure (CIF).",
+      "step2": "2) Upload the DFT-relaxed structure — a CIF or the PDB written by CP2K (multi-frame trajectories use the last frame).",
+      "step3": "3) Click 'Compute deviations' to inspect mean / max deviation, cell changes and the per-atom table (click headers to sort, filter by element).",
+      "step4": "4) Generate and download the Markdown / CSV report under 'Report Export'."
+    }
+  },
+  "symmetry": {
+    "title": "Space Group Detection",
+    "desc": "Upload a refined all-atom P1 CIF (or any symmetric CIF — it is expanded automatically). The space group is detected WITHOUT touching your cell, unlike MS/PLATON which force the structure into the standard setting and rewrite the cell. Operations are returned in the current cell basis, ready to validate a refinement.",
+    "upload": "Upload a CIF (drag & drop or click)",
+    "sections": {
+      "input": "Upload & Detect",
+      "result": "Result",
+      "export": "Symmetrised Export"
+    },
+    "uploadInfo": {
+      "file": "File",
+      "cell": "Cell",
+      "atoms": "Atoms"
+    },
+    "fields": {
+      "symprec": "Symmetry tolerance symprec (Å)",
+      "symprecHelp": "Maximum distance for positions to count as symmetry-related. Refined coordinates are only approximately symmetric — sweep the tolerance first to see how the group changes."
+    },
+    "actions": {
+      "analyze": "Detect space group",
+      "analyzing": "Detecting...",
+      "scan": "Tolerance sweep",
+      "scanning": "Sweeping...",
+      "symmetrize": "Generate symmetrised CIF",
+      "symmetrizing": "Generating...",
+      "symmetrizeP1": "Generate symmetrised P1 all-atom CIF",
+      "symmetrizingP1": "Generating...",
+      "download": "Download CIF"
+    },
+    "result": {
+      "empty": "Upload a CIF in “Upload & Detect” and run the detection first.",
+      "nOps": "Symmetry operations",
+      "asym": "Asymmetric-unit atoms",
+      "maxShift": "Max symmetrisation shift",
+      "inputCell": "Cell (as uploaded, untouched)",
+      "opsTitle": "Symmetry operations (current cell basis)",
+      "asuTitle": "Asymmetric-unit atoms",
+      "label": "Label",
+      "element": "Element",
+      "noteHm": "The H-M symbol is the standard-setting name of the group (the one MS/PLATON report); the setting matching your cell (e.g. P2₁/n) is uniquely defined by the Hall symbol and the operation list below.",
+      "stdRef": "Standard-setting reference (the cell MS/PLATON would convert to — not applied here)",
+      "stdNote": "Reference only: both cells describe the same lattice (|det T| ≈ 1 means it is just a change of basis/origin); no conversion is needed.",
+      "supercellWarn": "Note: the input cell is a {n}-fold supercell of the true primitive cell; the detected operations already include the corresponding translations."
+    },
+    "scan": {
+      "title": "Tolerance sweep",
+      "symprec": "symprec (Å)",
+      "sg": "Space group",
+      "ops": "Ops",
+      "asym": "ASU atoms",
+      "hint": "Watch how the group changes with tolerance: a group that appears already at small tolerances is trustworthy; one that only shows up at large tolerance may be pseudo-symmetry. The row of the current tolerance is highlighted."
+    },
+    "export": {
+      "hint": "Both exports keep the cell parameters exactly as input: “Generate symmetrised CIF” writes the symmetry-operation loop plus asymmetric-unit atoms (Wyckoff letters included) for VESTA / Materials Studio / PLATON to expand; “Generate symmetrised P1 all-atom CIF” actually applies the symmetrisation to the coordinates (special-position atoms land exactly on their symmetry elements) and expands to a full P 1 cell for calculation programs that only read P 1.",
+      "hintP1": "The symmetrisation has been applied to the coordinates: the largest atom displacement is shown as “Max symmetrisation shift”. The source space group is recorded as a comment inside the CIF.",
+      "preview": "CIF preview"
+    },
+    "usage": {
+      "title": "How to use",
+      "step1": "Upload the refined CIF and run the tolerance sweep to confirm the group is stable over a reasonable range;",
+      "step2": "Run the detection and check the number, H-M symbol and the operations in your own basis, making sure the maximum symmetrisation shift is small;",
+      "step3": "Archive or submit via the symmetrised CIF — the cell parameters are exactly those of your refinement;",
+      "step4": "If a calculation program needs an all-atom P 1 input, export the symmetrised P1 all-atom CIF — the symmetrisation is applied to the atoms while the cell stays untouched."
+    },
+    "logs": {
+      "uploaded": "Uploaded {name} ({n} atoms)",
+      "analyzing": "Detecting (symprec={v} Å)...",
+      "detected": "Detected space group #{number} {hm} ({ops} operations)",
+      "scanning": "Sweeping tolerances...",
+      "scanDone": "Tolerance sweep done",
+      "symmetrizing": "Generating symmetrised CIF (symprec={v} Å)...",
+      "exported": "Symmetrised CIF generated ({n} asymmetric atoms, cell unchanged)",
+      "symmetrizingP1": "Generating symmetrised P1 all-atom CIF (symprec={v} Å)...",
+      "exportedP1": "Symmetrised P1 all-atom CIF generated ({n} atoms, max move {s} Å, cell unchanged)"
+    }
+  },
+  "qzSlice": {
+    "title": "qz Band Integration",
+    "header": "Integrate a GIWAXS fiber-merge map in horizontal qz bands (centers at n×qz, width 2×interval): each band is column-averaged into an I(q∥) curve.",
+    "data": {
+      "title": "Data source",
+      "desc": "Upload the fiber-merge export ZIP (*_giwaxs.npy / ip_array.npy / oop_array.npy) or the three .npy files; or send the result straight from the merge page.",
+      "handoffOk": "Received merge result: {name}",
+      "handoffFail": "Hand-off data could not be loaded (backend may have restarted); please upload manually",
+      "loaded": "Loaded {name} ({rows}×{cols})",
+      "clear": "Clear data",
+      "needMap": "Load a 2-D merge map first"
+    },
+    "params": {
+      "title": "Band parameters",
+      "desc": "Band centers sit at n × qz (n = 0, ±1, ±2, …), each band is 2 × interval wide; the gray overlay previews them live.",
+      "qz": "qz (band spacing)",
+      "interval": "Interval (half width)",
+      "unit": "Unit: {unit}",
+      "bandCount": "Bands: {n}",
+      "overlapWarn": "⚠ 2×interval exceeds qz — adjacent bands will overlap",
+      "invalid": "qz and interval must be positive",
+      "maskLowerBound": "Mask lower bound",
+      "maskLowerBoundPh": "disabled",
+      "maskHelp": "Pixels below this value join neither the sum nor the average"
+    },
+    "actions": {
+      "run": "Compute band integration",
+      "reset": "Reset",
+      "exportCsv": "Export CSV",
+      "exportTxt": "Export TXT (qip)"
+    },
+    "status": {
+      "running": "Computing…",
+      "empty": "Load data and run first",
+      "exporting": "Exporting…"
+    },
+    "result": {
+      "title": "Band integration result",
+      "mapTitle": "2-D map · gray band overlay",
+      "curvesTitle": "I(q∥) band-averaged curves",
+      "dirty": "Parameters changed — curves are from the previous run",
+      "bands": "bands",
+      "rows": "rows",
+      "offset": "Vertical curve offset",
+      "logY": "Log y-axis",
+      "contrastMin": "Contrast min",
+      "contrastMax": "Contrast max",
+      "contrastReset": "Reset contrast",
+      "grid": "Grid",
+      "rangeIp": "IP range",
+      "rangeOop": "OOP range",
+      "min": "Min",
+      "max": "Max"
+    }
+  }
+}

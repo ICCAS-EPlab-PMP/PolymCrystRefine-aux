@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+python-multipart
+numpy
+scipy
+scikit-image
+scikit-learn
+fabio
+pyFAI
+matplotlib
+h5py
+pymatgen
+spglib
+pandas
+Pillow
+rdkit
+numba

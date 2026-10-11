@@ -1,0 +1,1720 @@
+{
+  "common": {
+    "home": "首页",
+    "save": "保存",
+    "cancel": "取消",
+    "close": "关闭",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "idle": "空闲",
+    "running": "运行中...",
+    "completed": "已完成",
+    "failed": "失败",
+    "loaded": "已加载",
+    "export": "导出",
+    "upload": "上传",
+    "download": "下载",
+    "run": "运行",
+    "stop": "停止",
+    "reset": "重置",
+    "add": "添加",
+    "remove": "移除",
+    "edit": "编辑",
+    "view": "查看",
+    "yes": "是",
+    "no": "否",
+    "on": "开",
+    "off": "关",
+    "none": "无",
+    "auto": "自动",
+    "manual": "手动",
+    "language": "语言"
+  },
+  "app": {
+    "name": "PolymCrystRefine",
+    "versionTag": "辅助功能版",
+    "module": "数据处理模块 · 辅助功能版"
+  },
+  "home": {
+    "eyebrow": "桌面工具包",
+    "kicker": "PolymCrystRefine",
+    "title": "PolymCrystRefine",
+    "subtitle": "聚合物晶体精修 · 数据处理模块 · 辅助功能版",
+    "pills": {
+      "integration": "2D 积分",
+      "calibration": "图像合并",
+      "simulation": "衍射模拟",
+      "analysis": "强度提取"
+    },
+    "aboutEyebrow": "关于",
+    "aboutTitle": "PolymCrystRefine 数据处理桌面套件（PREGUI）",
+    "aboutBody": "PolymCrystRefine-aux（PRE 辅助版）为辅助 PolymCrystRefine 精修计算流水线构建的图形化桌面应用：从 2D WAXS 积分与合并强度提取，到 OPLSAA 力场提取、精修输入生成，再到 CIF 解析与补氢、空间群检测、单相/双相纤维衍射模拟，并附带我们 CP2K 插件的衍射段生成、结构偏差分析等 DFT 辅助工具，覆盖从原始探测器图像到结构精修结果到 DFT 优化的完整工作流。",
+    "aboutSection": {
+      "citationEyebrow": "引用",
+      "citationTitle": "引用信息",
+      "citationLead": "如果 PolymCrystRefine 对您的研究有所帮助，请在发表的论文中引用：",
+      "citationAuthors": "Ma, Tianyi, Liu, Guoming & Wang, Dujin (2026).",
+      "citationTitleLine": "PolymCrystRefine: a workflow for diffraction analysis of polymer crystals.",
+      "citationJournalLine": "Journal of Applied Crystallography, 59, 1630-1644.",
+      "citationMeta": "Vol. 59, No. 5 (2026-09) · International Union of Crystallography (IUCr) · pp. 1630-1644",
+      "citationDoi": "DOI: 10.1107/s1600576726008290",
+      "viewPaper": "查看原文",
+      "bibtexLabel": "BibTeX 引用格式",
+      "copyBibtex": "复制 BibTeX",
+      "copied": "已复制",
+      "ackEyebrow": "致谢",
+      "ackTitle": "支持与致谢",
+      "ack1": "中国科学院化学研究所",
+      "ack2": "工程塑料实验室",
+      "ack3": "高分子形态加工课题组",
+      "ack4": "HEPS 北京怀柔高能同步辐射光源 ID08",
+      "ack5": "SSRF 上海同步辐射光源 16B/10U",
+      "ack6": "pyFAI 与 fabIO 开发团队（方位角积分工具）",
+      "linksEyebrow": "友情链接",
+      "linksTitle": "友情链接",
+      "linksLead": "与本工作流程相关的机构与开源工具。",
+      "visit": "访问",
+      "linkNames": {
+        "polymcrystal": "PolymCryst 系列程序首页",
+        "iccas": "中国科学院化学研究所",
+        "eplab": "工程塑料实验室",
+        "pmp": "高分子形态加工课题组",
+        "polymcrystalindex": "PolymCrystIndex",
+        "xfais": "XFAIS"
+      },
+      "linkDescs": {
+        "polymcrystal": "PolymCryst 系列聚合物晶体学程序的统一入口。",
+        "iccas": "中国科学院化学研究所官方网站。",
+        "eplab": "工程塑料实验室官方网站。",
+        "pmp": "高分子形态加工课题组主页。",
+        "polymcrystalindex": "纤维衍射图谱指标化程序",
+        "xfais": "WAXS/SAXS 数据处理程序"
+      },
+      "checkUpdate": "检查更新",
+      "checking": "检查中…",
+      "upToDate": "已是最新版本（v{version}）",
+      "newVersion": "发现新版本 v{version}",
+      "fetchFailed": "无法获取更新信息，请检查网络",
+      "viewRelease": "前往下载"
+    },
+    "badges": {
+      "new": "新功能",
+      "preview": "预览版"
+    },
+    "modules": {
+      "integration": {
+        "title": "2D 强度积分",
+        "desc": "基于 pyFAI / PONI 的二维强度积分与掩膜处理，支持批量图像。"
+      },
+      "waxs": {
+        "title": "2D 积分处理",
+        "desc": "批量导入图像、合并积分结果并导出一维 WAXS 曲线。"
+      },
+      "giwaxs": {
+        "title": "GIWAXS 纤维积分合并",
+        "desc": "逐图 rot3 旋转覆盖的纤维（掠入射）积分 → 同网格逐像素合并，导出 npy/processing_info/PNG。"
+      },
+      "xrd": {
+        "title": "衍射模拟",
+        "desc": "基于高斯峰形的 XRD 谱图模拟，可调峰位、半高宽与强度。"
+      },
+      "cif": {
+        "title": "CIF 结构解析",
+        "desc": "解析 CIF 生成理论纤维衍射峰（含方位角 ψ），导出 peak_result.txt 供模拟器使用。"
+      },
+      "analysis": {
+        "title": "强度提取",
+        "desc": "在 2D cake 图上框选感兴趣区域 (ROI)，提取并导出积分强度，支持 Miller 指数匹配。"
+      },
+      "viewer": {
+        "title": "2D 积分图像导出",
+        "desc": "加载并导出二维积分 (cake) 图像，支持多种格式。"
+      },
+      "inputGen": {
+        "title": "精修输入生成器",
+        "desc": "构建 Fortran 精修引擎所需的完整 input.txt 配置文件 — 填写所有参数，预览并下载。"
+      },
+      "lmpExtractor": {
+        "title": "OPLSAA 力场提取器",
+        "desc": "上传结构文件 (PDB/MOL/GRO 等) + LAMMPS (OPLSAA) data 文件，校验元素/质量对应关系，按 old→new 映射提取力场参数为 CSV。"
+      },
+      "qzSlice": {
+        "title": "qz 条带积分",
+        "desc": "对 GIWAXS 纤维积分合并图按 qz 条带（中心 n×qz、宽 2×间隔）逐条平均，批量提取 I(q∥) 一维曲线，条带以灰色模板叠加在二维图上。"
+      },
+      "cifH": {
+        "title": "CIF 补氢",
+        "desc": "为不含氢的精修聚合物结构自动识别化学键（支持跨晶胞）并按价态补氢，3D 预览与键编辑后导出可供 CP2K 优化的 CIF。"
+      },
+      "cp2k": {
+        "title": "CP2K 衍射段生成器",
+        "desc": "为专用版 CP2K-Polymcryst-Refine (v1.1) 生成 &FIBER_DIFFRACTION 纤维衍射偏置段——只生成 diffraction 部分，插入 CP2K 输入的 &FORCE_EVAL 内即可。"
+      },
+      "symmetry": {
+        "title": "空间群检测",
+        "desc": "在晶胞参数完全不变的前提下识别空间群：返回编号 / H-M 符号、对称操作与不对称单元，支持导出。"
+      },
+      "deviation": {
+        "title": "结构偏差报告",
+        "desc": "对比 DFT 优化后结构（CIF / CP2K PDB）与参考结构：逐原子偏差、平均与最大偏差及晶胞变化，支持 Markdown / CSV 报告导出。"
+      }
+    },
+    "groups": {
+      "integration2d": "2D 积分",
+      "extraction": "强度提取",
+      "simulation": "衍射模拟",
+      "refinement": "精修",
+      "localAux": "本地辅助功能",
+      "fiberIntegration": "纤维积分处理"
+    },
+    "quickNav": {
+      "title": "快速导航",
+      "backToTop": "回顶部",
+      "updates": "最近更新",
+      "about": "关于",
+      "citation": "引用",
+      "acknowledgments": "致谢",
+      "friendlyLinks": "友情链接",
+      "particles": "粒子背景"
+    },
+    "updates": {
+      "eyebrow": "最近更新",
+      "title": "最近更新",
+      "viewLabel": "前往",
+      "empty": "这里将显示最近的更新……（以后可在 i18n / Home.vue 中填写）",
+      "items": {
+        "cp2k": {
+          "version": "v1.1",
+          "date": "2025-08-18",
+          "title": "CP2K 衍射段生成器",
+          "desc": "为 CP2K-Polymcryst-Refine 一键生成 &FIBER_DIFFRACTION 纤维衍射偏置段，插入 &FORCE_EVAL 即可优化。"
+        },
+        "cifH": {
+          "version": "v1.0",
+          "date": "2025-07-22",
+          "title": "CIF 补氢",
+          "desc": "自动识别成键并按价态补氢，3D 预览与键编辑后导出 CP2K 可优化 CIF。"
+        },
+        "v120": {
+          "title": "发布 1.2.0 · 首次开源",
+          "desc": "PolymCrystRefine Aux 首个开源版本发布，源码托管于 GitHub。"
+        }
+      }
+    },
+    "workflow": {
+      "eyebrow": "核心工作流",
+      "title": "从衍射图像到精修与 DFT",
+      "s1": {
+        "title": "前序处理",
+        "lead": "图像 → 可用强度数据",
+        "step1": "2D 积分",
+        "step2": "图像拼合",
+        "step3": "背景扣除"
+      },
+      "s2": {
+        "title": "精修准备",
+        "lead": "数据与输入就绪",
+        "step1": "强度提取",
+        "step2": "力场准备",
+        "step3": "input 准备"
+      },
+      "s3": {
+        "title": "后处理",
+        "lead": "结构验证与模拟",
+        "step1": "DFT 运算准备",
+        "step2": "晶体结构检测",
+        "step3": "衍射结果模拟"
+      }
+    }
+  },
+  "lmp": {
+    "notices": {
+      "title": "适用力场：OPLSAA（推荐 LigParGen 生成）",
+      "body": "本工具主要处理 OPLSAA 型力场（LAMMPS data 格式）。推荐在 LigParGen（耶鲁大学）在线上传小分子，选择 OPLSAA 力场，生成并下载 .gro 结构文件与 LAMMPS 力场文件（.lmp / .data），然后回到此处上传两者进行提取。",
+      "link": "前往 LigParGen 获取 .gro 与 LAMMPS 力场文件",
+      "url": "https://zarbi.chem.yale.edu/ligpargen/"
+    },
+    "sections": {
+      "upload": "上传文件",
+      "atoms": "原子列表与 ID 映射",
+      "viewer": "三维结构",
+      "validateResult": "验证详情",
+      "mapping": "原子 ID 映射"
+    },
+    "descs": {
+      "upload": "上传结构文件（PDB、MOL、SDF、XYZ、CIF 或 GRO）和 LAMMPS data 文件（.data / .lmp）。工具将校验两者的元素/质量组成是否一致。",
+      "viewer": "上传分子的球棍模型。每个原子都标注其原子序号；点击原子可切换其赋值（红色环=已赋值）。键由原子间距重算（不使用文件内部的 Bonds，避免周期影像键画成缠绕长线）；参与周期性相互作用的原子显示青色环。",
+      "mapping": "按列逐一为每个原子赋新 ID（旧 ID → 新 ID）。新 ID 留空则跳过该原子；也可以用「自动排序」（1 / 2 / -1 标记）按键连路径自动编号中间原子。「周期」列是整数：0=非周期，≥1=该原子跨 N 个周期影像（来自 LAMMPS 拓扑的 # 标记，可手动修改）。"
+    },
+    "subsections": {
+      "structFile": "结构文件 (PDB / MOL / GRO)",
+      "lmpFile": "LAMMPS Data 文件",
+      "typeElement": "LAMMPS Type → 元素",
+      "elementDiff": "元素组成对比",
+      "preview": "CSV 预览"
+    },
+    "labels": {
+      "dropStruct": "拖放结构文件到此处（.pdb / .mol / .sdf / .xyz / .cif / .gro）",
+      "dropLmp": "拖放 LAMMPS data 文件到此处（.data / .lmp / .txt）",
+      "newIdStart": "新 ID 起始值"
+    },
+    "actions": {
+      "validate": "验证对应关系",
+      "validating": "验证中...",
+      "hideH": "隐藏氢原子",
+      "selectAll": "全选",
+      "deselectAll": "取消全选",
+      "selectNonH": "选择非氢原子",
+      "extract": "提取 CSV",
+      "extracting": "提取中...",
+      "downloadCsv": "下载 CSV",
+      "showNumbers": "显示原子序号",
+      "autoAssign": "新 ID = 旧 ID",
+      "clearNew": "清空新 ID",
+      "autoSequence": "自动排序",
+      "insertH": "排序时插入氢原子",
+      "floatViewer": "悬浮显示",
+      "dockViewer": "还原内嵌"
+    },
+    "hints": {
+      "selectedCount": "已选 {n} / {total} 个原子",
+      "noAtoms": "没有可显示的原子。",
+      "records": "条记录",
+      "bonds": "{n} 条键（{p} 条周期性 #）",
+      "bondsAuto": "键由原子间距自动识别（每次上传重算）",
+      "bondNormal": "普通键",
+      "bondPeriodic": "周期性键 (#)",
+      "assignedCount": "已赋值 {n} / {total} 个原子",
+      "periodicAtoms": "{n} 个周期性原子",
+      "periodicTip": "「周期」列是整数：0=非周期，≥1=跨 N 个周期影像。该值会写入拓扑输出（如 新ID#N）；全部原子都标记周期(>0)的拓扑记录在提取时跳过。",
+      "periodicToggle": "周期数（整数：0=非周期，≥1=跨 N 个周期影像）",
+      "periodicFile": "LAMMPS 文件检测到周期性 — 点击可额外添加手动标记",
+      "periodicFileN": "LAMMPS 文件检测到该原子为 {n} 周期 — 可在此修改",
+      "periodicAtomRing": "周期原子（青色环）",
+      "matchOk": "一致",
+      "matchFail": "不一致",
+      "noCompare": "（结构或 LAMMPS 缺少元素信息，无法对比）",
+      "newIdPh": "新",
+      "moreAtoms": "仅显示前 {shown} 条，共 {total} 条",
+      "autoSeqHelp": "自动排序用法：先把链的起点与方向标出——起点原子「新 ID」填 1、第二个原子填 2、终点原子填 -1，再点击「自动排序」。工具按键连路径自动为中间原子编号；-1 原子获得最终编号。不在链上的原子保持空白，由你手动选择。",
+      "autoSeqOk": "自动排序完成：链上 {n} 个原子，共编号 {total} 个（其中氢原子 {h} 个）。",
+      "autoSeqViaH": "注意：链路径经过了氢原子，请核对结果。",
+      "autoSeqErrMark": "请先标记三个原子：起点「新 ID」= 1，第二个原子 = 2，终点 = -1，再点击「自动排序」。",
+      "autoSeqErrDup": "1、2、-1 必须标记在三个不同的原子上。",
+      "autoSeqErrPath": "无法从标记 2 的原子沿键连路径到达标记 -1 的原子，请检查标记或结构。",
+      "negIdWarn": "存在负数「新 ID」（-1 是终点标记）：请先点击「自动排序」或手动修正后再提取。",
+      "floatTip": "悬浮模式下三维结构固定在页面角落，可拖动标题栏移动——方便一边查看结构一边在下表选择原子。"
+    },
+    "cols": {
+      "select": "选",
+      "index": "编号",
+      "element": "元素",
+      "coords": "坐标 (x, y, z)",
+      "oldId": "旧 ID",
+      "newId": "新 ID",
+      "periodic": "周期",
+      "typeId": "Type",
+      "mass": "质量",
+      "structCount": "结构",
+      "lmpCount": "LAMMPS",
+      "status": "状态"
+    },
+    "logs": {
+      "parsingStruct": "正在解析结构文件...",
+      "structParsed": "结构解析完成：{n} 个原子，化学式 = {formula}。",
+      "parsingLmp": "正在解析 LAMMPS data 文件...",
+      "lmpParsed": "LAMMPS data 解析完成：{n} 个原子。",
+      "validating": "正在验证结构↔LAMMPS 对应关系...",
+      "extracting": "正在提取力场参数...",
+      "extracted": "提取完成：{n} 条记录。"
+    }
+  },
+  "inputGen": {
+    "sections": {
+      "basic": "基础参数",
+      "coordinate": "坐标块",
+      "cell": "晶胞参数",
+      "chains": "链与空间群",
+      "helix": "螺旋与几何",
+      "thermal": "温度因子 & LM",
+      "modes": "模式开关",
+      "experimental": "实验 / 校正参数",
+      "ga": "GA 参数",
+      "output": "生成与下载",
+      "equatorial": "赤道面模块",
+      "advanced": "高级多分子模式"
+    },
+    "descs": {
+      "basic": "Fortran 精修引擎所需的核心参数：波长、代数、原子数和衍射强度权重。",
+      "coordinate": "定义不对称单元的原子：元素符号、r 随机范围、z 位置索引。行数必须等于 num_atoms。",
+      "cell": "晶胞参数 a, b, c (Å) 和 α, β, γ (°)。注意：实际 c 轴在精修中由 z_add × period_num 决定。",
+      "chains": "链数、空间群对称操作、链中心和对称操作符。",
+      "helix": "周期数、螺旋数、相邻周期旋转角，以及 Python 端构建参数（init-helix / GA 需要）。",
+      "pythonBuild": "Python init-helix 和 GA 流程所需：单周期 z 范围、预期全周期 c 轴长度、主链单体数。",
+      "thermal": "温度（B）因子设置：仅支持各向同性（各向异性尚未实现）。",
+      "lm": "Levenberg-Marquardt 优化器设置。大多数工作流保持 status_LM = NO 即可。",
+      "modes": "控制单链构建、X 射线源类型、稳定 z 和镜像链的模式开关。",
+      "phase2": "独立链与伪对称：n_independent_chains、theta_ini_map、build_order、pseudo_symmetry_mode。",
+      "experimental": "吸收 / 空气散射校正、HKL 指标化范围、低 q 过滤和背景贡献。",
+      "ga": "遗传算法配置：模式 (basic/flash/pro)、步数和输出目录。",
+      "output": "输出详细级别和可选化学式。生成预览并下载 input.txt。",
+      "equatorial": "赤道面 (l=0) 增强 [260814]：设定一为 l=0 blank 反射单独权重（替代 blank_contribution）；设定二为赤道 1D 类 Rietveld 剖面拟合（填写曲线文件后启用）。全部可选，不写即完全旧行为。",
+      "advanced": "高级多分子模式 [260815]：同一晶胞内两个独立分子实体（case_a 确定位置 / case_b 共享位置三 domain 统计）。分子坐标与力场在「坐标块」分节中编辑；chain_num 由模式隐含为 2，不写出。",
+      "chainsAdvanced": "高级模式下 chain_num 由模式隐含（固定 2）且不允许写出；链中心照常使用（case_a 每分子一个中心，case_b 共享同一套中心）。仅支持 P1（space_group_num = 0）。"
+    },
+    "subsections": {
+      "chainCenters": "链中心",
+      "spaceGroups": "空间群操作",
+      "pythonBuild": "Python 构建参数 (init-helix / GA)",
+      "lm": "Levenberg-Marquardt (LM)",
+      "phase2": "Phase 2 — 独立链 / 伪对称",
+      "flashParams": "Flash 模式参数",
+      "proParams": "Pro 模式参数",
+      "preview": "预览",
+      "eqProfile": "设定二：赤道 1D 剖面拟合",
+      "molecule": "分子 {n}",
+      "mixture": "case_b 占比 (mixture_fractions)",
+      "deepSearch": "DeepSearch 后置多分子精修"
+    },
+    "actions": {
+      "addAtom": "+ 添加原子",
+      "removeAtom": "− 移除最后",
+      "addRow": "+ 添加行",
+      "removeRow": "− 移除最后",
+      "addOp": "+ 添加操作",
+      "removeOp": "− 移除最后",
+      "generate": "生成预览",
+      "generating": "生成中...",
+      "download": "下载 input.txt"
+    },
+    "hints": {
+      "coordCount": "{n} / {total} 个原子",
+      "noAtoms": "尚未定义原子。点击「+ 添加原子」开始。",
+      "molCount": "{n} 个原子",
+      "xraylibAuto": "xraylib = on：molecular_mass / sample_absorption_coeff / air_absorption_coeff 由 组成+波长 自动推导（不写出）；chemical_formula 必填（单周期 repeat unit 分子式）。",
+      "advancedNote": "高级模式约定：chain_num 不允许出现（固定 2）；single_chain_mod / stable_z_chain / mirror_chain / build_order 必须为 0；仅支持 P1；theta 桶与伪对称禁用；GA 仅支持 basic / flash（pro 会 error stop）。位置 2 = 位置 1 的镜像放置（θ→−θ、z→−z，反平行堆积）。每分子一个力场文件（forcefield.txt 不再需要）。",
+      "mustZeroAdvanced": "高级模式下必须为 0",
+      "numAtomsAdvanced": "高级模式下自动取两个 molecule 块原子数之和，此值被忽略",
+      "advGaNote": "高级模式下 GA 仅支持 basic / flash，选 pro 会 error stop",
+      "deepSearchNote": "仅 ga_mode=basic、chain_num=2、stable_z_chain=0、非高级模式可开启；结束后把最优结构拆成 case_a 双分子独立精修，结果归档到 result/deepsearch/",
+      "required": "必填",
+      "cellMissing": "晶胞参数不完整：请填写全部 6 个值（a b c alpha beta gamma），或使用粘贴识别填充",
+      "cellLenPositive": "晶胞边长 a、b、c 必须大于 0",
+      "cellAngleRange": "晶胞角 alpha、beta、gamma 必须在 0–180° 之间",
+      "coordCountMismatch": "coordinate 行数（{n}）与 num_atoms（{total}）不一致，请修正后再生成",
+      "chainCentersMismatch": "链中心行数（{n}）与 chain_num（{total}）不一致",
+      "spaceGroupMismatch": "空间群操作数（{n}）与 space_group_num（{total}）不一致",
+      "molCoordEmpty": "高级模式下两个分子的坐标块都至少需要一行原子",
+      "advNoSpaceGroup": "高级多分子模式不支持空间群（V1 限 P1），已忽略粘贴的空间群操作"
+    },
+    "cols": {
+      "element": "元素",
+      "rMin": "r_min",
+      "rMax": "r_max",
+      "zIdx": "z_idx",
+      "transdirect": "Transdirect",
+      "centerMove": "Center Move"
+    },
+    "logs": {
+      "generating": "正在生成 input.txt...",
+      "generated": "input.txt 生成成功。"
+    },
+    "paste": {
+      "coordTitle": "粘贴识别填充（可直接从已有 input.txt 复制）",
+      "coordPlaceholder": "每行一个原子：元素 r_min r_max z_idx\n例如：\nO 0 2 1\nC 0 1 1\nH 0 2 3\n（支持 num_atoms = 22 行，自动同步原子数）",
+      "coordBtn": "识别填充坐标表",
+      "chainsTitle": "粘贴识别填充（可直接从已有 input.txt 复制片段）",
+      "chainsPlaceholder": "支持 chain_center / space_group 数据块，例如：\nchain_center_begin\n0.0 0.0 0.0\nchain_center_end\nspace_group_begin\n-1 -1 1\n0.25 0.25 0\nspace_group_end\n不带标记时：每行 3 个数 = 链中心；每行 6 个数 = 一个空间群操作（方向+平移）。\n支持 chain_num = / space_group_num = 行自动同步。",
+      "chainsBtn": "识别填充链与空间群",
+      "cellTitle": "粘贴识别填充",
+      "cellPlaceholder": "粘贴 6 个数：a b c alpha beta gamma\n例如：\n5.9897 4.5159 10.7076 61.9291 121.3998 113.4930",
+      "cellBtn": "识别填充晶胞",
+      "parsedCoord": "坐标识别完成：{n} 个原子（num_atoms 已同步）",
+      "parsedMol": "分子 {mol} 坐标识别完成：{n} 个原子",
+      "parsedChains": "识别完成：{c} 个链中心，{o} 个空间群操作",
+      "parsedCell": "晶胞识别完成：{v}",
+      "errPrefix": "识别失败：",
+      "errEmpty": "没有识别到有效数据行",
+      "errCoordCols": "每行需要 4 列（元素 r_min r_max z_idx），该行只有 {n} 列",
+      "errCoordElement": "第 1 列应为元素符号，不能是数字",
+      "errChainsCols": "每行需要 3 个数（链中心）或 6 个数（空间群操作），该行有 {n} 列",
+      "errCellCount": "晶胞需要恰好 6 个数（a b c alpha beta gamma），识别到 {n} 个",
+      "errNum": "存在无法解析的数字"
+    },
+    "toggles": {
+      "equatorial": "启用赤道面模块 [260814]"
+    },
+    "help": {
+      "wavelength": "X 射线波长（Å），必须 > 0",
+      "generation_num": "种群 / 迭代代数，必须 > 0；也是 output.rphi 的块数",
+      "num_atoms": "单周期（不对称单元）原子数，必须与坐标块行数一致",
+      "intensity_contribution": "衍射残差权重；为 0 时完全忽略衍射数据，通常填正数（如 400）",
+      "z_min": "单周期 z 随机范围下限（Å），init-helix / GA 必填",
+      "z_max": "单周期 z 随机范围上限（Å），init-helix / GA 必填",
+      "c_length": "预期全周期 c 轴长度（Å），init-helix / GA 必填",
+      "main_chain_num": "主链单体数，用于把 z 缩放到每个原子",
+      "temperature_factor_stat": "B 因子类型：0 = 各向同性（唯一支持值）",
+      "temperature_factor_min": "B 因子下限（默认 0.15）",
+      "temperature_factor_max": "B 因子上限；小于下限时回退默认区间 0.10–0.35",
+      "status_LM": "是否启用 LM 覆盖设置；NO 时 tol / maxcall 被忽略",
+      "tol": "LM 收敛阈值（仅 LM = YES 生效，默认 1e-3）",
+      "maxcall": "LM 最大迭代数（仅 LM = YES 生效，默认 500）",
+      "period_num": "周期数，必须 > 0；实际 c = z_add × period_num",
+      "helix_num": "螺旋数（≥ 0），仅 Fortran 用于生成 out_helix.xyz",
+      "theta_add": "相邻周期旋转角（度）",
+      "single_chain_mod": "单链是否按对称中心模式构建（0/1）",
+      "xray_source_mod": "X 光源类型：0 = 同步辐射，1 = 实验室光源，2 = 极化因子取 1",
+      "stable_z_chain": "1 = 所有 z_ini 强制为 0，并改变 rphi 文件头部格式",
+      "mirror_chain": "链镜像模式（0/1/2）；chain_num ≥ 2 未写时自动补 0 并警告",
+      "chain_num": "螺旋链数，必须 > 0；须与链中心行数一致",
+      "space_group_num": "非单位对称操作数；> 0 时需填下方空间群操作表",
+      "pseudo_symmetry_mode": "伪对称模式：0 关闭，1 透传，2 bc 面镜像，3 ac 面镜像（>1 需满足 gating 条件）",
+      "n_independent_chains": "独立 theta_ini 参数数（1 到 chain_num）；小于 chain_num 时必须给 theta_ini_map",
+      "theta_ini_map": "每条链映射到哪个独立角桶，长度 = chain_num，如 1 2 1 2",
+      "build_order": "构建顺序：0 = 先定位再对称，1 = 先对称再定位",
+      "use_xraylib": "on 时吸收 μ/ρ、整胞质量与散射因子由 xraylib 按组成+波长计算；off 复现旧值",
+      "chemical_formula": "单周期分子式（repeat unit，如 C4H10O2）；use_xraylib = on 时必填",
+      "molecular_mass": "整胞质量（g/mol）；xraylib on 且未显式给出时自动计算",
+      "sample_absorption_coeff": "样品质能吸收系数 μ/ρ（cm²/g）",
+      "air_absorption_coeff": "空气质能吸收系数 μ/ρ（cm²/g）",
+      "sample_thickness_cm": "样品厚度（cm）",
+      "air_density": "空气密度（g/cm³）",
+      "detector_distance_cm": "探测器距离（cm）",
+      "h_max": "h 指标枚举最大值（≥ 0）",
+      "k_max": "k 指标枚举最大值（≥ 0）",
+      "l_max": "l 指标枚举最大值（≥ 0）",
+      "max_hkl_per_peak": "每个衍射峰的最大 HKL 数（> 0）",
+      "max_blank_hkl": "空白衍射最大 HKL 数（> 0）",
+      "blank_contribution": "背景贡献值（≥ 0，默认 0.20）",
+      "q_min": "低 q 过滤阈值；0 = 关闭，> 0 时丢弃 q < q_min 的数据点",
+      "equatorial_module_on": "默认关闭；开启后才会写入 equatorial_* 键（不写 = 完全旧行为）",
+      "equatorial_blank_contribution": "l = 0 blank 反射单独权重；不填则跟随 blank_contribution",
+      "equatorial_profile_file": "赤道 1D 观测曲线文件（workdir 相对路径）；留空 = 不启用剖面拟合",
+      "equatorial_profile_contribution": "剖面残差总权重（独立定标，不乘 intensity_contribution）",
+      "equatorial_peak_fwhm": "pseudo-Voigt 峰 FWHM（q 单位 Å⁻¹，默认 0.04）",
+      "equatorial_pv_eta": "Lorentzian 成分占比 η（0–1）",
+      "equatorial_background": "常数背景（与曲线同单位；建议先扣背景再设 0）",
+      "equatorial_h_max": "hk0 反射枚举 h 上限；不填跟随 h_max",
+      "equatorial_k_max": "hk0 反射枚举 k 上限；不填跟随 k_max",
+      "advanced_multi_molecule": "off = 标准模式；case_a = 确定位置；case_b = 共享位置三 domain 统计混合（默认 off）",
+      "molecular_mass_mol1": "分子 1 分子量（g/mol，密度/吸收用）",
+      "molecular_mass_mol2": "分子 2 分子量（g/mol，密度/吸收用）",
+      "data_param_ratio_warn": "信息量/参数比红警线（须 > 1；硬门禁 1 固定不可调）",
+      "axis_penalty_weight": "轴向偏离惩罚权重（0 = 关闭；建议从 1.0 起试）",
+      "mixture_fractions": "case_b 占比 p1 p2 p12，各 > 0 且和 = 1；留空随机初始化",
+      "mixture_fractions_fixed": "yes = 占比固定不参与 LM（需显式给出占比）",
+      "forcefield": "该分子的力场文件名（如 forcefield_mol1.txt）",
+      "print_level": "输出详细程度：low / medium / high",
+      "ga_mode": "GA 模式：basic 默认 / flash 速度优先 / pro 探索优先（高级模式仅 basic/flash）",
+      "ga_steps": "GA 迭代步数（默认 100）",
+      "ga_result_dir": "GA 输出目录名（默认 result）",
+      "deep_search": "basic 主循环结束后把最优结构拆成 case_a 双分子精修（默认 off）",
+      "deepsearch_steps": "后置精修步数（≥ 1）",
+      "deepsearch_start_topk": "后置种群来源 top-K（当前仅支持 1）",
+      "freeze_threshold_r": "冻结检测：r 变化阈值",
+      "freeze_threshold_phi": "冻结检测：phi 变化阈值（度）",
+      "freeze_threshold_z": "冻结检测：z 变化阈值",
+      "freeze_threshold_sq": "冻结检测：total_sq 变化阈值",
+      "freeze_streak_k": "连续 K 代稳定则冻结（跳过 LM 优化）",
+      "warmup_percent": "warmup 代数比例（占总步数；期间只优化能量项）",
+      "warmup_generations": "warmup 具体代数；0 = 按百分比计算",
+      "pro_max_age": "aggressive 池候选最大存活代数",
+      "elite_ratio": "elite 池占比（0–1）",
+      "pro_aggressive_ratio_early": "早期 aggressive 池占比",
+      "pro_aggressive_ratio_late": "后期 aggressive 池占比",
+      "pro_schedule_crossover_point": "早期→后期切换点（占 ga_steps 比例）",
+      "dedup_threshold_r": "弱同构去重：r 分箱阈值",
+      "dedup_threshold_phi": "弱同构去重：phi 分箱阈值（度）",
+      "dedup_threshold_z": "弱同构去重：z 分箱阈值",
+      "cell_a": "晶胞边长 a（Å，> 0，必填）",
+      "cell_b": "晶胞边长 b（Å，> 0，必填）",
+      "cell_c": "晶胞边长 c（Å，> 0，必填；实际 c 由 z_add × period_num 决定）",
+      "cell_alpha": "晶胞角 α（度，0–180，必填）",
+      "cell_beta": "晶胞角 β（度，0–180，必填）",
+      "cell_gamma": "晶胞角 γ（度，0–180，必填）"
+    }
+  },
+  "integration": {
+    "title": "2D 强度积分",
+    "header": "基于 pyFAI / PONI 的二维强度积分与 Mask 处理",
+    "tabs": {
+      "detector": "原始图像",
+      "cake": "已积分 Cake 图"
+    },
+    "detector": {
+      "title": "原始图像 + PONI",
+      "desc": "上传原始图像与 PONI 标定文件，使用 pyFAI integrate2d_ng 执行方位角积分。支持一次导入多幅图像批量积分。",
+      "imageLabel": "导入原始图像",
+      "imageCount": "已选 {n} 个图像",
+      "clearAll": "清除全部",
+      "removeOne": "移除",
+      "poniLabel": "拖放 PONI 标定文件到此处（.poni）",
+      "poniParsed": "PONI 参数已加载"
+    },
+    "cake": {
+      "title": "已积分 Cake 图（.npy）",
+      "desc": "直接处理已积分的 2D cake 图（方位角 × q），仅应用 Mask。",
+      "imageLabel": "拖放已积分 cake 图到此处（.npy）",
+      "axisLabel": "轴范围（应用于所有图像）",
+      "qMin": "q 最小值",
+      "qMax": "q 最大值",
+      "chiMin": "chi 最小值 (度)",
+      "chiMax": "chi 最大值 (度)",
+      "unit": "X轴单位",
+      "importInfo": "导入 npy 信息文件",
+      "infoApplied": "已从 npy 信息文件 应用轴范围",
+      "infoError": "npy 信息文件 解析失败",
+      "infoEmpty": "npy 信息文件 未包含可识别的轴范围"
+    },
+    "mask": {
+      "title": "Mask 设置",
+      "desc": "基于阈值的 Mask，可选上传自定义 Mask。低于最小值或高于最大值的像素将被屏蔽。",
+      "auto": "自动检测",
+      "manual": "手动设置",
+      "lowPct": "最小百分位",
+      "highPct": "最大百分位",
+      "min": "最小阈值",
+      "max": "最大阈值",
+      "recalc": "重新计算阈值",
+      "customLabel": "自定义 Mask（可选，.npy/.tif）",
+      "ratio": "Mask 区域占比",
+      "fillValue": "Mask 填充值"
+    },
+    "params": {
+      "title": "积分参数",
+      "nptRadial": "径向点数 (q)",
+      "nptAzimuthal": "方位角点数 (χ)",
+      "unit": "X轴单位",
+      "method": "积分方法",
+      "polarization": "极化率因子",
+      "summary": "参数摘要"
+    },
+    "actions": {
+      "run": "开始积分",
+      "export": "导出当前 (ZIP)",
+      "exportAll": "导出全部 (ZIP) · {n} 张",
+      "exportPoni": "导出 PONI",
+      "reset": "重置"
+    },
+    "result": {
+      "title": "积分结果",
+      "imageSelect": "图像",
+      "colFile": "文件",
+      "thumbsTitle": "缩略图 · 点击切换",
+      "maskRatio": "Mask 区域占比",
+      "min": "最小强度",
+      "max": "最大强度",
+      "contrastMin": "对比度下限",
+      "contrastMax": "对比度上限",
+      "contrastReset": "重置对比度",
+      "refLine": "参考线 (0°)",
+      "refLineOffset": "参考线偏移 (°)"
+    },
+    "status": {
+      "uploading": "正在上传文件...",
+      "parsingPoni": "正在解析 PONI...",
+      "integrating": "正在执行 2D 积分...",
+      "done": "积分完成。",
+      "exporting": "正在打包导出...",
+      "exported": "结果已导出。",
+      "exportedBatch": "已导出 {n} 个结果（全部 .npy 同放一个文件夹，共享 q/chi 轴）。",
+      "needInput": "请先上传图像文件。",
+      "needPoni": "原始图像模式需要 PONI 文件。"
+    }
+  },
+  "waxs": {
+    "tabs": {
+      "batchImport": "批量导入",
+      "background": "背景扣除",
+      "merge": "合并"
+    },
+    "batchImport": {
+      "title": "批量导入",
+      "desc": "拖入已积分的 cake 图(.npy)或探测器图像(.tif/.tiff/.edf/.h5)批量上传；可导入单个 npy 信息文件（.json 或旧版 .txt）作为全部文件的轴/参数信息，用于展示、对齐插值与导出回写。",
+      "dropLabel": "拖放数据文件到此处（.npy/.tif/.tiff/.edf/.h5）",
+      "jsonLabel": "拖放 npy 信息文件 到此处（单个，.json / .txt）",
+      "btnLoad": "上传并加载",
+      "tableTitle": "文件信息",
+      "colFile": "文件",
+      "colXAxis": "X 轴范围",
+      "colYAxis": "Y 轴范围 (°)",
+      "colPoints": "积分点数",
+      "colPolar": "极化率",
+      "noInfo": "—",
+      "loaded": "已加载 {n} 个文件",
+      "infoOk": "✓ npy 信息文件 已解析（{fields}）",
+      "infoEmpty": "⚠ 已读取 {file}，但未识别到字段（需含 xAxisRange / yAxisRangeDeg / integrationPoints 等）。请检查文件格式。",
+      "infoError": "⚠ npy 信息文件 解析失败：{msg}"
+    },
+    "background": {
+      "title": "背景扣除",
+      "desc": "对导入的 cake 逐个执行滚球背景扣除，去除非晶晕、空气散射等缓变背景。扣除后的结果可作为后续合并步骤的输入（可在合并步骤切换是否使用）。",
+      "btnRun": "运行背景扣除",
+      "ballRadius": "滚球半径",
+      "rollingBallType": "滚球类型",
+      "typeOptions": {
+        "classic": "经典（最小值滤波）",
+        "smooth": "平滑（形态学开运算）"
+      },
+      "method": "实现版本",
+      "versionOptions": {
+        "scipy": "scipy",
+        "skimage": "scikit-image"
+      },
+      "smoothingSigma": "结果平滑 σ",
+      "fillValue": "截断下限",
+      "maskZeros": "忽略零值（零值像素不参与背景估计）",
+      "resultTitle": "背景扣除结果",
+      "needImport": "请先在「批量导入」中上传文件。",
+      "thumbsTitle": "缩略图（点击切换）",
+      "contrastMin": "对比度 下限",
+      "contrastMax": "对比度 上限",
+      "contrastReset": "重置对比度",
+      "done": "✅ 已扣除 {n} 张；扣除结果将作为合并的默认输入（可在「合并」步骤切换）。",
+      "inputSource": "输入来源",
+      "sourceOriginalPerItem": "原始数据（逐张）",
+      "sourceMerge": "合并结果（单张）",
+      "useMergeForBg": "使用合并结果作为背景扣除输入",
+      "usesMerge": "背景输入：合并结果",
+      "usesOriginalPerItem": "背景输入：原始数据（逐张）",
+      "mergeNotRun": "尚未运行合并，背景将使用原始数据（逐张）。",
+      "exportStep": "导出此步",
+      "exportAll": "导出全部步骤 ({n})",
+      "historyTitle": "历史步骤",
+      "stepBackground": "背景扣除 #{n}",
+      "noResult": "尚未运行背景扣除。",
+      "view": "查看",
+      "exportedStep": "已导出该步结果。",
+      "exportedAll": "已导出全部 {n} 步结果。"
+    },
+    "merge": {
+      "title": "合并",
+      "desc": "基于导入的 npy 信息文件 中的 xAxisRange 对齐插值后合并多个 cake。需要导入 npy 信息文件（.json/.txt）才能按 q 轴对齐插值；否则按 chi 偏移合并。可为每张图单独设置 chi 角度偏移。",
+      "btnRun": "运行合并",
+      "mergeMethod": "合并方式",
+      "methodOptions": {
+        "mean": "平均",
+        "median": "中位数",
+        "weighted": "加权（方差倒数）",
+        "sequential": "顺序继承"
+      },
+      "maskLowerBound": "Mask 下限值",
+      "maskLowerBoundPlaceholder": "留空则不启用",
+      "maskLowerBoundHelp": "低于此值的像素（及非有限值）不参与合并；所有输入均无效的像素填充为「下限值 − 1」。顺序继承模式下每个像素取第一个有效值。",
+      "chiOffsetTitle": "每张图的 chi 角度偏移",
+      "chiOffsetCol": "chi 偏移 (°)",
+      "chiOffset": "chi 偏移 (度)",
+      "inputSource": "输入来源",
+      "sourceOriginal": "原始数据",
+      "sourceBg": "背景扣除后数据（逐张）",
+      "useBgForMerge": "使用背景扣除结果（逐张）作为合并输入",
+      "usesBg": "合并输入：背景扣除后数据",
+      "usesOriginal": "合并输入：原始数据",
+      "bgNotRun": "尚未运行背景扣除，合并将使用原始数据。",
+      "exportStep": "导出此步",
+      "exportAll": "导出全部步骤 ({n})",
+      "historyTitle": "历史步骤",
+      "stepMerge": "合并 #{n}",
+      "noResult": "尚未运行合并。",
+      "view": "查看",
+      "exportedStep": "已导出该步结果。",
+      "exportedAll": "已导出全部 {n} 步结果。",
+      "btnExport": "导出合并结果 (ZIP)",
+      "resultTitle": "合并结果",
+      "exported": "合并结果已导出。",
+      "needImport": "请先在「批量导入」中上传文件。",
+      "contrastMin": "对比度 下限",
+      "contrastMax": "对比度 上限",
+      "contrastReset": "重置对比度"
+    }
+  },
+  "giwaxs": {
+    "title": "GIWAXS 纤维积分合并",
+    "header": "多张探测器图像以逐图 rot3 旋转覆盖（rot1/rot2 恒继承 PONI）做 pyFAI 纤维（掠入射）积分，映射到同一 (面内, 面外) 网格后逐像素合并为一张纤维衍射校正图，导出 npy + processing_info（可附 PNG）。",
+    "data": {
+      "title": "数据与标定",
+      "desc": "上传多张原始探测器图像与一个 PONI 标定文件；可选自定义掩膜（非零值视为遮挡）。PONI 的光斑中心（poni1/poni2 → 像素坐标）与旋转将作为各图 rot 覆盖的继承默认值。",
+      "imagesLabel": "探测器图像（可多选）",
+      "poniLabel": "PONI 标定文件",
+      "maskLabel": "自定义掩膜（可选）",
+      "imageCount": "已加载 {n} 张图像",
+      "removeOne": "移除该图",
+      "clearAll": "清空全部",
+      "loaded": "✓ 已上传 {n} 张图像",
+      "poniSummary": {
+        "title": "PONI 摘要",
+        "distance": "距离",
+        "pixel": "像素",
+        "beamCenter": "光斑中心"
+      }
+    },
+    "rot": {
+      "title": "逐图 rot3 设置",
+      "desc": "每张图各自的探测器绕光束轴旋转角 rot3（度）。留空表示继承 PONI 文件中的值；rot1/rot2 恒继承 PONI。各图积分到同一 (面内, 面外) 网格后合并——这是与 2D 积分处理「先积分后拼合」的本质区别。",
+      "name": "文件",
+      "inherit": "继承 PONI",
+      "poni": "PONI",
+      "needImages": "请先上传探测器图像。",
+      "batchTitle": "等差生成 rot3：",
+      "batchApply": "应用到全部",
+      "applied": "✓ 已填充 rot3",
+      "appliedCol": "rot3 实际应用",
+      "batchStart": "起始",
+      "batchStep": "步长",
+      "batchGenerate": "生成填充",
+      "batchHint": "第 i 张图（从 0 计）rot3 = 起始 + i × 步长。例如起始 0、步长 5、4 张图 → 0, 5, 10, 15；步长 0 则全部相同。"
+    },
+    "geom": {
+      "title": "几何与校正（X-FAIS 设置）",
+      "sampleOrientation": "样品方向 (EXIF 1–8)",
+      "ori_1": "无变化（默认）",
+      "ori_2": "水平翻转",
+      "ori_3": "旋转 180°",
+      "ori_4": "垂直翻转 + 180°",
+      "ori_5": "翻转 + 逆时针 90°",
+      "ori_6": "逆时针 90°",
+      "ori_7": "翻转 + 顺时针 90°",
+      "ori_8": "顺时针 90°",
+      "incidentAngle": "入射角 αᵢ (°)",
+      "tiltAngle": "样品倾斜角 (°)",
+      "polarization": "偏振因子",
+      "polarizationPh": "留空 = 不校正；0.99 = 水平偏振",
+      "correctSolidAngle": "立体角校正"
+    },
+    "integ": {
+      "title": "积分参数",
+      "unitIp": "面内单位 (X)",
+      "unitOop": "面外单位 (Y)",
+      "autoRange": "自动范围",
+      "manualRange": "手动范围",
+      "autoRangeHint": "自动模式：由第一张成功积分的图像确定公共 (面内, 面外) 范围，所有图像都积分到该网格，保证轴完全一致。",
+      "ipMin": "IP 最小",
+      "ipMax": "IP 最大",
+      "oopMin": "OOP 最小",
+      "oopMax": "OOP 最大",
+      "nptIp": "面内点数 npt_ip",
+      "nptOop": "面外点数 npt_oop",
+      "method": "积分算法",
+      "methodAuto": "自动（pyFAI 默认）"
+    },
+    "merge": {
+      "title": "合并设置",
+      "desc": "与 2D 积分处理相同的合并语义：各图像素对齐后逐像素合并。NaN（无数据 bin）永不参与合并。",
+      "method": "合并方式",
+      "methods": {
+        "mean": "平均",
+        "median": "中位数",
+        "weighted": "加权（方差倒数）",
+        "sequential": "顺序继承"
+      },
+      "maskLowerBound": "Mask 下限值",
+      "maskLowerBoundPh": "留空则不启用",
+      "maskLowerBoundHelp": "低于此值的像素（及非有限值）不参与合并；所有输入均无效的像素保持 NaN（无数据）。顺序继承模式下每个像素取第一个有效值。"
+    },
+    "actions": {
+      "run": "积分并合并",
+      "reset": "重置"
+    },
+    "status": {
+      "running": "积分合并中…",
+      "empty": "上传图像与 PONI 后点击「积分并合并」",
+      "runningLog": "▶ 开始：{n} 张图像 · {npt}×{npt} 网格 · 纤维积分 → 合并…",
+      "doneLog": "✅ 合并完成（{method} · {n} 张有效图像）"
+    },
+    "result": {
+      "title": "合并结果（纤维校正 GIWAXS 图）",
+      "grid": "网格",
+      "images": "有效图像",
+      "uncovered": "未覆盖",
+      "min": "最小",
+      "max": "最大",
+      "perImageTitle": "逐图纤维积分预览（点击切换）",
+      "contrastMin": "对比度 下限",
+      "contrastMax": "对比度 上限",
+      "contrastReset": "重置对比度"
+    },
+    "exportSec": {
+      "title": "导出",
+      "btnZip": "导出 ZIP（npy + 轴 + processing_info）",
+      "includePng": "ZIP 内附带 PNG",
+      "btnDownloadPng": "下载 PNG",
+      "pngSettings": "PNG 图像导出设置",
+      "cmap": "色图",
+      "titleField": "标题",
+      "dpi": "DPI",
+      "logFloor": "对数下限",
+      "climMin": "色标下限",
+      "climMax": "色标上限",
+      "useLog": "对数色标",
+      "flipX": "翻转 X",
+      "flipY": "翻转 Y",
+      "showColorbar": "显示色标条",
+      "auto": "自动",
+      "manual": "手动",
+      "btnRender": "生成 PNG 预览",
+      "rendering": "渲染中…",
+      "rendered": "✓ PNG 预览已生成",
+      "exportedPng": "✓ PNG 已导出。",
+      "exportedZip": "✓ ZIP 已导出。",
+      "exportedZipPng": "✓ ZIP（含 PNG）已导出。",
+      "sendQzSlice": "发送到 qz 条带积分"
+    }
+  },
+  "cif": {
+    "title": "CIF 结构解析",
+    "desc": "解析 CIF（晶体学信息文件），基于 pymatgen 生成含 Miller 指数、q 与方位角 ψ 的理论纤维衍射峰，导出 peak_result.txt 供衍射模拟使用。",
+    "uploadLabel": "拖放 CIF 文件到此处",
+    "wavelength": "波长 (Å)",
+    "xrayMode": "光源模式",
+    "maxQ": "最大 q (Å⁻¹)",
+    "maxQHelp": "只保留 q 不超过该值的峰，留空则不限制。",
+    "maxH": "最大 h（绝对值）",
+    "maxK": "最大 k（绝对值）",
+    "maxL": "最大 l（绝对值）",
+    "minIntensity": "最小输出强度",
+    "noLimit": "不限制",
+    "sortBy": "排序方式",
+    "sortOptions": {
+      "intensity": "强度（降序）",
+      "l": "l 指数（升序）",
+      "none": "原始顺序"
+    },
+    "xrayModeOptions": {
+      "synchrotron": "同步辐射",
+      "laboratory": "实验室光源"
+    },
+    "btnParse": "解析并生成峰",
+    "parsing": "解析中...",
+    "resultTitle": "理论峰",
+    "cols": {
+      "h": "h",
+      "k": "k",
+      "l": "l",
+      "q": "q (Å⁻¹)",
+      "psi": "ψ (°)",
+      "intensity": "强度"
+    },
+    "downloadPeakResult": "下载 peak_result.txt",
+    "peaksDownloaded": "已导出 {count} 个峰到 peak_result.txt。",
+    "needCif": "请先上传 CIF 文件。"
+  },
+  "xrd": {
+    "tabs": {
+      "single": "单相",
+      "dual": "双相"
+    },
+    "single": {
+      "title": "单相纤维衍射模拟",
+      "desc": "导入 peak_result.txt 峰列表（h k l q psi intensity）模拟纤维衍射。可选 Cake 模式（方位角 χ vs. q，原始探测器表示）或 2D 探测器模式（基于 PONI 几何的真实像素图像）。可展开纤维四重对称。",
+      "btnRun": "运行模拟",
+      "simulating": "模拟中...",
+      "sigmaQ": "Sigma Q (Å⁻¹)",
+      "sigmaChi": "Sigma Chi (度)",
+      "mode": "模式",
+      "kernel": "计算内核",
+      "kernels": {
+        "fast": "快速（推荐）",
+        "legacy": "兼容（逐峰 numpy）"
+      },
+      "colorscale": "色彩映射",
+      "symmetry": "四重纤维对称",
+      "symmetryHelp": "默认开启。将每个峰镜像到四个象限（四重对称），峰值数变为 4 倍；关闭后仅显示原象限，计算更快。",
+      "uploadPeakResult": "上传 peak_result.txt（可在 CIF 结构解析模块生成并下载）",
+      "modes": {
+        "cake": "Cake 图 (q-χ)",
+        "detector": "2D 探测器"
+      },
+      "result": {
+        "contrastTitle": "对比度",
+        "contrastMin": "下限",
+        "contrastMax": "上限",
+        "contrastReset": "重置对比度",
+        "cropHint": "在图上框选可裁切显示范围",
+        "cropReset": "重置裁切",
+        "exportTiff": "导出 .tiff",
+        "exportedTiff": "已导出 {name}（{rows}×{cols}）",
+        "exportNpy": "导出 .npy",
+        "exportedNpy": "已导出 {name}（{rows}×{cols}）"
+      },
+      "cake": {
+        "title": "Cake 网格",
+        "processingInfoUpload": "上传 npy 信息文件（.json/.txt，自动填充网格）",
+        "processingInfoParsed": "已套用网格：{name}",
+        "qMin": "q 最小值 (Å⁻¹)",
+        "qMax": "q 最大值 (Å⁻¹)",
+        "chiMin": "χ 最小值 (度)",
+        "chiMax": "χ 最大值 (度)",
+        "nQ": "q 点数",
+        "nChi": "χ 点数"
+      },
+      "detector": {
+        "title": "探测器几何",
+        "poniUpload": "上传 PONI（自动填充）",
+        "poniParsed": "PONI 已解析：{detector}",
+        "wavelength": "波长 (Å)",
+        "sampleDistance": "样品距离 (mm)",
+        "beamCenterX": "束斑中心 X (px)",
+        "beamCenterY": "束斑中心 Y (px)",
+        "pixelSize": "像素尺寸 (μm)",
+        "imgWidth": "图像宽度 (px)",
+        "imgHeight": "图像高度 (px)",
+        "presetsTitle": "常见探测器像素大小参考 ▼"
+      },
+      "compare": {
+        "title": "对比模式",
+        "uploadExp": "上传实验数据（cake模式用.npy，探测器模式用.tif/.edf）",
+        "expLoaded": "实验数据已加载",
+        "expLoadedLog": "实验数据已加载，可用于对比。",
+        "displayTitle": "对比设置",
+        "normalize": "归一化实验图至模拟最大值",
+        "logScale": "对数刻度",
+        "simTitle": "模拟",
+        "expTitle": "实验",
+        "expContrastTitle": "参考图对比度",
+        "alignTitle": "图像归正",
+        "flipV": "上下翻转",
+        "flipH": "左右翻转",
+        "rot180": "旋转 180°",
+        "alignHint": "翻转/旋转实验图，使其方向与模拟图对齐（可叠加，再次点击撤销）",
+        "uploadExpShort": "上传实验图（单张）",
+        "off": "关闭对比",
+        "resetAll": "恢复初始设置",
+        "resetAllHint": "重置对比显示：色彩映射、归一化、对数、归正翻转与实验图对比度",
+        "resetDone": "已恢复对比初始设置。",
+        "exportSimPng": "导出模拟图 PNG",
+        "exportExpPng": "导出实验图 PNG",
+        "exportedPane": "已导出对比图：{name}",
+        "placeholder": "上传一张实验图，即可与当前模拟结果上下对比"
+      }
+    },
+    "dual": {
+      "title": "双相模拟",
+      "desc": "通过混合单个相模拟来模拟两相混合物。设置每个相的重量分数，并独立控制展宽和织构参数。",
+      "btnRun": "运行双相模拟",
+      "phaseA": "相 A",
+      "phaseB": "相 B",
+      "weight": "重量分数",
+      "sigma": "Sigma",
+      "outputMode": "输出模式",
+      "resolution": "分辨率 (px)",
+      "uploadLabelA": "相 A peak_result.txt",
+      "uploadLabelB": "相 B peak_result.txt",
+      "simulating": "模拟中...",
+      "needBothPhases": "请为相 A 和相 B 各上传一个 peak_result.txt。"
+    }
+  },
+  "analysis": {
+    "tabs": {
+      "cake": "Cake 分析",
+      "detector": "探测器分析"
+    },
+    "cake": {
+      "title": "加载 Cake 图像",
+      "uploadLabel": "上传图像",
+      "btnLoad": "加载",
+      "displayTitle": "Cake 图（方位角 vs. q）",
+      "xAxisTitle": "q (Å⁻¹)",
+      "yAxisTitle": "χ (°)",
+      "placeholder": "Cake 图显示（方位角 vs. q）",
+      "placeholderHint": "上传 .npy/.tif/.edf 文件以显示",
+      "panels": {
+        "settings": "设置",
+        "roi": "ROI 信息"
+      }
+    },
+    "detector": {
+      "title": "加载探测器图像",
+      "uploadLabel": "上传图像",
+      "btnLoad": "加载",
+      "displayTitle": "原始探测器图像",
+      "placeholder": "原始探测器图像",
+      "placeholderHint": "上传 .tif/.edf/.npy 文件以显示"
+    },
+    "controls": {
+      "title": "显示控制",
+      "colormap": "色彩映射",
+      "logScale": "对数刻度",
+      "aspectRatio": "纵横比",
+      "aspectAuto": "自动",
+      "aspectEqual": "相等",
+      "bgMode": "背景模式",
+      "bgModes": {
+        "none": "无",
+        "radial": "径向中值",
+        "azimuthal": "方位角中值",
+        "polynomial": "二维多项式",
+        "frame": "空白帧"
+      },
+      "xAxis": "X 轴",
+      "yAxis": "Y 轴",
+      "frameIndex": "帧索引",
+      "export": "导出"
+    },
+    "slice": {
+      "title": "切片图（点击主图生成）",
+      "clickPos": "点击位置",
+      "qSlice": "横向切片 (强度 vs q)",
+      "azimuthSlice": "纵向切片 (强度 vs χ)",
+      "integrationWidth": "积分宽度",
+      "displayRange": "显示范围",
+      "clickedPoint": "点击点",
+      "floatBtn": "悬浮",
+      "dockBtn": "还原内嵌",
+      "hideBtn": "隐藏切片图",
+      "resizeHint": "拖动调整大小",
+      "toggleShow": "显示切片图",
+      "toggleHide": "隐藏切片图",
+      "toggleHint": "随时在此处打开 / 关闭切片图",
+      "dockToolbarHint": "把悬浮的切片卡片还原为内嵌显示——卡片被拖出窗口外找不到时，用这里即可找回",
+      "quickTitle": "快速设置（记录新峰时应用）",
+      "quickRefineBtn": "精致匹配框",
+      "quickRefineHint": "对选中（或最后一个）ROI 开始精致匹配区域绘制（F 方框 / L 套索）"
+    },
+    "contrast": {
+      "title": "对比度调节",
+      "min": "下限",
+      "max": "上限",
+      "reset": "重置"
+    },
+    "selection": {
+      "title": "区域选择",
+      "rough": "拖拽框选",
+      "precise": "精准选择",
+      "record": "记录当前区域",
+      "recordKeyHint": "把快速设置（倍数/背景）一并录入新峰 — 快捷键 R",
+      "clear": "清除选择",
+      "showLabels": "在图中显示 ROI 序号"
+    },
+    "crop": {
+      "title": "χ 轴裁剪",
+      "enable": "启用 χ 裁剪",
+      "chiMin": "χ 下限 (°)",
+      "chiMax": "χ 上限 (°)",
+      "reset": "恢复至 χ 范围"
+    },
+    "background": {
+      "title": "背景扣除",
+      "perPeakHint": "背景扣除按每个峰单独设置：此面板是新建峰的默认背景；修改“固定背景值”会同步到所有固定背景模式的峰，之后每个峰仍可在 ROI 列表中单独修改。",
+      "mode": "背景模式",
+      "modes": {
+        "none": "无",
+        "fixed": "固定背景值",
+        "neighbor": "X轴邻域均值",
+        "dbscan": "DBSCAN 聚类预估"
+      },
+      "fixedValue": "每像素背景值",
+      "side": "背景侧",
+      "sides": {
+        "left": "仅左侧",
+        "right": "仅右侧",
+        "both": "双侧平均"
+      },
+      "neighborWidth": "邻域宽度 (像素列)",
+      "dbscan": {
+        "thresholdPercentile": "亮度阈值百分位 (%)",
+        "minSamples": "最小样本数 (minPts)",
+        "minClusterPixels": "最小簇像素数",
+        "dilationPixels": "峰区域膨胀 (像素)",
+        "backgroundPercentile": "背景百分位 (%)",
+        "btnEstimate": "预览聚类并估计",
+        "estimating": "估计中…",
+        "btnApply": "应用为固定背景值",
+        "applyHint": "把估计出的背景强度填入固定背景值模式",
+        "showMask": "显示峰掩膜",
+        "backgroundLevel": "背景强度",
+        "thresholdLabel": "亮度阈值",
+        "clustersLabel": "峰簇数",
+        "peakPx": "峰像素",
+        "bgPx": "背景像素",
+        "hint": "DBSCAN 将亮像素聚成衍射峰簇（红色掩膜），其余像素视为背景并按百分位取值。调整参数后重新预览，直到掩膜与图中峰位吻合；已记录的 ROI 区域始终按峰处理，不会被计入背景。"
+      }
+    },
+    "saturation": {
+      "title": "饱和 / 异常像素屏蔽",
+      "min": "最小强度",
+      "max": "饱和上限",
+      "auto": "自动 (99.9%)",
+      "clear": "关闭",
+      "hint": "高于此值的像素（如饱和/死像素）将从强度提取中排除，避免污染求和"
+    },
+    "miller": {
+      "title": "Miller 指数叠加",
+      "uploadLabel": "上传 Miller 文件",
+      "btnLoad": "加载并匹配",
+      "convention": "约定",
+      "azimuthOffset": "方位角偏移 (度)",
+      "showPoints": "显示散点",
+      "pointColor": "散点颜色",
+      "colorReset": "恢复灰色",
+      "qTolerance": "q 容差 (Å⁻¹)",
+      "chiTolerance": "χ 容差 (度)",
+      "exportQMargin": "导出边距 dq (Å⁻¹)",
+      "exportPsiMargin": "导出边距 dψ (°)",
+      "marginHint": "导出范围 = 选区（或精致化选区）内 Miller 点的最小/最大 q 与 ψ ± 边距；未匹配时 = 选区框 ± 边距。默认 dq=0.02、dψ=2。"
+    },
+    "roi": {
+      "titleCake": "感兴趣区域",
+      "titleDetector": "探测器 ROI",
+      "titleRecords": "ROI 记录列表",
+      "btnAdd": "+ 添加 ROI",
+      "btnExport": "导出 ROI (CSV)",
+      "btnImport": "导入 ROI",
+      "btnCalculate": "计算强度",
+      "btnExportMatched": "导出匹配强度",
+      "columns": {
+        "index": "#",
+        "qMin": "Q 最小值",
+        "qMax": "Q 最大值",
+        "azimuthMin": "方位角最小值",
+        "azimuthMax": "方位角最大值",
+        "xMin": "X 最小值",
+        "xMax": "X 最大值",
+        "yMin": "Y 最小值",
+        "yMax": "Y 最大值",
+        "multiplier": "倍数",
+        "bgMode": "背景扣除",
+        "bgParams": "背景参数",
+        "intensity": "积分强度",
+        "pixels": "像素数",
+        "label": "标签",
+        "match": "匹配HKL",
+        "matchPsi": "匹配 ψ±",
+        "matchQ": "匹配 q±",
+        "refine": "精致化"
+      },
+      "btnSetRefine": "设定精致匹配框",
+      "refineShape": "精致化形状",
+      "refineShapeRect": "方框",
+      "refineShapeLasso": "套索（笔画）",
+      "btnClearRefine": "清除精致匹配框",
+      "refineHint": "正在为 ROI #{n} 设定精致匹配框 —— 在图上拖拽一个小框，只圈住目标 Miller 点。",
+      "refineCancel": "取消",
+      "refineHintLasso": "正在为 ROI #{n} 设定精致匹配区域 —— 在图上用套索圈住目标 Miller 点（取套索的 q/χ 极值为匹配框）。",
+      "editingHint": "正在修改 ROI #{n}：记录将更新该行，不会新建",
+      "btnCancelEdit": "取消修改",
+      "btnUpdate": "更新 ROI #{n}",
+      "rowClickHint": "点击加载该 ROI 的边界到切片图（修改模式：记录 = 更新此行）",
+      "bgSides": {
+        "left": "左",
+        "right": "右",
+        "both": "两侧"
+      }
+    },
+    "intensity": {
+      "title": "ROI 强度分布",
+      "xaxis": "帧",
+      "yaxis": "强度"
+    },
+    "export": {
+      "png": "导出 PNG",
+      "pngFullHint": "导出完整图像（不受当前缩放影响）；启用 χ 裁剪时导出裁剪区域的全图"
+    }
+  },
+  "viewer": {
+    "tabs": {
+      "cake": "2D Cake 查看器",
+      "raw": "原始图像查看器"
+    },
+    "cake": {
+      "title": "NPY 文件",
+      "uploadLabel": "添加 NPY 文件",
+      "empty": "未加载 NPY 文件",
+      "displayTitle": "Cake 图",
+      "placeholder": "Cake 图查看器",
+      "placeholderHint": "q（水平）vs. chi（垂直）轴",
+      "remove": "删除",
+      "removeConfirm": "确定删除「{name}」？该上传文件将从服务器中移除。",
+      "removeAll": "清空",
+      "removeAllConfirm": "确定删除全部 {count} 个已上传图像？此操作将从服务器移除这些文件。"
+    },
+    "raw": {
+      "title": "图像文件",
+      "uploadLabel": "添加图像文件",
+      "empty": "未加载图像文件",
+      "displayTitle": "原始图像",
+      "placeholder": "原始探测器图像",
+      "placeholderHint": "EDF / TIFF / H5 原始帧查看器"
+    },
+    "controls": {
+      "title": "查看器控制",
+      "colormap": "色彩映射",
+      "logScale": "对数刻度",
+      "colorbar": "色标 (Colorbar)",
+      "wavelength": "波长 λ (Å)",
+      "xAxis": "X 轴",
+      "yAxis": "Y 轴",
+      "frameIndex": "帧索引",
+      "export": "导出",
+      "contrastMin": "对比度下限",
+      "contrastMax": "对比度上限",
+      "contrastMinShort": "下限",
+      "contrastMaxShort": "上限",
+      "contrastReset": "重置对比度",
+      "refLine": "参考线 (0°)",
+      "refLineOffset": "参考线偏移",
+      "resetAll": "恢复初始状态",
+      "resetAllHint": "重置全部显示设置：色彩映射、对数、色标、坐标轴、参考线、q/χ 范围与裁剪、对比度（已加载文件保留）",
+      "resetDone": "已恢复初始显示状态。"
+    },
+    "export": {
+      "png": "导出 PNG",
+      "batch": "批量导出 ZIP",
+      "batchByFirst": "按第一张图批量导出",
+      "batchByFirstHint": "按第一张图（开对比时为 A，否则为当前选中图）的对比度等显示设置渲染全部图像，批量导出 ZIP"
+    },
+    "bottom": {
+      "addNpy": "添加 NPY",
+      "importInfo": "导入 npy 信息文件"
+    },
+    "axis": {
+      "title": "坐标轴范围 / 裁剪",
+      "hint": "导入 npy 信息文件 自动填充 q (Å⁻¹) 与 χ (°) 范围，使热图显示真实物理坐标而非像素索引。",
+      "infoLabel": "导入 npy 信息文件",
+      "infoApplied": "已从 npy 信息文件 应用 q / χ 轴范围",
+      "infoEmpty": "npy 信息文件 未包含可识别的轴范围",
+      "q": "q (Å⁻¹)",
+      "chi": "χ (°)",
+      "qMin": "q 最小值",
+      "qMax": "q 最大值",
+      "chiMin": "χ 最小值",
+      "chiMax": "χ 最大值"
+    },
+    "crop": {
+      "enable": "启用 χ 裁剪（垂直范围）",
+      "chiMin": "裁剪 χ 最小值",
+      "chiMax": "裁剪 χ 最大值",
+      "reset": "重置裁剪"
+    },
+    "compare": {
+      "toggle": "对比",
+      "toggleHint": "开启后可在左侧挑选两幅图同屏对比，各自设置对比度",
+      "slotA": "图 A",
+      "slotB": "图 B",
+      "emptyHint": "点击左侧文件加载图像",
+      "contrastA": "对比度 A",
+      "contrastB": "对比度 B",
+      "resetA": "重置 A 对比度",
+      "resetB": "重置 B 对比度",
+      "exportA": "导出 A PNG",
+      "exportB": "导出 B PNG"
+    }
+  },
+  "status": {
+    "idle": "空闲",
+    "running": "运行中...",
+    "completed": "已完成",
+    "failed": "失败",
+    "loading": "加载中...",
+    "loaded": "已加载",
+    "error": "错误"
+  },
+  "components": {
+    "fileUpload": {
+      "dropHere": "拖放文件到此处",
+      "browse": "或点击浏览",
+      "remove": "移除"
+    },
+    "console": {
+      "cancel": "取消",
+      "waiting": "等待输出...",
+      "started": "开始时间：",
+      "ended": "结束时间：",
+      "duration": "用时："
+    },
+    "imageCanvas": {
+      "colormap": "色彩映射",
+      "log": "对数",
+      "reset": "重置",
+      "toggleLog": "切换对数刻度",
+      "resetZoom": "重置缩放"
+    },
+    "plotViewer": {
+      "png": "PNG",
+      "downloadPng": "下载 PNG",
+      "resetView": "重置视图",
+      "reset": "重置"
+    },
+    "miller": {
+      "datasets": "数据集",
+      "points": "点",
+      "convention": "约定",
+      "azimuthOffset": "方位角偏移"
+    }
+  },
+  "logs": {
+    "common": {
+      "error": "错误：{message}"
+    },
+    "waxs": {
+      "starting": "正在启动 {step}...",
+      "stepCompleted": "{step} 已成功完成。",
+      "failedPoll": "轮询任务状态失败。",
+      "pipelineStart": "正在启动完整流程...",
+      "pipelineDone": "完整流程已成功完成。",
+      "cancelled": "任务已被用户取消。"
+    },
+    "cif": {
+      "readingCif": "正在读取 CIF 文件...",
+      "generatingPeaks": "正在生成理论峰...",
+      "peaksGenerated": "已生成 {count} 个理论峰。",
+      "filtersApplied": "已应用过滤：{filters}",
+      "hklLimitDropped": "hkl 绝对值限制过滤掉了 {count} 个超限峰。",
+      "peaksDownloaded": "已导出 {count} 个峰到 peak_result.txt。"
+    },
+    "xrd": {
+      "singleSimStart": "正在启动单相模拟...",
+      "singleSimDone": "单相模拟已完成。",
+      "dualSimStart": "正在启动双相模拟...",
+      "dualSimDone": "双相模拟已完成。",
+      "processingInfoLoaded": "已从 npy 信息文件 套用 q-χ 网格（原始单位：{unit}）。"
+    },
+    "analysis": {
+      "uploadingCake": "正在上传 cake 图像...",
+      "imageLoaded": "图像已成功加载。",
+      "infoApplied": "已应用 info：{name}（图像 q/χ 轴范围已更新）。",
+      "uploadingMiller": "正在上传 Miller 指数数据集...",
+      "millerLoaded": "Miller 指数叠加已加载。",
+      "matchingMiller": "正在将 Miller 指数与 ROI 匹配...",
+      "matchDone": "匹配完成：{found}/{total} 个 ROI 已匹配。",
+      "roisExported": "ROI 已成功导出。",
+      "exportError": "导出错误：{message}",
+      "calculatingIntensity": "正在计算 ROI 强度...",
+      "intensityDone": "强度计算已完成。",
+      "bgEstimated": "DBSCAN 背景估计：背景强度 ≈ {value}，识别到 {n} 个峰簇。",
+      "bgApplied": "已应用估计背景 {value} 为固定背景值。",
+      "uploadingDetector": "正在上传探测器图像...",
+      "detectorLoaded": "探测器图像已成功加载。",
+      "exportNoImage": "没有已加载的图像可供导出。",
+      "exportNoData": "没有可导出的数据。"
+    },
+    "viewer": {
+      "uploading": "正在上传 {count} 个文件...",
+      "uploaded": "已上传 {count} 个文件。",
+      "skippedDuplicates": "已跳过 {count} 个重复文件（此前已上传）。",
+      "loading": "正在加载 {name}...",
+      "imageLoaded": "图像已加载。",
+      "loadError": "加载图像出错：{message}",
+      "deleted": "已删除 {name}。",
+      "deletedAll": "已删除全部已上传图像。",
+      "deleteMissing": "服务器上未找到 {name}（可能已被清理），已从列表移除。",
+      "deleteError": "删除文件出错：{message}",
+      "exportingBatch": "正在批量导出 {count} 张图像...",
+      "exportedBatch": "已批量导出 {count} 张图像 (ZIP)。",
+      "exportError": "导出错误：{message}"
+    }
+  },
+  "cifh": {
+    "title": "CIF 补氢",
+    "desc": "将不含氢的精修结构补充氢原子，用于 CP2K 结构优化。自动识别聚合物化学键（含周期性边界、跨晶胞成键），按价态与键级补氢；可在 3D 视图中检查并修改键连接，导出 Materials Studio 风格 CIF。",
+    "upload": "上传精修 CIF（不含氢）",
+    "tolerance": "成键容差 (Å)",
+    "chDist": "C–H 键长 (Å)",
+    "running": "处理中...",
+    "rerun": "重新补氢",
+    "view": {
+      "title": "补氢结构预览",
+      "cell": "晶胞",
+      "h": "氢原子",
+      "double": "双键",
+      "stretched": "跨胞拉伸键",
+      "hint": "点击原子选中 · 点击键中点选中键 · 拖动旋转"
+    },
+    "edit": {
+      "title": "键编辑",
+      "addBond": "添加键",
+      "cancelAdd": "取消添加",
+      "picked": "已选 {n} 个原子",
+      "pickHint": "在 3D 图中依次点击两个原子以成键",
+      "confirmAdd": "确认添加",
+      "repick": "重新选点",
+      "selected": "选中的键",
+      "single": "单键",
+      "toSingle": "改为单键",
+      "toDouble": "改为双键",
+      "restore": "恢复此键",
+      "delete": "删除此键",
+      "pendingInfo": "{a}–{b} · {d} Å — 确认添加？"
+    },
+    "warnings": "警告",
+    "bonds": {
+      "title": "键列表",
+      "showH": "含 X–H 键",
+      "pair": "原子对",
+      "order": "键级"
+    },
+    "export": {
+      "hint": "导出含氢 CIF（P1，带 _geom_bond 循环与对称码），可直接用于 CP2K 优化。",
+      "btn": "导出 CIF",
+      "exporting": "导出中..."
+    },
+    "summary": "{name} · {atoms} 个重原子 · {cell} · {counts} → 补 {h} 个 H · {formula}",
+    "logs": {
+      "uploadStart": "上传 CIF...",
+      "uploaded": "CIF 已解析：{n} 个原子",
+      "done": "补氢完成：共 {h} 个 H · 分子式 {formula}",
+      "exported": "已导出 {name}（{n} 个原子）"
+    }
+  },
+  "cp2k": {
+    "sections": {
+      "basic": "基本（极简形态）",
+      "experimental": "实验条件",
+      "hkl": "HKL 范围",
+      "bfactor": "B 因子",
+      "overrides": "显式覆盖项",
+      "output": "生成与下载"
+    },
+    "descs": {
+      "basic": "极简形态只需 5 个关键字：ENABLED、DIFFRACTION_FILE、WAVELENGTH、AUTO_SCALE、LAMBDA。吸收 / 密度 / 散射因子由 xraylib 从晶胞组成 + 波长自动推导。",
+      "experimental": "样品厚度与探测器距离（v1.1 起厚度默认 0.03 cm = 0.3 mm）；X 光源模式 0=同步辐射、1=普通光源、其他=无偏振因子。",
+      "hkl": "hkl 搜索范围与 blank 惩罚。注意：使用 MULTIPLE_UNIT_CELL 超胞时 H_MAX / K_MAX 要按超胞指标放大（如 2×2 超胞用 10）。",
+      "bfactor": "B 因子固定、不参与优化。不提供 B 文件时全体原子使用 B_FACTOR_DEFAULT；提供时须与 CP2K 粒子同序、同数目（超胞需扩到超胞原子数）。",
+      "overrides": "显式覆盖项（缺省走 xraylib 自动推导）：Cromer-Mann 表覆盖、预生成反射表、每原子 B 因子文件、固定 SCALE_FACTOR。",
+      "output": "生成 &FIBER_DIFFRACTION 段并下载。字符型取值行尾不能写内联注释（会被计入文件名）——生成器已将注释独立成行。"
+    },
+    "actions": {
+      "generate": "生成预览",
+      "download": "下载 fiber_diffraction.inc"
+    },
+    "logs": {
+      "generating": "正在生成 &FIBER_DIFFRACTION 段...",
+      "generated": "&FIBER_DIFFRACTION 段生成成功。"
+    },
+    "fields": {
+      "emitOverrides": "启用显式覆盖项"
+    },
+    "helps": {
+      "wavelength": "唯一实验能量入口 [Å]，E = 12.3984/WAVELENGTH keV；直接写数值，不要加 [angstrom] 单位后缀",
+      "autoScale": "v1.1 推荐起步用 .TRUE.（每步加权最小二乘自动求 k）；固定 k 时关闭并填 SCALE_FACTOR",
+      "scaleFactor": "仅 AUTO_SCALE .FALSE. 时生效；建议从零耦合检查（LAMBDA=0 + AUTO_SCALE）抄下 k",
+      "lambda": "耦合强度 [hartree]，先小后大；按 FIBER| fiber/DFT 比值线性调节（λ_new ≈ λ × 期望比 / 当前比）",
+      "hkl": "超胞注意：2×2 超胞 H/K_MAX 应为原始值 ×2（如 10），L 不变",
+      "bFactorFile": "须与结构原子同序、同数目；超胞（如 2×2）必须有超胞原子数的条目",
+      "overrides": "含离子体系 / 自定义参数时才提供 ATOMIC_FACTOR_FILE；缺省 = xraylib FF_Rayl 中性原子",
+      "atomicFactor": "Cromer-Mann 表（refine.f90 同格式），仅显式覆盖时读取"
+    },
+    "usage": {
+      "title": "推荐工作流",
+      "step1": "1) 先跑 LAMBDA = 0.0 + AUTO_SCALE .TRUE. 的零耦合检查，从输出 FIBER| LAMBDA 行抄下自动标定的 SCALE_FACTOR；",
+      "step2": "2) 固定 k（AUTO_SCALE .FALSE. + SCALE_FACTOR），从小 LAMBDA 开始 GEO_OPT，观察 FIBER| fiber/DFT 比值（建议 0.01~0.5 起步）；",
+      "step3": "3) 不要只看 R 因子升降：R 略升也可能合理，以 fiber/DFT 力占比为准调节 λ。"
+    }
+  },
+  "deviation": {
+    "title": "结构偏差报告",
+    "desc": "对比 DFT 优化后的结构（CIF，或 CP2K 输出的 PDB）与优化前的参考结构：按周期性最小镜像计算逐原子位置偏差、平均 / 均方根 / 最大偏差与晶胞变化，并可导出 Markdown / CSV 报告。",
+    "refSlot": "参考结构（优化前）",
+    "dftSlot": "DFT 优化后结构",
+    "refUpload": "上传参考 CIF / PDB",
+    "dftUpload": "上传 DFT 后 CIF / PDB",
+    "nModels": "{n} 帧（取最后一帧）",
+    "warningsTitle": "提示",
+    "sections": {
+      "input": "输入结构",
+      "result": "偏差结果",
+      "report": "报告导出"
+    },
+    "uploadInfo": {
+      "file": "文件",
+      "format": "格式",
+      "cell": "晶胞",
+      "atoms": "原子数"
+    },
+    "fields": {
+      "match": "原子配对",
+      "matchHelp": "近邻匹配按元素分组、以最近位置配对（推荐，可容忍 CP2K 乱序输出）；按文件顺序要求两个文件原子顺序一致。",
+      "basis": "位移基晶胞",
+      "basisHelp": "分数位移换算为 Å 所用的晶胞（两结构晶胞略有弛豫时有影响），默认参考晶胞。"
+    },
+    "matchOpts": {
+      "nearest": "近邻匹配（推荐）",
+      "order": "按文件顺序"
+    },
+    "basisOpts": {
+      "ref": "参考晶胞",
+      "dft": "DFT 晶胞",
+      "avg": "两晶胞平均"
+    },
+    "actions": {
+      "compare": "计算偏差",
+      "comparing": "计算中...",
+      "genMd": "生成 Markdown 报告",
+      "genCsv": "生成 CSV 表",
+      "download": "下载报告",
+      "generating": "生成中..."
+    },
+    "logs": {
+      "uploaded": "{slot}已上传 {name}（{n} 原子）",
+      "comparing": "正在配对原子并计算偏差...",
+      "done": "完成：平均偏差 {mean} Å，最大偏差 {max} Å（{atom}）",
+      "reportDone": "报告已生成：{name}"
+    },
+    "result": {
+      "title": "偏差结果",
+      "empty": "先在「输入结构」上传两个结构并点击「计算偏差」。",
+      "mean": "平均偏差",
+      "rms": "均方根偏差",
+      "max": "最大偏差",
+      "median": "中位数",
+      "pairing": "配对方式",
+      "basis": "位移基",
+      "nAtoms": "原子数",
+      "cellTitle": "晶胞参数对比",
+      "cellParam": "参数",
+      "ref": "参考",
+      "elTitle": "分元素统计",
+      "atomsTitle": "逐原子偏差",
+      "allElements": "全部元素",
+      "cols": {
+        "refLabel": "参考标签",
+        "dftLabel": "DFT 标签",
+        "element": "元素"
+      }
+    },
+    "report": {
+      "title": "报告导出",
+      "hint": "将本次对比渲染为 Markdown 报告（统计摘要 + 晶胞对比 + 逐原子表）或 CSV 数据表，便于归档与进一步分析。",
+      "mean": "平均",
+      "max": "最大"
+    },
+    "usage": {
+      "title": "使用说明",
+      "step1": "1) 上传优化前的参考结构（CIF）。",
+      "step2": "2) 上传 DFT 优化后的结构——CIF 或 CP2K 输出的 PDB（多帧轨迹自动取最后一帧）。",
+      "step3": "3) 点击「计算偏差」查看平均 / 最大偏差、晶胞变化与逐原子明细（表头可点击排序，可按元素筛选）。",
+      "step4": "4) 在「报告导出」生成并下载 Markdown / CSV 报告。"
+    }
+  },
+  "symmetry": {
+    "title": "空间群检测",
+    "desc": "上传精修得到的 P1 全原子 CIF（或任何含对称性的 CIF，会自动展开）。检测空间群的同时完全保留当前晶胞参数——不像 MS/PLATON 那样强制转换到标准设定而改动晶胞。对称操作以当前晶胞基矢给出，可直接用于验证精修结果。",
+    "upload": "上传 CIF（拖拽或点击选择）",
+    "sections": {
+      "input": "上传与检测",
+      "result": "检测结果",
+      "export": "对称化导出"
+    },
+    "uploadInfo": {
+      "file": "文件",
+      "cell": "晶胞",
+      "atoms": "原子数"
+    },
+    "fields": {
+      "symprec": "对称容差 symprec (Å)",
+      "symprecHelp": "原子位置判为对称的最大距离。精修坐标通常只有近似对称，建议先用容差扫描观察空间群随容差的变化。"
+    },
+    "actions": {
+      "analyze": "检测空间群",
+      "analyzing": "检测中...",
+      "scan": "容差扫描",
+      "scanning": "扫描中...",
+      "symmetrize": "生成对称化 CIF",
+      "symmetrizing": "生成中...",
+      "symmetrizeP1": "生成对称化 P1 全原子 CIF",
+      "symmetrizingP1": "生成中...",
+      "download": "下载 CIF"
+    },
+    "result": {
+      "empty": "请先在「上传与检测」页上传 CIF 并运行检测。",
+      "nOps": "对称操作数",
+      "asym": "不对称单元原子",
+      "maxShift": "最大对称化位移",
+      "inputCell": "晶胞（保持输入值，未改动）",
+      "opsTitle": "对称操作（当前晶胞基矢）",
+      "asuTitle": "不对称单元原子",
+      "label": "标签",
+      "element": "元素",
+      "noteHm": "H-M 符号为该空间群标准设定的名称（MS/PLATON 报告的那个）；当前晶胞下的实际设定（如 P2₁/n）由 Hall 符号与下方对称操作列表唯一确定。",
+      "stdRef": "标准设定参考（MS/PLATON 会转换到的晶胞 — 本工具未应用）",
+      "stdNote": "仅作对照：两套晶胞描述的是同一个晶格（|det T| ≈ 1 表示只是换基矢/原点），无需转换。",
+      "supercellWarn": "注意：输入晶胞是真实原胞的 {n} 倍超胞；检测到的对称操作已包含相应的平移分量。"
+    },
+    "scan": {
+      "title": "容差扫描结果",
+      "symprec": "symprec (Å)",
+      "sg": "空间群",
+      "ops": "操作数",
+      "asym": "不对称原子",
+      "hint": "观察空间群随容差的变化：小容差下即稳定出现的群可信度高；只在很大容差下才出现的可能是伪对称。当前使用的容差行已高亮。"
+    },
+    "export": {
+      "hint": "两种导出的晶胞参数均与输入完全一致：「生成对称化 CIF」保留对称操作循环与不对称单元原子（带 Wyckoff 字母），供 VESTA / Materials Studio / PLATON 展开；「生成对称化 P1 全原子 CIF」把对称化实际应用到原子坐标（特殊位置原子精确落在对称元素上），并展开为 P 1 全原子晶胞，供只读 P1 的计算程序直接使用。",
+      "hintP1": "对称化已应用到坐标：原子最大移动距离见下方「最大对称化位移」。CIF 中以注释记录来源空间群。",
+      "preview": "CIF 预览"
+    },
+    "usage": {
+      "title": "使用说明",
+      "step1": "上传精修 CIF，先用「容差扫描」确认空间群在合理容差范围内稳定；",
+      "step2": "运行「检测空间群」，查看编号、H-M 符号与当前基矢下的对称操作，确认最大对称化位移足够小；",
+      "step3": "如需存档或提交，导出对称化 CIF——晶胞参数与您的精修结果完全一致；",
+      "step4": "计算程序若需要全原子 P1 输入，导出对称化 P1 全原子 CIF——对称化已应用到原子坐标，晶胞仍保持不变。"
+    },
+    "logs": {
+      "uploaded": "已上传 {name}（{n} 个原子）",
+      "analyzing": "检测中 (symprec={v} Å)...",
+      "detected": "检测到空间群 #{number} {hm}（{ops} 个对称操作）",
+      "scanning": "容差扫描中...",
+      "scanDone": "容差扫描完成",
+      "symmetrizing": "生成对称化 CIF (symprec={v} Å)...",
+      "exported": "已生成对称化 CIF（{n} 个不对称原子，晶胞未变）",
+      "symmetrizingP1": "生成对称化 P1 全原子 CIF (symprec={v} Å)...",
+      "exportedP1": "已生成对称化 P1 全原子 CIF（{n} 个原子，最大移动 {s} Å，晶胞未变）"
+    }
+  },
+  "qzSlice": {
+    "title": "qz 条带积分",
+    "header": "对 GIWAXS 纤维积分合并结果做 qz 条带积分：以 n×qz 为中心、宽 2×间隔 的水平条带内逐列取平均，得到各条带的 I(q∥) 一维曲线。",
+    "data": {
+      "title": "数据源",
+      "desc": "上传纤维积分合并导出的 ZIP（含 *_giwaxs.npy / ip_array.npy / oop_array.npy）或三个 .npy 文件；也可从合并页直接发送。",
+      "handoffOk": "已接收合并结果：{name}",
+      "handoffFail": "交接数据加载失败（后端可能已重启清理），请手动上传",
+      "loaded": "已加载 {name}（{rows}×{cols}）",
+      "clear": "清除数据",
+      "needMap": "请先加载二维合并图"
+    },
+    "params": {
+      "title": "条带参数",
+      "desc": "条带中心位于 n × qz（n = 0, ±1, ±2, …），每条宽 2 × 间隔；灰色模板实时预览。",
+      "qz": "设定 qz（条带间距）",
+      "interval": "间隔（半宽）",
+      "unit": "单位：{unit}",
+      "bandCount": "条带数：{n}",
+      "overlapWarn": "⚠ 2×间隔大于 qz，相邻条带将重叠",
+      "invalid": "qz 与间隔必须为正数",
+      "maskLowerBound": "mask 下限",
+      "maskLowerBoundPh": "不启用",
+      "maskHelp": "低于该值的像素不参与积分，也不参与平均"
+    },
+    "actions": {
+      "run": "计算条带积分",
+      "reset": "重置",
+      "exportCsv": "导出 CSV",
+      "exportTxt": "导出 TXT (qip)"
+    },
+    "status": {
+      "running": "计算中…",
+      "empty": "先加载数据并运行",
+      "exporting": "导出中…"
+    },
+    "result": {
+      "title": "条带积分结果",
+      "mapTitle": "二维图 · 灰色条带模板",
+      "curvesTitle": "I(q∥) 条带平均曲线",
+      "dirty": "参数已修改，曲线为上次运行结果",
+      "bands": "条带",
+      "rows": "行",
+      "offset": "曲线纵向偏移",
+      "logY": "对数纵轴",
+      "contrastMin": "对比度下限",
+      "contrastMax": "对比度上限",
+      "contrastReset": "重置对比度",
+      "grid": "网格",
+      "rangeIp": "IP 范围",
+      "rangeOop": "OOP 范围",
+      "min": "最小",
+      "max": "最大"
+    }
+  }
+}

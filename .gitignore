@@ -1,0 +1,33 @@
+# Node
+node_modules/
+frontend/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Build outputs
+release/
+release-*/
+dist-electron/
+
+# Logs & temp
+*.log
+logs/
+temp/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# AI assistant / tool caches
+.mimosa/
+.omo/
+.claude/
+.zcode/
+.codegraph/

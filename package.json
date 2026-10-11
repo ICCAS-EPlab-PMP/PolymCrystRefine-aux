@@ -1,0 +1,22 @@
+{
+  "name": "polymcrystrefine-desktop",
+  "version": "1.2.0",
+  "description": "PolymCrystRefine — Data Processing Module: WAXS/XRD data processing, simulation, and analysis desktop suite",
+  "license": "MIT",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"npm run dev:frontend\" \"npm run dev:electron\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:electron": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .",
+    "build": "npm run build:frontend && npm run build:electron",
+    "build:frontend": "cd frontend && npm run build",
+    "build:electron": "node electron/scripts/prebuild-clean.js && electron-builder --config electron/electron-builder.json"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.0.0",
+    "concurrently": "^9.0.0",
+    "wait-on": "^8.0.0",
+    "cross-env": "^7.0.0"
+  }
+}

@@ -1,0 +1,148 @@
+/* ============================================
+   PolymCrystRefine — Data Processing Module
+   Design System (Light Violet — white base, layered gray surfaces)
+   ============================================ */
+
+:root {
+  /* ---- Primary Palette (Violet accent) ---- */
+  --color-primary: #7C3AED;
+  --color-primary-hover: #6D28D9;
+  --color-secondary: #8B5CF6;
+  --color-primary-glow: rgba(124, 58, 237, 0.20);
+  --color-primary-10: rgba(124, 58, 237, 0.10);
+  --color-primary-20: rgba(124, 58, 237, 0.18);
+
+  /* ---- Reference-style aliases (used by layout & home) ---- */
+  --primary: #7C3AED;
+  --primary-light: #8B5CF6;
+  --primary-lighter: #A78BFA;
+  --primary-dark: #6D28D9;
+  --primary-bg: rgba(124, 58, 237, 0.10);
+  --accent: #7C3AED;
+
+  /* ---- Functional ---- */
+  --cta: #8B5CF6;
+
+  /* ---- Backgrounds (white base + layered white→light-lavender surfaces) ---- */
+  --color-bg: #FFFFFF;
+  --color-neutral: linear-gradient(160deg, #FFFFFF 0%, #F5F3FF 100%);
+  --color-surface: linear-gradient(160deg, #F5F3FF 0%, #EDE9FE 100%);
+  --color-surface-elevated: #FFFFFF;
+  --bg-primary: #FFFFFF;
+  --bg-surface: linear-gradient(160deg, #FFFFFF 0%, #F5F3FF 100%);
+  --bg-surface-alt: linear-gradient(160deg, #F5F3FF 0%, #EDE9FE 100%);
+  --bg-hover: rgba(124, 58, 237, 0.06);
+
+  /* ---- Text ---- */
+  --color-text: #262432;
+  --color-text-secondary: #5A5767;
+  --color-text-placeholder: #A9A6BA;
+  --text-primary: #262432;
+  --text-secondary: #5A5767;
+  --text-muted: #A9A6BA;
+  --text-inverse: #FFFFFF;
+
+  /* ---- Borders ---- */
+  --color-border: #E3E0EF;
+  --color-border-hover: #D1CDDE;
+  --color-border-focus: #7C3AED;
+  --border: #E3E0EF;
+  --border-hover: #D1CDDE;
+  --border-focus: #7C3AED;
+
+  /* ---- Status Colors ---- */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #7C3AED;
+  --status-running: #7C3AED;
+  --status-success: #10B981;
+  --status-warning: #F59E0B;
+  --status-error: #EF4444;
+
+  /* ---- Typography ---- */
+  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --fs-overline: 11px;
+  --fs-meta: 12px;
+  --fs-small: 13px;
+  --fs-body: 14px;
+  --fs-panel-title: 16px;
+  --fs-view-title: 20px;
+  --fs-page-title: 24px;
+  --fs-section: 32px;
+  --fs-hero: 40px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --ls-tight: -0.03em;
+  --ls-normal: 0;
+  --ls-wide: 0.05em;
+
+  --lh-tight: 1.2;
+  --lh-body: 1.5;
+
+  /* ---- Layout ---- */
+  --header-height: 80px;
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 72px;
+  --content-max-width: 1400px;
+  --card-padding: 24px;
+  --grid-gap: 16px;
+
+  /* ---- Spacing (base 4px) ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ---- Border Radius ---- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows (light — soft dark on white) ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 12px 28px rgba(0, 0, 0, 0.10);
+  --shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 24px rgba(124, 58, 237, 0.18);
+
+  /* ---- Transitions ---- */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* ---- Z-index ---- */
+  --z-dropdown: 100;
+  --z-sticky: 50;
+  --z-modal: 200;
+  --z-tooltip: 300;
+
+  /* ---- Component Tokens ---- */
+  --btn-height: 36px;
+  --btn-height-compact: 30px;
+  --input-height: 36px;
+  --input-height-compact: 30px;
+  --row-height: 36px;
+  --chip-height: 22px;
+
+  /* ---- Image display ---- */
+  --image-bg: #EFECF7;
+}

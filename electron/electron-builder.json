@@ -1,0 +1,45 @@
+{
+  "appId": "com.polymcrystrefine.desktop",
+  "productName": "PolymCrystRefine",
+  "directories": {
+    "output": "../../PRE-release-opensource"
+  },
+  "files": [
+    "electron/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "backend",
+      "to": "backend",
+      "filter": ["**/*", "!**/__pycache__/**", "!**/.venv/**", "!**/*.pyc"]
+    },
+    {
+      "from": "frontend/dist",
+      "to": "frontend/dist"
+    }
+  ],
+  "asar": true,
+  "asarUnpack": [
+    "**/*.node"
+  ],
+  "win": {
+    "icon": "icon/icon.ico",
+    "target": [
+      { "target": "nsis", "arch": ["x64"] },
+      { "target": "dir", "arch": ["x64"] }
+    ],
+    "artifactName": "PolymCrystRefine-Aux-${version}-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "icon/icon.ico",
+    "uninstallerIcon": "icon/icon.ico",
+    "installerHeaderIcon": "icon/icon.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "PolymCrystRefine Aux"
+  }
+}
