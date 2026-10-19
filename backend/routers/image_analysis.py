@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import io
 import json
+import math
 import os
 import uuid
 from typing import Any, Dict, List, Optional
@@ -215,7 +216,12 @@ class IntensityRequest(BaseModel):
     regions: List[ROI]
     backgroundMode: int = Field(0, ge=0, le=3, description="Legacy: 0=none, 1=annular, 2=radial, 3=2D-median")
     background: Optional[BackgroundConfig] = Field(None, description="New background config (takes precedence)")
-    coordinateType: str = Field("physical", description="'physical' for cake coords, 'pixel' for detector coords")
+    coordinateType: str = Field("physical", description="'physical' for cake coords, 'pixel' for detector coords, 'pyfai' for q/chi windows resolved through a PONI calibration")
+    # PONI calibration file id (required when coordinateType == 'pyfai'). The
+    # per-pixel q (Å⁻¹) and χ (°) geometry arrays are built from it and each
+    # ROI's q/χ window selects the contributing detector pixels — the same
+    # bin assignment pyFAI's radial (linear) and azimuthal integrators use.
+    poniFileId: Optional[str] = Field(None, description="Uploaded PONI file id (coordinateType='pyfai')")
     # Axis ranges of the cake image the ROIs were drawn on. Required to map the
     # ROI's physical (q/χ) coords onto the correct pixel rows/cols — without
     # these the mask fell back to hard-coded (0,25)/(0,360) and integrated the
@@ -239,6 +245,145 @@ class ROIIntensity(BaseModel):
 
 class IntensityResponse(BaseModel):
     results: List[ROIIntensity]
+
+
+class PoniInfoResponse(BaseModel):
+    """Geometry parsed from a pyFAI PONI calibration file.
+
+    Wavelength is reported in Å and distances in mm for display; pixel sizes
+    in μm. ``shape`` is the detector's expected pixel-grid shape (rows, cols).
+    """
+    fileId: str
+    wavelength: float
+    dist: float
+    poni1: float
+    poni2: float
+    rot1: float
+    rot2: float
+    rot3: float
+    detector: str
+    pixel1: float
+    pixel2: float
+    shape: Optional[List[int]] = None
+    # Beam-centre pixel (col, row) = (poni2/pixel2, poni1/pixel1).
+    centerX: float
+    centerY: float
+
+
+class DetectorRoiWindowRequest(BaseModel):
+    """Convert a pixel box on a calibrated detector image into the q/χ window
+    it covers (min/max of the pyFAI geometry arrays inside the box)."""
+    poniFileId: str
+    xMin: float
+    xMax: float
+    yMin: float
+    yMax: float
+    shape: Optional[List[int]] = Field(None, description="Detector image shape (rows, cols) when it differs from the PONI's own shape")
+
+
+class DetectorRoiWindowResponse(BaseModel):
+    qMin: float
+    qMax: float
+    azimuthMin: float
+    azimuthMax: float
+
+
+class DetectorClickRequest(BaseModel):
+    """Locate a point on the raw detector image (no peak-picking semantics —
+    the raw clicked pixel, or optionally the brightest pixel in a small
+    window when snap=True)."""
+    fileId: str
+    poniFileId: str
+    x: float = Field(..., description="Click position, ORIGINAL detector pixel x")
+    y: float = Field(..., description="Click position, ORIGINAL detector pixel y")
+    window: int = Field(30, ge=3, description="Square snap-search window in pixels (snap=True only)")
+    snap: bool = Field(True, description="Snap to the brightest valid pixel inside the window")
+    minIntensity: Optional[float] = None
+    maxIntensity: Optional[float] = None
+
+
+class DetectorClickResponse(BaseModel):
+    x: int
+    y: int
+    intensity: float
+    q: float
+    psiDeg: float
+
+
+class DetectorIntegrateRequest(BaseModel):
+    """Radial (q-I) + azimuthal (ψ-I) integration around an anchor point.
+
+    Ranges are ± half-widths around the anchor's (q₀, ψ₀), mirroring the
+    R1.7all PeakExtraction workflow:
+      q-I : q ∈ q₀ ± radialHalf, χ ∈ ψ₀ ± azimuthHalf   (npt q bins)
+      ψ-I : q ∈ q₀ ± radialHalfR, χ ∈ ψ₀ ± azimuthHalfR (nptR χ bins,
+            nptRadR radial bins per χ bin)
+    """
+    fileId: str
+    poniFileId: str
+    x: float
+    y: float
+    azimuthHalf: float = Field(5.0, gt=0)
+    radialHalf: float = Field(0.35, gt=0)
+    npt: int = Field(500, ge=16)
+    radialHalfR: float = Field(0.05, gt=0)
+    azimuthHalfR: float = Field(30.0, gt=0)
+    nptR: int = Field(150, ge=8)
+    nptRadR: int = Field(50, ge=4)
+    excludeEmptyBins: bool = True
+    minIntensity: Optional[float] = None
+    maxIntensity: Optional[float] = None
+
+
+class DetectorIntegrateResponse(BaseModel):
+    qValues: List[Optional[float]]
+    iQ: List[Optional[float]]
+    psiValues: List[Optional[float]]
+    iPsi: List[Optional[float]]
+    currentQ: float
+    currentPsi: float
+    # Outline of the extraction wedge (q₀±radialHalf × ψ₀±azimuthHalfR) in
+    # ORIGINAL pixel [x, y] pairs, for overlay on the displayed heatmap.
+    wedgePolygon: List[List[float]] = []
+    wedgeQMin: float = 0.0
+    wedgeQMax: float = 0.0
+    wedgeAzMin: float = 0.0
+    wedgeAzMax: float = 0.0
+
+
+class DetectorCalcPixelRequest(BaseModel):
+    """Refine the anchor: map a (q, ψ) picked on the integration curves back
+    to a detector pixel."""
+    fileId: str
+    poniFileId: str
+    selectedQ: Optional[float] = None
+    selectedPsi: Optional[float] = None
+    currentQ: float
+    currentPsi: float
+
+
+class DetectorCalcPixelResponse(BaseModel):
+    x: int
+    y: int
+    intensity: float
+    q: float
+    psiDeg: float
+
+
+class DetectorWedgeRequest(BaseModel):
+    """Outline of an ARBITRARY q/χ region (the range the user selected on the
+    integration curves) in ORIGINAL pixel coordinates, for overlay on the
+    heatmap and as the bbox seed when recording it as a ROI."""
+    poniFileId: str
+    shape: List[int]
+    qMin: float
+    qMax: float
+    azimuthMin: float
+    azimuthMax: float
+
+
+class DetectorWedgeResponse(BaseModel):
+    polygon: List[List[float]] = []
 
 
 class BackgroundEstimateRequest(BaseModel):
@@ -508,6 +653,199 @@ def _roi_mask_pixel(
         # Fallback: use physical coords
         mask = _roi_mask(shape, roi)
     return mask
+
+
+# ---------------------------------------------------------------------------
+# pyFAI detector geometry
+# ---------------------------------------------------------------------------
+
+def _pyfai_load(poni_file_id: str):
+    """Load the pyFAI AzimuthalIntegrator for an uploaded PONI file id."""
+    try:
+        from pyFAI import load as pyfai_load
+    except ImportError:
+        raise HTTPException(500, "pyfai 坐标模式需要 pyFAI：pip install pyfai")
+    return pyfai_load(_file_path(poni_file_id))
+
+
+# Geometry arrays are expensive (full detector grid) but identical for every
+# ROI on the same calibration, so they are cached per PONI file id. The cache
+# key includes the target shape because a differently-sized image re-uses the
+# same PONI only by re-generating arrays at that shape.
+_pyfai_array_cache: Dict[tuple, tuple] = {}
+
+
+def _pyfai_arrays(poni_file_id: str, shape: tuple[int, int]):
+    """Return (q in Å⁻¹, χ in degrees) pixel maps for the PONI geometry.
+
+    These are the same per-pixel coordinates pyFAI's radial (linear) and
+    azimuthal integrators bin by, so an ROI window over them selects exactly
+    the pixels those integrations would sweep through.
+    """
+    key = (poni_file_id, shape)
+    cached = _pyfai_array_cache.get(key)
+    if cached is not None:
+        return cached
+    ai = _pyfai_load(poni_file_id)
+    q_arr = np.asarray(ai.array_from_unit(shape=shape, unit="q_A^-1"), dtype=np.float64)
+    chi_arr = np.asarray(ai.array_from_unit(shape=shape, unit="chi_deg"), dtype=np.float64)
+    if len(_pyfai_array_cache) > 4:
+        _pyfai_array_cache.clear()
+    _pyfai_array_cache[key] = (q_arr, chi_arr)
+    return q_arr, chi_arr
+
+
+def _pyfai_window_mask(
+    q_arr: np.ndarray,
+    chi_arr: np.ndarray,
+    q_lo: float,
+    q_hi: float,
+    az_lo: float,
+    az_hi: float,
+) -> np.ndarray:
+    """Boolean mask of pixels whose (q, χ) fall in the ROI window.
+
+    The χ window preserves direction so a box crossing the ±180° seam
+    (az_lo > az_hi) selects the two end caps, matching _roi_mask.
+    """
+    q_in = (q_arr >= q_lo) & (q_arr <= q_hi)
+    if az_lo <= az_hi:
+        az_in = (chi_arr >= az_lo) & (chi_arr <= az_hi)
+    else:
+        az_in = (chi_arr >= az_lo) | (chi_arr <= az_hi)
+    return q_in & az_in & np.isfinite(q_arr) & np.isfinite(chi_arr)
+
+
+def _pyfai_wedge_polygon(
+    q_arr: np.ndarray,
+    chi_arr: np.ndarray,
+    q_lo: float,
+    q_hi: float,
+    az_lo: float,
+    az_hi: float,
+) -> list[list[float]]:
+    """Outline of a q/χ window's pixel footprint as [x, y] pairs (cosmetic
+    overlay); empty when scikit-image is unavailable."""
+    mask = _pyfai_window_mask(q_arr, chi_arr, q_lo, q_hi, az_lo, az_hi)
+    try:
+        from skimage.measure import find_contours
+        contours = find_contours(mask.astype(float), 0.5)
+        if contours:
+            contour = max(contours, key=len)
+            step = max(1, len(contour) // 160)
+            return [[float(pt[1]), float(pt[0])] for pt in contour[::step]]
+    except ImportError:
+        pass
+    return []
+
+
+# ---------------------------------------------------------------------------
+# Detector peak picking & pyFAI radial/azimuthal integration
+#
+# Ported from the R1.7all PeakExtraction raw-image workflow (backend/api/
+# peak_raw.py): click an anchor point on the raw detector image, then run a
+# narrow-sector radial (q-I) integration and an azimuthal (ψ-I) integration
+# around it with user-tunable ± half-widths. Windows crossing the ±180° seam
+# are split into two pyFAI segments and stitched back together.
+# ---------------------------------------------------------------------------
+
+def _normalize_angle_180(a: float) -> float:
+    a = (a % 360.0 + 360.0) % 360.0
+    return a - 360.0 if a >= 180.0 else a
+
+
+def _split_azimuth_window(center_deg: float, half_width_deg: float) -> list[dict[str, float]]:
+    """Split an azimuth window centred on center_deg into ±180-safe segments."""
+    center = _normalize_angle_180(center_deg)
+    start = center - half_width_deg
+    end = center + half_width_deg
+    if start >= -180.0 and end <= 180.0:
+        return [{"start": start, "end": end, "width": end - start}]
+    if start < -180.0:
+        return [
+            {"start": start + 360.0, "end": 180.0, "width": 180.0 - (start + 360.0)},
+            {"start": -180.0, "end": end, "width": end + 180.0},
+        ]
+    return [
+        {"start": start, "end": 180.0, "width": 180.0 - start},
+        {"start": -180.0, "end": end - 360.0, "width": end - 180.0},
+    ]
+
+
+def _mask_empty_bins(intensity, count) -> np.ndarray:
+    """NaN-out bins no pixel contributed to (pyFAI fills them with ai.empty=0,
+    indistinguishable from a true zero and responsible for huge jumps in the
+    curve across masked areas). True zeros (count>0) stay 0."""
+    out = np.array(intensity, dtype=float).copy()
+    if count is None:
+        return out
+    count_arr = np.asarray(count)
+    if count_arr.shape == out.shape:
+        out[count_arr == 0] = np.nan
+    return out
+
+
+def _weighted_merge_curves(curves: list[tuple[np.ndarray, float]]) -> list[float]:
+    """Width-weighted mean of segment curves (nan-aware)."""
+    if not curves:
+        return []
+    weighted_sum = np.zeros_like(curves[0][0], dtype=float)
+    weight_sum = np.zeros_like(curves[0][0], dtype=float)
+    for curve, width in curves:
+        valid = np.isfinite(curve)
+        weighted_sum[valid] += curve[valid] * width
+        weight_sum[valid] += width
+    merged = np.divide(
+        weighted_sum, weight_sum,
+        out=np.full_like(weight_sum, np.nan, dtype=float),
+        where=weight_sum > 0,
+    )
+    return merged.tolist()
+
+
+def _allocate_bins(total_bins: int, segments: list[dict[str, float]]) -> list[int]:
+    """Split a total bin budget across seam segments proportionally."""
+    if len(segments) == 1:
+        return [max(2, total_bins)]
+    total_width = sum(seg["width"] for seg in segments)
+    raw = [(seg["width"] / total_width) * total_bins for seg in segments]
+    bins = [max(2, int(math.floor(value))) for value in raw]
+    while sum(bins) < total_bins:
+        idx = max(range(len(raw)), key=lambda i: raw[i] - bins[i])
+        bins[idx] += 1
+    while sum(bins) > total_bins:
+        idx = max(range(len(bins)), key=lambda i: bins[i])
+        if bins[idx] <= 2:
+            break
+        bins[idx] -= 1
+    return bins
+
+
+def _collapse_psi_intensity(intensity: np.ndarray) -> np.ndarray:
+    return np.nanmean(intensity, axis=0) if intensity.ndim == 2 else intensity.astype(float)
+
+
+def _stitch_psi_segments(segments: list[tuple[np.ndarray, np.ndarray]], center_deg: float) -> tuple[list[float], list[float]]:
+    """Concatenate seam segments into one axis continuous around the centre."""
+    if not segments:
+        return [], []
+    stitched: list[tuple[float, float]] = []
+    for axis, intensity in segments:
+        for az, value in zip(axis.tolist(), intensity.tolist()):
+            local_az = center_deg + _normalize_angle_180(az - center_deg)
+            stitched.append((local_az, value))
+    stitched.sort(key=lambda item: item[0])
+    return [item[0] for item in stitched], [item[1] for item in stitched]
+
+
+def _clean_series(values) -> list[Optional[float]]:
+    cleaned: list[Optional[float]] = []
+    for value in values:
+        if value is None or (isinstance(value, float) and not math.isfinite(value)):
+            cleaned.append(None)
+        else:
+            cleaned.append(float(value))
+    return cleaned
 
 
 def _estimate_background(
@@ -885,6 +1223,332 @@ def upload_miller(files: List[UploadFile] = File(...)):
         raise HTTPException(500, detail=str(exc))
 
 
+@router.post("/poni-upload", response_model=PoniInfoResponse)
+def upload_poni(file: UploadFile = File(...)):
+    """Upload and parse a pyFAI PONI calibration file.
+
+    The geometry is returned for display (wavelength in Å, distance in mm,
+    beam-centre pixel) and the stored file id backs the detector tab's
+    physical-coordinate ROI mode: pixel boxes are translated into q/χ windows
+    and intensity is integrated over the calibrated pixels.
+    """
+    try:
+        raw = file.file.read()
+        ext = os.path.splitext(file.filename or "")[1] or ".poni"
+        fid = _save_upload(raw, suffix=ext)
+        ai = _pyfai_load(fid)
+
+        detector = ai.detector
+        pixel1 = float(detector.get_pixel1()) if detector is not None else 0.0
+        pixel2 = float(detector.get_pixel2()) if detector is not None else 0.0
+        max_shape = None
+        if detector is not None and getattr(detector, "max_shape", None) is not None:
+            max_shape = list(detector.max_shape)
+
+        _file_meta[fid] = {"kind": "poni", "shape": max_shape}
+
+        return PoniInfoResponse(
+            fileId=fid,
+            wavelength=float(ai.wavelength) * 1e10,   # m -> Å
+            dist=float(ai.dist) * 1e3,                 # m -> mm
+            poni1=float(ai.poni1),
+            poni2=float(ai.poni2),
+            rot1=float(getattr(ai, "rot1", 0.0) or 0.0),
+            rot2=float(getattr(ai, "rot2", 0.0) or 0.0),
+            rot3=float(getattr(ai, "rot3", 0.0) or 0.0),
+            detector=(detector.name if detector is not None else "Unknown"),
+            pixel1=pixel1 * 1e6,                       # m -> μm
+            pixel2=pixel2 * 1e6,
+            shape=max_shape,
+            centerX=(float(ai.poni2) / pixel2) if pixel2 > 0 else 0.0,
+            centerY=(float(ai.poni1) / pixel1) if pixel1 > 0 else 0.0,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(500, detail=f"PONI 解析失败: {exc}")
+
+
+@router.post("/detector-roi-window", response_model=DetectorRoiWindowResponse)
+def detector_roi_window(req: DetectorRoiWindowRequest):
+    """Translate a pixel box into the q (Å⁻¹) / χ (°) window it covers.
+
+    The window is the min/max of the pyFAI geometry arrays over the box, so a
+    drag on the raw detector image yields the physical-space ROI the pyFAI
+    radial/azimuthal integrations would integrate over.
+    """
+    try:
+        shape = tuple(req.shape) if req.shape else None
+        if shape is None:
+            meta = _file_meta.get(req.poniFileId, {})
+            shape = meta.get("shape")
+        if not shape or len(shape) < 2:
+            raise HTTPException(400, "无法确定探测器尺寸：请提供 shape 或先解析 PONI")
+        nrows, ncols = int(shape[0]), int(shape[1])
+        x1 = int(np.clip(min(req.xMin, req.xMax), 0, ncols - 1))
+        x2 = int(np.clip(max(req.xMin, req.xMax), 0, ncols - 1))
+        y1 = int(np.clip(min(req.yMin, req.yMax), 0, nrows - 1))
+        y2 = int(np.clip(max(req.yMin, req.yMax), 0, nrows - 1))
+
+        q_arr, chi_arr = _pyfai_arrays(req.poniFileId, (nrows, ncols))
+        q_box = q_arr[y1:y2 + 1, x1:x2 + 1]
+        chi_box = chi_arr[y1:y2 + 1, x1:x2 + 1]
+        q_fin = q_box[np.isfinite(q_box)]
+        chi_fin = chi_box[np.isfinite(chi_box)]
+        if q_fin.size == 0 or chi_fin.size == 0:
+            raise HTTPException(400, "选定区域内没有有效标定像素")
+
+        return DetectorRoiWindowResponse(
+            qMin=float(q_fin.min()),
+            qMax=float(q_fin.max()),
+            azimuthMin=float(chi_fin.min()),
+            azimuthMax=float(chi_fin.max()),
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(500, detail=str(exc))
+
+
+def _pyfai_pixel_from_qchi(
+    poni_file_id: str,
+    shape: tuple[int, int],
+    q_t: float,
+    chi_t: float,
+) -> tuple[int, int]:
+    """Map a (q, χ) target back to the nearest detector pixel.
+
+    An analytic rot1=rot2=rot3=0 inversion gives the initial guess (the same
+    formula the R1.7all reference uses), then a local search against the true
+    geometry arrays snaps it onto the exact pixel — robust even when the PONI
+    carries small rotations.
+    """
+    ai = _pyfai_load(poni_file_id)
+    wl = float(ai.wavelength)
+    dist = float(ai.dist)
+    pixel1 = float(ai.detector.get_pixel1())
+    pixel2 = float(ai.detector.get_pixel2())
+    q_si = float(q_t) * 1e10  # Å⁻¹ → m⁻¹
+    sin_th = (q_si * wl) / (4.0 * math.pi)
+    if abs(sin_th) >= 1.0:
+        raise ValueError("q 值超出几何可达范围")
+    theta = math.asin(sin_th)
+    r = dist * math.tan(2.0 * theta)
+    chi_r = math.radians(float(chi_t))
+    gx = float(ai.poni2) / pixel2 + (r * math.cos(chi_r)) / pixel2
+    gy = float(ai.poni1) / pixel1 + (r * math.sin(chi_r)) / pixel1
+
+    nrows, ncols = shape
+    q_arr, chi_arr = _pyfai_arrays(poni_file_id, shape)
+    # Self-calibrated per-pixel scales: nearest in pixel units, not raw (q, χ).
+    dq_per_px = (2.0 * math.pi * pixel2 / (wl * dist)) / 1e10 if (wl and dist) else 0.01
+    r_px = max(r / pixel2 if pixel2 else 1.0, 1.0)
+    dchi_per_px = max(math.degrees(1.0 / r_px), 1e-3)
+
+    win = 80
+    x1 = int(max(0, min(ncols - 1, round(gx) - win)))
+    x2 = int(max(0, min(ncols, round(gx) + win + 1)))
+    y1 = int(max(0, min(nrows - 1, round(gy) - win)))
+    y2 = int(max(0, min(nrows, round(gy) + win + 1)))
+    qs = q_arr[y1:y2, x1:x2]
+    chis = chi_arr[y1:y2, x1:x2]
+    dchi = np.degrees(np.arctan2(
+        np.sin(np.radians(chis - chi_t)),
+        np.cos(np.radians(chis - chi_t)),
+    ))
+    metric = ((qs - q_t) / dq_per_px) ** 2 + (dchi / dchi_per_px) ** 2
+    metric = np.where(np.isfinite(metric), metric, np.inf)
+    ly, lx = np.unravel_index(int(np.argmin(metric)), metric.shape)
+    return int(x1 + lx), int(y1 + ly)
+
+
+@router.post("/detector-click", response_model=DetectorClickResponse)
+def detector_click(req: DetectorClickRequest):
+    """Resolve a click to a pixel + its (q, χ). With snap=True the brightest
+    valid pixel inside the window wins; otherwise the exact clicked pixel."""
+    try:
+        arr = _load_image(req.fileId)
+        nrows, ncols = arr.shape
+        q_arr, chi_arr = _pyfai_arrays(req.poniFileId, arr.shape)
+        cx = int(np.clip(round(req.x), 0, ncols - 1))
+        cy = int(np.clip(round(req.y), 0, nrows - 1))
+        if req.snap:
+            half = max(1, int(req.window) // 2)
+            x1, x2 = max(0, cx - half), min(ncols, cx + half + 1)
+            y1, y2 = max(0, cy - half), min(nrows, cy + half + 1)
+            win = arr[y1:y2, x1:x2]
+            valid = np.isfinite(win)
+            if req.minIntensity is not None:
+                valid &= win >= req.minIntensity
+            if req.maxIntensity is not None:
+                valid &= win <= req.maxIntensity
+            if not valid.any():
+                raise HTTPException(400, "选定窗口内没有有效像素")
+            ly, lx = np.unravel_index(int(np.argmax(np.where(valid, win, -np.inf))), win.shape)
+            gx, gy = int(x1 + lx), int(y1 + ly)
+        else:
+            gx, gy = cx, cy
+        return DetectorClickResponse(
+            x=gx, y=gy,
+            intensity=float(arr[gy, gx]),
+            q=float(q_arr[gy, gx]),
+            psiDeg=float(chi_arr[gy, gx]),
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(500, detail=str(exc))
+
+
+@router.post("/detector-integrate", response_model=DetectorIntegrateResponse)
+def detector_integrate(req: DetectorIntegrateRequest):
+    """Radial (q-I) + azimuthal (ψ-I) pyFAI integration around an anchor.
+
+    Mirrors the R1.7all PeakExtraction /integrate endpoint: ± half-width
+    windows around the anchor's (q₀, ψ₀), seam-crossing azimuth windows split
+    into segments, empty bins optionally NaN-masked, and the extraction wedge
+    returned as a pixel-space polygon for overlay.
+    """
+    try:
+        arr = _load_image(req.fileId)
+        nrows, ncols = arr.shape
+        q_arr, chi_arr = _pyfai_arrays(req.poniFileId, arr.shape)
+        cx = int(np.clip(round(req.x), 0, ncols - 1))
+        cy = int(np.clip(round(req.y), 0, nrows - 1))
+        q0 = float(q_arr[cy, cx])
+        psi0 = float(chi_arr[cy, cx])
+        if not (np.isfinite(q0) and np.isfinite(psi0)):
+            raise HTTPException(400, "选点落在标定有效范围之外")
+
+        ai = _pyfai_load(req.poniFileId)
+        mask = (~np.isfinite(arr)).astype(np.int8)
+        if req.minIntensity is not None:
+            mask |= (arr < req.minIntensity).astype(np.int8)
+        if req.maxIntensity is not None:
+            mask |= (arr > req.maxIntensity).astype(np.int8)
+
+        # ---- q-I: radial profile inside a narrow azimuth sector ------------
+        q_min = max(0.001, q0 - req.radialHalf)
+        q_max = q0 + req.radialHalf
+        q_axis: Optional[np.ndarray] = None
+        q_results: list[tuple[np.ndarray, float]] = []
+        for seg in _split_azimuth_window(psi0, req.azimuthHalf):
+            try:
+                res_q = ai.integrate1d_ng(
+                    arr, int(req.npt),
+                    unit="q_A^-1",
+                    method="splitpixel",
+                    correctSolidAngle=False,
+                    azimuth_range=(seg["start"], seg["end"]),
+                    radial_range=(q_min, q_max),
+                    mask=mask,
+                )
+            except Exception:
+                continue
+            if q_axis is None:
+                q_axis = np.array(res_q.radial, dtype=float)
+            seg_i = _mask_empty_bins(res_q.intensity, getattr(res_q, "count", None)) \
+                if req.excludeEmptyBins else np.array(res_q.intensity, dtype=float)
+            q_results.append((seg_i, seg["width"]))
+        if q_axis is None:
+            raise HTTPException(400, "q-I 积分失败：请检查半宽参数")
+
+        # ---- ψ-I: azimuthal profile inside a narrow radial ring ------------
+        q_min_r = max(0.001, q0 - req.radialHalfR)
+        q_max_r = q0 + req.radialHalfR
+        psi_segments_in = _split_azimuth_window(psi0, req.azimuthHalfR)
+        psi_bins = _allocate_bins(int(req.nptR), psi_segments_in)
+        psi_results: list[tuple[np.ndarray, np.ndarray]] = []
+        for seg, npt_bins in zip(psi_segments_in, psi_bins):
+            try:
+                res_psi = ai.integrate_radial(
+                    arr,
+                    npt_rad=int(req.nptRadR),
+                    npt=int(npt_bins),
+                    radial_range=(q_min_r, q_max_r),
+                    azimuth_range=(seg["start"], seg["end"]),
+                    unit="chi_deg",
+                    radial_unit="q_A^-1",
+                    method="splitpixel",
+                    correctSolidAngle=False,
+                    mask=mask,
+                )
+            except Exception:
+                continue
+            seg_axis = np.array(res_psi.radial, dtype=float)
+            seg_i = _mask_empty_bins(res_psi.intensity, getattr(res_psi, "count", None)) \
+                if req.excludeEmptyBins else np.array(res_psi.intensity, dtype=float)
+            psi_results.append((seg_axis, _collapse_psi_intensity(seg_i)))
+        if not psi_results:
+            raise HTTPException(400, "ψ-I 积分失败：请检查半宽参数")
+        psi_axis, i_psi = _stitch_psi_segments(psi_results, psi0)
+
+        # ---- extraction wedge (union of both windows) as a pixel polygon ---
+        wq_lo, wq_hi = q_min, q0 + req.radialHalf
+        az_segs = _split_azimuth_window(psi0, req.azimuthHalfR)
+        wedge_az_lo = min(seg["start"] for seg in az_segs)
+        wedge_az_hi = max(seg["end"] for seg in az_segs)
+        wedge_polygon = _pyfai_wedge_polygon(q_arr, chi_arr, wq_lo, wq_hi, wedge_az_lo, wedge_az_hi)
+
+        return DetectorIntegrateResponse(
+            qValues=_clean_series(q_axis.tolist()),
+            iQ=_clean_series(_weighted_merge_curves(q_results)),
+            psiValues=_clean_series(psi_axis),
+            iPsi=_clean_series(i_psi),
+            currentQ=q0,
+            currentPsi=psi0,
+            wedgePolygon=wedge_polygon,
+            wedgeQMin=wq_lo, wedgeQMax=wq_hi,
+            wedgeAzMin=wedge_az_lo, wedgeAzMax=wedge_az_hi,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(500, detail=str(exc))
+
+
+@router.post("/detector-calc-pixel", response_model=DetectorCalcPixelResponse)
+def detector_calc_pixel(req: DetectorCalcPixelRequest):
+    """Refine the anchor from (q, ψ) values picked on the integration curves."""
+    try:
+        q_t = float(req.selectedQ) if req.selectedQ is not None else float(req.currentQ)
+        psi_t = _normalize_angle_180(
+            float(req.selectedPsi) if req.selectedPsi is not None else float(req.currentPsi)
+        )
+        arr = _load_image(req.fileId)
+        nrows, ncols = arr.shape
+        nx, ny = _pyfai_pixel_from_qchi(req.poniFileId, arr.shape, q_t, psi_t)
+        if not (0 <= ny < nrows and 0 <= nx < ncols):
+            raise HTTPException(400, f"反算像素 ({nx}, {ny}) 超出图像范围")
+        q_arr, chi_arr = _pyfai_arrays(req.poniFileId, arr.shape)
+        return DetectorCalcPixelResponse(
+            x=int(nx), y=int(ny),
+            intensity=float(arr[ny, nx]),
+            q=float(q_arr[ny, nx]),
+            psiDeg=float(chi_arr[ny, nx]),
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(400, detail=str(exc))
+
+
+@router.post("/detector-wedge", response_model=DetectorWedgeResponse)
+def detector_wedge(req: DetectorWedgeRequest):
+    """Outline of a user-selected q/χ region in pixel coordinates."""
+    try:
+        shape = (int(req.shape[0]), int(req.shape[1]))
+        q_arr, chi_arr = _pyfai_arrays(req.poniFileId, shape)
+        poly = _pyfai_wedge_polygon(
+            q_arr, chi_arr,
+            min(req.qMin, req.qMax), max(req.qMin, req.qMax),
+            req.azimuthMin, req.azimuthMax,
+        )
+        return DetectorWedgeResponse(polygon=poly)
+    except Exception as exc:
+        raise HTTPException(500, detail=str(exc))
+
+
 @router.get("/image/{fileId}")
 def get_image(fileId: str, max_dim: int = Query(512, ge=64)):
     """Get image data for display, downsampled if large."""
@@ -909,9 +1573,16 @@ def calculate_intensity(req: IntensityRequest):
     """
     Calculate integrated intensity for each ROI.
 
-    Supports two coordinate types:
+    Supported coordinate types:
       - 'physical' (default): q/azimuth ranges on cake images
       - 'pixel': pixel x/y ranges on detector images
+      - 'pyfai': q/azimuth windows resolved against a PONI calibration
+        (requires poniFileId). The ROI window selects the detector pixels
+        whose pyFAI q (Å⁻¹) / χ (°) coordinates fall inside it — exactly the
+        pixels the pyFAI radial (linear) and azimuthal integrators sweep for
+        that window — and the raw pixel intensities are summed. Regions may
+        carry qMin/qMax/azimuthMin/azimuthMax directly or a pixel box whose
+        q/χ extent is resolved server-side.
 
     Background modes (via background.mode or legacy backgroundMode):
       none      – no subtraction
@@ -942,6 +1613,12 @@ def calculate_intensity(req: IntensityRequest):
         results: list[ROIIntensity] = []
 
         use_pixel_coords = (req.coordinateType == "pixel")
+        use_pyfai_coords = (req.coordinateType == "pyfai")
+        pyfai_arrays = None
+        if use_pyfai_coords:
+            if not req.poniFileId:
+                raise HTTPException(400, "coordinateType='pyfai' 需要 poniFileId")
+            pyfai_arrays = _pyfai_arrays(req.poniFileId, arr.shape)
         # Resolve the cake axis ranges (request → stored meta → defaults). These
         # map physical ROI coords onto pixels; using the hard-coded defaults
         # here integrated the wrong pixels whenever χ spanned e.g. [−180,180].
@@ -949,7 +1626,38 @@ def calculate_intensity(req: IntensityRequest):
 
         for roi in req.regions:
             # Build mask
-            if use_pixel_coords:
+            if use_pyfai_coords:
+                q_arr, chi_arr = pyfai_arrays
+                # ROI's q/χ fields default to 0.0 (not None), so presence is
+                # detected by a non-degenerate q window; a bare pixel box
+                # (all four zero) gets its window resolved from the geometry.
+                has_q_window = (roi.qMax is not None and roi.qMin is not None
+                                and roi.qMax > roi.qMin)
+                if has_q_window:
+                    q_lo, q_hi = min(roi.qMin, roi.qMax), max(roi.qMin, roi.qMax)
+                    az_lo, az_hi = roi.azimuthMin, roi.azimuthMax
+                elif (roi.xMin is not None and roi.xMax is not None
+                      and roi.yMin is not None and roi.yMax is not None):
+                    # Pixel box: resolve its q/χ extent from the geometry arrays.
+                    nrows, ncols = arr.shape
+                    x1 = int(np.clip(min(roi.xMin, roi.xMax), 0, ncols - 1))
+                    x2 = int(np.clip(max(roi.xMin, roi.xMax), 0, ncols - 1))
+                    y1 = int(np.clip(min(roi.yMin, roi.yMax), 0, nrows - 1))
+                    y2 = int(np.clip(max(roi.yMin, roi.yMax), 0, nrows - 1))
+                    q_box = q_arr[y1:y2 + 1, x1:x2 + 1]
+                    chi_box = chi_arr[y1:y2 + 1, x1:x2 + 1]
+                    q_lo = float(np.nanmin(q_box))
+                    q_hi = float(np.nanmax(q_box))
+                    az_lo = float(np.nanmin(chi_box))
+                    az_hi = float(np.nanmax(chi_box))
+                    # Echo the resolved window on the region so the caller sees
+                    # which physical ROI the pixel box mapped to.
+                    roi.qMin, roi.qMax = q_lo, q_hi
+                    roi.azimuthMin, roi.azimuthMax = az_lo, az_hi
+                else:
+                    raise HTTPException(400, "pyfai ROI 需要 q/χ 窗口或像素框")
+                mask = _pyfai_window_mask(q_arr, chi_arr, q_lo, q_hi, az_lo, az_hi)
+            elif use_pixel_coords:
                 mask = _roi_mask_pixel(arr.shape, roi)
             else:
                 mask = _roi_mask(arr.shape, roi, q_range, chi_range)
@@ -991,6 +1699,8 @@ def calculate_intensity(req: IntensityRequest):
             ))
 
         return IntensityResponse(results=results)
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(500, detail=str(exc))
 

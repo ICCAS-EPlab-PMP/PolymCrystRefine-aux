@@ -122,6 +122,21 @@ export const analysisParseInfo = (formData) =>
 export const analysisCalculateIntensity = (params) =>
   request.post('/analysis/intensity', params);
 
+export const analysisUploadPoni = (formData) =>
+  request.post('/analysis/poni-upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+
+export const analysisDetectorRoiWindow = (params) =>
+  request.post('/analysis/detector-roi-window', params);
+
+export const analysisDetectorClick = (params) =>
+  request.post('/analysis/detector-click', params);
+
+export const analysisDetectorIntegrate = (params) =>
+  request.post('/analysis/detector-integrate', params);
+
+export const analysisDetectorWedge = (params) =>
+  request.post('/analysis/detector-wedge', params);
+
 export const analysisEstimateBackground = (params) =>
   request.post('/analysis/background-estimate', params);
 

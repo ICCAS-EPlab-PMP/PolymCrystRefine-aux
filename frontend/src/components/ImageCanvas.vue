@@ -686,7 +686,7 @@ function getImageDataUrl(format) {
   })
 }
 
-defineExpose({ downloadImage, getImageDataUrl, plotContainer })
+defineExpose({ downloadImage, getImageDataUrl, plotContainer, resetZoom })
 
 onBeforeUnmount(() => {
   if (wheelRafId != null) {

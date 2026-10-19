@@ -674,7 +674,12 @@
                         {{ t('analysis.detector.uploadLabel') }}
                         <input type="file" accept=".tif,.tiff,.edf,.npy,.h5,.cbf" @change="onDetectorFileInput" hidden />
                       </label>
-                      <button class="btn-compact btn-primary-compact" :disabled="!detectorFile" @click="loadDetectorImage" style="margin-left:6px">
+                      <label class="btn-compact" :title="t('analysis.detector.poniHint')" style="margin-left:4px">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
+                        PONI
+                        <input type="file" accept=".poni" @change="onDetectorPoniInput" hidden />
+                      </label>
+                      <button class="btn-compact btn-primary-compact" :disabled="!detectorFile" @click="loadDetectorImage" style="margin-left:4px">
                         {{ t('analysis.detector.btnLoad') }}
                       </button>
                     </div>
@@ -682,6 +687,11 @@
                   <div v-if="detectorMeta" class="meta-strip">
                     <span><strong>shape:</strong> {{ (detectorMeta.shape || []).join(' × ') }}</span>
                     <span><strong>dtype:</strong> {{ detectorMeta.dtype }}</span>
+                    <span v-if="detectorPoni" :title="t('analysis.detector.poniHint')">
+                      <strong>λ:</strong> {{ detectorPoni.wavelength?.toFixed(4) }} Å
+                      <strong>dist:</strong> {{ detectorPoni.dist?.toFixed(1) }} mm
+                      <strong>中心:</strong> ({{ Math.round(detectorPoni.centerX) }}, {{ Math.round(detectorPoni.centerY) }})
+                    </span>
                   </div>
                   <div class="image-canvas-wrap">
                     <ImageCanvas
@@ -690,11 +700,21 @@
                       :image-data="detectorImageData"
                       :colorscale="detectorControls.colormap"
                       :log-scale="detectorControls.logScale"
+                      :zmin="detectorControls.zmin"
+                      :zmax="detectorControls.zmax"
                       :show-colorbar="false"
                       :show-toolbar="false"
                       :title="t('analysis.detector.displayTitle')"
+                      :height="detectorCanvasHeight"
                       :smooth-zoom="true"
+                      square-pixels
+                      :shapes="detectorShapes"
+                      :roi-labels="detectorRoiLabels"
+                      :overlay-points="detectorAnchorOverlay"
+                      :overlay-color="'#FFFFFF'"
+                      :overlay-size="8"
                       @region-selected="onDetectorRegionSelected"
+                      @point-clicked="onDetectorPointClicked"
                     />
                     <div v-else class="image-placeholder">
                       <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -703,6 +723,28 @@
                       </svg>
                       <span>{{ t('analysis.detector.placeholder') }}</span>
                       <span class="placeholder-hint">{{ t('analysis.detector.placeholderHint') }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contrast window for the detector image (display only —
+                     mirrors the cake tab's card; the integration threshold
+                     stays separate in the saturation card). -->
+                <div class="section-card" v-if="detectorImageData">
+                  <div class="section-header"><h3>{{ t('analysis.contrast.title') }}</h3></div>
+                  <div class="contrast-block">
+                    <div class="contrast-field">
+                      <label class="contrast-block-label">{{ t('analysis.contrast.min') }}</label>
+                      <input type="range" :min="detectorContrastRange[0]" :max="detectorContrastRange[1]" v-model.number="detectorControls.zmin" class="contrast-slider" />
+                      <input type="number" :min="detectorContrastRange[0]" :max="detectorContrastRange[1]" v-model.number="detectorControls.zmin" class="contrast-num" />
+                    </div>
+                    <div class="contrast-field">
+                      <label class="contrast-block-label">{{ t('analysis.contrast.max') }}</label>
+                      <input type="range" :min="detectorContrastRange[0]" :max="detectorContrastRange[1]" v-model.number="detectorControls.zmax" class="contrast-slider" />
+                      <input type="number" :min="detectorContrastRange[0]" :max="detectorContrastRange[1]" v-model.number="detectorControls.zmax" class="contrast-num" />
+                    </div>
+                    <div class="btn-row">
+                      <button class="btn-compact" @click="resetDetectorContrast">{{ t('analysis.contrast.reset') }}</button>
                     </div>
                   </div>
                 </div>
@@ -731,6 +773,48 @@
                         {{ detectorControls.logScale ? t('common.on') : t('common.off') }}
                       </button>
                     </div>
+                  </div>
+                  <!-- Canvas sizing: true-aspect canvas whose height the user can
+                       adjust; the image renders inside it 1 pixel = 1 square. -->
+                  <div class="form-field-stack" style="margin-top:8px">
+                    <label>{{ t('analysis.detector.canvasHeight') }}: {{ detectorCanvasHeight }} px</label>
+                    <input type="range" min="320" max="1400" step="20" v-model.number="detectorCanvasHeight" class="contrast-slider" @change="persistDetectorCanvasHeight" />
+                    <div class="btn-row">
+                      <button class="btn-compact" @click="resetDetectorZoom">{{ t('analysis.detector.resetZoom') }}</button>
+                    </div>
+                  </div>
+                  <!-- ROI coordinate mode: raw pixel boxes, or physical q/χ
+                       windows resolved through the uploaded PONI calibration
+                       (pyFAI radial + azimuthal integration pixel selection). -->
+                  <div class="form-field-stack" style="margin-top:8px">
+                    <label>{{ t('analysis.detector.coordMode') }}</label>
+                    <select v-model="detectorCoordMode" class="param-input" :disabled="!detectorImageData">
+                      <option value="pixel">{{ t('analysis.detector.coordPixel') }}</option>
+                      <option value="qchi" :disabled="!detectorPoni">{{ t('analysis.detector.coordQchi') }}</option>
+                    </select>
+                    <div v-if="detectorCoordMode === 'qchi'" style="font-size:11px; color: var(--color-text-secondary)">
+                      {{ t('analysis.detector.coordQchiHint') }}
+                    </div>
+                    <div v-else-if="!detectorPoni" style="font-size:11px; color: var(--color-text-secondary)">
+                      {{ t('analysis.detector.poniHint') }}
+                    </div>
+                  </div>
+                  <!-- Fixed on/off site for the integration-slices card:
+                       visible in every state, so a closed/floating card can
+                       always be reopened/redocked from here. -->
+                  <div class="btn-row" style="margin-top:8px">
+                    <button
+                      :class="['btn-compact', { 'btn-accent-compact': detectorPeakVisible }]"
+                      :disabled="!detectorImageData"
+                      @click="togglePeakCard"
+                    >{{ detectorPeakVisible ? t('analysis.detector.peakToggleHide') : t('analysis.detector.peakToggleShow') }}</button>
+                    <button
+                      v-if="detectorPeakFloating"
+                      class="btn-compact"
+                      :title="t('analysis.detector.peakDockHint')"
+                      :disabled="!detectorImageData"
+                      @click="dockPeakCard"
+                    >{{ t('analysis.slice.dockBtn') }}</button>
                   </div>
                 </div>
 
@@ -793,6 +877,124 @@
               </div>
             </div>
 
+            <!-- ===== Integration slices + region select =====
+                 Click the image to set the integration CENTER, then pyFAI
+                 radial (q-I) / azimuthal (ψ-I) slice curves are generated
+                 around it (same interaction model as the cake slice card).
+                 The user DRAG-SELECTS a q range and a χ range on the curves;
+                 the combined region (cyan wedge on the image) is recorded as
+                 an intensity ROI. Requires a PONI calibration.
+                 Inline by default; pops out into a draggable/resizable
+                 floating card (拖动标题栏移动 / 右下角缩放 / × 关闭). -->
+            <div
+              v-if="detectorImageData && detectorPeakVisible"
+              :class="['section-card', 'slice-card', { 'slice-card--floating': detectorPeakFloating }]"
+              :style="detectorPeakFloating ? detectorPeakCardStyle : null"
+            >
+              <div
+                class="section-header slice-card__header"
+                :class="{ 'slice-card__header--drag': detectorPeakFloating }"
+                @pointerdown="startPeakCardDrag"
+              >
+                <h3>{{ t('analysis.detector.peakTitle') }}</h3>
+                <div class="slice-card__actions" @pointerdown.stop>
+                  <button v-if="detectorAnchor" class="btn-compact" @click="clearDetectorAnchor">{{ t('analysis.detector.btnClearCenter') }}</button>
+                  <button class="btn-compact" :title="t('analysis.detector.peakFloatHint')" @click="togglePeakCardFloating">
+                    {{ detectorPeakFloating ? t('analysis.slice.dockBtn') : t('analysis.slice.floatBtn') }}
+                  </button>
+                  <button
+                    class="btn-icon slice-card__close"
+                    :title="t('analysis.detector.peakHide')"
+                    @click="closePeakCard"
+                  >&times;</button>
+                </div>
+              </div>
+              <div v-if="!detectorPoni" class="panel-hint">{{ t('analysis.detector.peakNeedPoni') }}</div>
+              <template v-else>
+                <!-- Integration center readout -->
+                <div class="selection-info" v-if="detectorAnchor">
+                  <span class="sel-tag">{{ t('analysis.detector.centerTag') }}: ({{ detectorAnchor.x }}, {{ detectorAnchor.y }})</span>
+                  <span class="sel-tag">q: {{ detectorAnchor.q?.toFixed(5) }} Å⁻¹</span>
+                  <span class="sel-tag">χ: {{ detectorAnchor.psiDeg?.toFixed(2) }}°</span>
+                </div>
+                <div v-else class="panel-hint">{{ t('analysis.detector.peakHint') }}</div>
+
+                <!-- Slice windows: q-I (top) and ψ-I (bottom) -->
+                <div class="slice-grid" style="margin-top:8px" v-if="detectorAnchor">
+                  <div class="slice-plot">
+                    <div class="slice-plot-label">{{ t('analysis.detector.qIntegrate') }}</div>
+                    <div class="slice-plot-params">
+                      <label>{{ t('analysis.detector.azHalf') }}</label>
+                      <input v-model.number="detectorIntP.azimuthHalf" type="number" step="1" min="0.1" class="param-input param-input-xs" @change="runDetectorIntegration" />
+                      <span class="param-unit">°</span>
+                    </div>
+                    <div class="slice-plot-params">
+                      <label>{{ t('analysis.detector.radialHalf') }}</label>
+                      <input v-model.number="detectorIntP.radialHalf" type="number" step="0.01" min="0.001" class="param-input param-input-xs" @change="runDetectorIntegration" />
+                      <span class="param-unit">Å⁻¹</span>
+                    </div>
+                    <div class="slice-plot-params">
+                      <label>{{ t('analysis.detector.nptQ') }}</label>
+                      <input v-model.number="detectorIntP.npt" type="number" step="50" min="16" class="param-input param-input-xs" @change="runDetectorIntegration" />
+                    </div>
+                    <div ref="detectorQChartRef" class="slice-plot-area"></div>
+                  </div>
+                  <div class="slice-plot">
+                    <div class="slice-plot-label">{{ t('analysis.detector.psiIntegrate') }}</div>
+                    <div class="slice-plot-params">
+                      <label>{{ t('analysis.detector.radialHalfR') }}</label>
+                      <input v-model.number="detectorIntP.radialHalfR" type="number" step="0.005" min="0.001" class="param-input param-input-xs" @change="runDetectorIntegration" />
+                      <span class="param-unit">Å⁻¹</span>
+                    </div>
+                    <div class="slice-plot-params">
+                      <label>{{ t('analysis.detector.azHalfR') }}</label>
+                      <input v-model.number="detectorIntP.azimuthHalfR" type="number" step="5" min="0.1" class="param-input param-input-xs" @change="runDetectorIntegration" />
+                      <span class="param-unit">°</span>
+                    </div>
+                    <div class="slice-plot-params">
+                      <label>{{ t('analysis.detector.nptPsi') }}</label>
+                      <input v-model.number="detectorIntP.nptR" type="number" step="10" min="8" class="param-input param-input-xs" @change="runDetectorIntegration" />
+                    </div>
+                    <div ref="detectorPsiChartRef" class="slice-plot-area"></div>
+                  </div>
+                </div>
+                <div class="panel-hint" style="margin-top:6px" v-if="detectorAnchor">{{ t('analysis.detector.selectHint') }}</div>
+
+                <!-- Selected ranges + actions -->
+                <div class="controls-row" style="margin-top:8px" v-if="detectorAnchor">
+                  <div class="selection-info">
+                    <span class="sel-tag">{{ t('analysis.detector.selQRange') }}: <b>{{ detectorSelQ ? `[${detectorSelQ[0].toFixed(4)}, ${detectorSelQ[1].toFixed(4)}]` : '—' }}</b></span>
+                    <span class="sel-tag">{{ t('analysis.detector.selPsiRange') }}: <b>{{ detectorSelPsi ? `[${detectorSelPsi[0].toFixed(1)}, ${detectorSelPsi[1].toFixed(1)}]°` : '—' }}</b></span>
+                  </div>
+                  <div class="btn-row" style="align-items:center; gap:6px">
+                    <label class="crop-toggle">
+                      <input type="checkbox" v-model="detectorIntP.excludeEmptyBins" @change="runDetectorIntegration" />
+                      <span>{{ t('analysis.detector.excludeEmpty') }}</span>
+                    </label>
+                    <button
+                      v-if="detectorSelQ || detectorSelPsi"
+                      class="btn-compact"
+                      @click="clearDetectorSelection"
+                    >{{ t('analysis.detector.btnClearSelection') }}</button>
+                    <button
+                      class="btn-compact btn-primary-compact"
+                      :disabled="!detectorSelQ || !detectorSelPsi"
+                      :title="t('analysis.detector.recordRoiHint')"
+                      @click="recordDetectorWedgeRoi"
+                    >
+                      {{ t('analysis.detector.btnRecordRoi') }}
+                    </button>
+                  </div>
+                </div>
+              </template>
+              <div
+                v-if="detectorPeakFloating"
+                class="slice-card__resize"
+                :title="t('analysis.slice.resizeHint')"
+                @pointerdown="startPeakCardResize"
+              ></div>
+            </div>
+
             <!-- Detector ROI Table -->
             <div class="section-card roi-section" v-if="detectorImageData">
               <div class="section-header">
@@ -809,10 +1011,18 @@
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>{{ t('analysis.roi.columns.xMin') }}</th>
-                      <th>{{ t('analysis.roi.columns.xMax') }}</th>
-                      <th>{{ t('analysis.roi.columns.yMin') }}</th>
-                      <th>{{ t('analysis.roi.columns.yMax') }}</th>
+                      <template v-if="detectorCoordMode === 'qchi'">
+                        <th>{{ t('analysis.roi.columns.qMin') }}</th>
+                        <th>{{ t('analysis.roi.columns.qMax') }}</th>
+                        <th>{{ t('analysis.roi.columns.azimuthMin') }}</th>
+                        <th>{{ t('analysis.roi.columns.azimuthMax') }}</th>
+                      </template>
+                      <template v-else>
+                        <th>{{ t('analysis.roi.columns.xMin') }}</th>
+                        <th>{{ t('analysis.roi.columns.xMax') }}</th>
+                        <th>{{ t('analysis.roi.columns.yMin') }}</th>
+                        <th>{{ t('analysis.roi.columns.yMax') }}</th>
+                      </template>
                       <th>{{ t('analysis.roi.columns.multiplier') }}</th>
                       <th>{{ t('analysis.roi.columns.intensity') }}</th>
                       <th>{{ t('analysis.roi.columns.pixels') }}</th>
@@ -823,10 +1033,18 @@
                   <tbody>
                     <tr v-for="(roi, i) in detectorRois" :key="i">
                       <td class="td-idx">{{ i + 1 }}</td>
-                      <td><input v-model.number="roi.xMin" type="number" step="1" class="cell-input" /></td>
-                      <td><input v-model.number="roi.xMax" type="number" step="1" class="cell-input" /></td>
-                      <td><input v-model.number="roi.yMin" type="number" step="1" class="cell-input" /></td>
-                      <td><input v-model.number="roi.yMax" type="number" step="1" class="cell-input" /></td>
+                      <template v-if="detectorCoordMode === 'qchi'">
+                        <td><input v-model.number="roi.qMin" type="number" step="0.005" class="cell-input" /></td>
+                        <td><input v-model.number="roi.qMax" type="number" step="0.005" class="cell-input" /></td>
+                        <td><input v-model.number="roi.azimuthMin" type="number" step="1" class="cell-input" /></td>
+                        <td><input v-model.number="roi.azimuthMax" type="number" step="1" class="cell-input" /></td>
+                      </template>
+                      <template v-else>
+                        <td><input v-model.number="roi.xMin" type="number" step="1" class="cell-input" /></td>
+                        <td><input v-model.number="roi.xMax" type="number" step="1" class="cell-input" /></td>
+                        <td><input v-model.number="roi.yMin" type="number" step="1" class="cell-input" /></td>
+                        <td><input v-model.number="roi.yMax" type="number" step="1" class="cell-input" /></td>
+                      </template>
                       <td>
                         <select v-model.number="roi.multiplier" class="cell-input cell-select">
                           <option :value="0">0</option>
@@ -868,9 +1086,14 @@ import { renderFullImageDataUrl } from '@/services/imageExport'
 import {
   analysisUploadImage,
   analysisUploadMiller,
+  analysisUploadPoni,
   analysisGetImage,
   analysisParseInfo,
   analysisCalculateIntensity,
+  analysisDetectorRoiWindow,
+  analysisDetectorClick,
+  analysisDetectorIntegrate,
+  analysisDetectorWedge,
   analysisEstimateBackground,
   analysisMatchMiller,
 } from '@/api/index.js'
@@ -1343,6 +1566,7 @@ function clampSliceCardToViewport() {
 
 function onWindowResize() {
   clampSliceCardToViewport()
+  clampPeakCardToViewport()
 }
 window.addEventListener('resize', onWindowResize)
 
@@ -1518,13 +1742,178 @@ const detectorFile = ref(null)
 const detectorImageData = ref(null)
 const detectorImageFileId = ref(null)
 const detectorMeta = ref(null)
+// Display grid shape ([rows, cols]) of the downsampled image actually plotted.
+// ROI drags arrive in THESE coordinates; they must be mapped back to original
+// detector pixels (via mapDisplayToOriginal below) before any integration —
+// for detectors larger than the 512 px display cap the two grids differ.
+const detectorDisplayShape = ref(null)
 
 const detectorControls = reactive({
   colormap: 'Viridis',
   logScale: true,
+  // Display contrast window (linear domain; ImageCanvas maps it into the log
+  // domain when logScale is on). Seeded from the image min/max on load.
+  zmin: 0,
+  zmax: 65535,
 })
+const detectorContrastRange = ref([0, 65535])
+
+const resetDetectorContrast = () => {
+  detectorControls.zmin = detectorContrastRange.value[0]
+  detectorControls.zmax = detectorContrastRange.value[1]
+}
+
+// Canvas height (px) of the detector image pane. Persisted so the user's
+// preferred canvas size survives reloads.
+const DETECTOR_CANVAS_STORE_KEY = 'pregui.detectorCanvasHeight'
+const detectorCanvasHeight = ref(600)
+try {
+  const saved = Number(localStorage.getItem(DETECTOR_CANVAS_STORE_KEY))
+  detectorCanvasHeight.value = Number.isFinite(saved) && saved >= 320 && saved <= 1400 ? saved : 600
+} catch { detectorCanvasHeight.value = 600 }
+const persistDetectorCanvasHeight = () => {
+  try { localStorage.setItem(DETECTOR_CANVAS_STORE_KEY, String(detectorCanvasHeight.value)) } catch { /* ignore */ }
+}
+
+const resetDetectorZoom = () => {
+  detectorImageCanvasRef.value?.resetZoom?.()
+}
+
+// ---- Integration-slices card: inline ⇄ floating (draggable/resizable) ----
+// Same pattern as the cake slice card: position/size/visibility persist in
+// localStorage; the fixed open/dock site lives in the Display Controls card.
+const PEAK_CARD_STORE_KEY = 'pre_analysis_peak_card_v1'
+const detectorPeakVisible = ref(true)
+const detectorPeakFloating = ref(false)
+const detectorPeakPos = reactive({ x: 80, y: 120 })
+const detectorPeakSize = reactive({ w: 860, h: 560 })
+const detectorPeakCardStyle = computed(() => ({
+  left: `${detectorPeakPos.x}px`,
+  top: `${detectorPeakPos.y}px`,
+  width: `${detectorPeakSize.w}px`,
+  height: `${detectorPeakSize.h}px`,
+}))
+
+function clampPeakCardToViewport() {
+  detectorPeakPos.x = clamp(detectorPeakPos.x, -detectorPeakSize.w + 120, Math.max(0, window.innerWidth - 120))
+  detectorPeakPos.y = clamp(detectorPeakPos.y, 0, Math.max(0, window.innerHeight - 48))
+}
+function loadPeakCardState() {
+  try {
+    const raw = localStorage.getItem(PEAK_CARD_STORE_KEY)
+    if (!raw) return
+    const s = JSON.parse(raw)
+    if (typeof s.visible === 'boolean') detectorPeakVisible.value = s.visible
+    if (typeof s.floating === 'boolean') detectorPeakFloating.value = s.floating
+    if (Number.isFinite(s.x)) detectorPeakPos.x = s.x
+    if (Number.isFinite(s.y)) detectorPeakPos.y = s.y
+    if (Number.isFinite(s.w) && s.w >= 360) detectorPeakSize.w = s.w
+    if (Number.isFinite(s.h) && s.h >= 280) detectorPeakSize.h = s.h
+  } catch { /* corrupted state — keep defaults */ }
+  clampPeakCardToViewport()
+}
+function persistPeakCard() {
+  try {
+    localStorage.setItem(PEAK_CARD_STORE_KEY, JSON.stringify({
+      visible: detectorPeakVisible.value,
+      floating: detectorPeakFloating.value,
+      ...detectorPeakPos,
+      ...detectorPeakSize,
+    }))
+  } catch { /* storage unavailable — non-fatal */ }
+}
+loadPeakCardState()
+
+// The charts are Plotly-plotted into freshly-mounted divs after each
+// v-if/v-show transition, so redraw + resize them whenever the card reopens
+// or toggles between inline (full width) and floating (fixed width).
+function redrawPeakCharts() {
+  nextTick(() => {
+    if (detectorIntData.value) drawDetectorCharts()
+    if (detectorQChartRef.value) Plotly.Plots.resize(detectorQChartRef.value)
+    if (detectorPsiChartRef.value) Plotly.Plots.resize(detectorPsiChartRef.value)
+  })
+}
+function togglePeakCardFloating() {
+  detectorPeakFloating.value = !detectorPeakFloating.value
+  persistPeakCard()
+  redrawPeakCharts()
+}
+function togglePeakCard() {
+  detectorPeakVisible.value = !detectorPeakVisible.value
+  persistPeakCard()
+  if (detectorPeakVisible.value) redrawPeakCharts()
+}
+function closePeakCard() {
+  detectorPeakVisible.value = false
+  persistPeakCard()
+}
+function dockPeakCard() {
+  detectorPeakFloating.value = false
+  detectorPeakPos.x = 80
+  detectorPeakPos.y = 120
+  if (!detectorPeakVisible.value) detectorPeakVisible.value = true
+  persistPeakCard()
+  redrawPeakCharts()
+}
+
+function startPeakCardDrag(e) {
+  if (!detectorPeakFloating.value || e.button !== 0) return
+  e.preventDefault()
+  const startX = e.clientX
+  const startY = e.clientY
+  const origX = detectorPeakPos.x
+  const origY = detectorPeakPos.y
+  const onMove = (ev) => {
+    detectorPeakPos.x = clamp(origX + ev.clientX - startX, -detectorPeakSize.w + 120, window.innerWidth - 120)
+    detectorPeakPos.y = clamp(origY + ev.clientY - startY, 0, window.innerHeight - 48)
+  }
+  const onUp = () => {
+    window.removeEventListener('pointermove', onMove)
+    window.removeEventListener('pointerup', onUp)
+    persistPeakCard()
+  }
+  window.addEventListener('pointermove', onMove)
+  window.addEventListener('pointerup', onUp)
+}
+
+function startPeakCardResize(e) {
+  if (e.button !== 0) return
+  e.preventDefault()
+  e.stopPropagation()
+  const startX = e.clientX
+  const startY = e.clientY
+  const origW = detectorPeakSize.w
+  const origH = detectorPeakSize.h
+  const onMove = (ev) => {
+    detectorPeakSize.w = clamp(origW + ev.clientX - startX, 360, window.innerWidth - 40)
+    detectorPeakSize.h = clamp(origH + ev.clientY - startY, 280, window.innerHeight - 40)
+  }
+  const onUp = () => {
+    window.removeEventListener('pointermove', onMove)
+    window.removeEventListener('pointerup', onUp)
+    persistPeakCard()
+    // Plotly needs an explicit resize when its container's box changes.
+    if (detectorQChartRef.value) Plotly.Plots.resize(detectorQChartRef.value)
+    if (detectorPsiChartRef.value) Plotly.Plots.resize(detectorPsiChartRef.value)
+  }
+  window.addEventListener('pointermove', onMove)
+  window.addEventListener('pointerup', onUp)
+}
+
+// Parsed PONI calibration (pyFAI geometry) for physical-coordinate ROIs.
+const detectorPoni = ref(null)
+// ROI coordinate mode: 'pixel' = raw pixel boxes; 'qchi' = q (Å⁻¹) / χ (°)
+// windows resolved against the PONI — the pixel set pyFAI's radial and
+// azimuthal integrators would sweep for that window.
+const detectorCoordMode = ref('pixel')
 
 const detectorRois = ref([])
+// Each ROI row carries coordType: 'qchi' rows are physical q/χ regions —
+// displayed and integrated as their true calibrated SECTOR (wedge) outline,
+// fetched via /detector-wedge; 'pixel' rows are raw pixel boxes (rects).
+// wedgeKey caches the window the current wedgePolygon was computed for, so
+// numeric edits of q/χ trigger a refetch.
 
 const detectorBgMode = ref('fixed')
 const detectorBgValue = ref(0)
@@ -1679,6 +2068,16 @@ const loadDetectorImage = async () => {
       }
       const imgRes = await analysisGetImage(res.data.fileId)
       detectorImageData.value = imgRes.data?.data ?? null
+      detectorDisplayShape.value = imgRes.data?.displayShape || res.data.shape || null
+      // Seed the contrast window from the full-resolution min/max (finite
+      // only), like the cake tab.
+      if (imgRes.data) {
+        const dmin = imgRes.data.min ?? 0
+        const dmax = imgRes.data.max ?? 65535
+        detectorContrastRange.value = [dmin, dmax]
+        detectorControls.zmin = dmin
+        detectorControls.zmax = dmax
+      }
     }
     consoleLogs.detector.push(t('logs.analysis.detectorLoaded'))
     taskStatus.detector = 'completed'
@@ -1688,6 +2087,51 @@ const loadDetectorImage = async () => {
     taskStatus.detector = 'error'
     runStatus.value = 'failed'
   }
+}
+
+// ===================== PONI (pyFAI geometry) =====================
+// Upload + parse a PONI calibration so detector ROIs can be drawn/integrated
+// in physical q/χ space. Kept until replaced or the page is left.
+const onDetectorPoniInput = async (e) => {
+  const f = e.target.files?.[0] || null
+  if (!f) return
+  consoleLogs.detector.push(t('logs.analysis.uploadingPoni'))
+  try {
+    const fd = new FormData()
+    fd.append('file', f)
+    const res = await analysisUploadPoni(fd)
+    detectorPoni.value = res.data || null
+    consoleLogs.detector.push(t('logs.analysis.poniLoaded', {
+      lambda: detectorPoni.value?.wavelength?.toFixed(4) ?? '?',
+      dist: detectorPoni.value?.dist?.toFixed(1) ?? '?',
+    }))
+  } catch (err) {
+    detectorPoni.value = null
+    detectorCoordMode.value = 'pixel'
+    consoleLogs.detector.push(t('logs.common.error', { message: err.response?.data?.detail || err.message }))
+  }
+}
+
+// Display-grid pixel → original detector pixel (endpoint-linear mapping).
+// The plotted heatmap is the backend-downsampled grid; integrations and the
+// PONI geometry work on the ORIGINAL pixel grid, so every dragged box must be
+// rescaled before use.
+function mapDisplayToOriginal(xDisp, yDisp) {
+  const [rows, cols] = detectorDisplayShape.value || detectorMeta.value?.shape || [0, 0]
+  const [oRows, oCols] = detectorMeta.value?.shape || [rows, cols]
+  const x = cols > 1 ? (xDisp / (cols - 1)) * (oCols - 1) : 0
+  const y = rows > 1 ? (yDisp / (rows - 1)) * (oRows - 1) : 0
+  return { x, y, cols: oCols, rows: oRows }
+}
+
+// Original detector pixel → display-grid pixel (inverse of the above), for
+// drawing recorded ROI boxes back onto the plotted heatmap.
+function mapOriginalToDisplay(xOrig, yOrig) {
+  const [rows, cols] = detectorDisplayShape.value || detectorMeta.value?.shape || [0, 0]
+  const [oRows, oCols] = detectorMeta.value?.shape || [rows, cols]
+  const x = oCols > 1 ? (xOrig / (oCols - 1)) * (cols - 1) : 0
+  const y = oRows > 1 ? (yOrig / (oRows - 1)) * (rows - 1) : 0
+  return { x, y }
 }
 
 // ===================== CAKE REGION SELECTION =====================
@@ -1972,19 +2416,384 @@ function clearCakeSelection() {
 }
 
 // ===================== DETECTOR REGION SELECTION =====================
-function onDetectorRegionSelected(region) {
+// A drag on the (downsampled) display grid is first mapped to ORIGINAL
+// detector pixels; in q/χ mode the backend then resolves the pyFAI q/χ
+// window covered by that box and the ROI is stored in physical coordinates.
+async function onDetectorRegionSelected(region) {
   const [x1, x2] = region.xRange
   const [y1, y2] = region.yRange
-  detectorRois.value.push({
-    xMin: Math.round(Math.min(x1, x2)),
-    xMax: Math.round(Math.max(x1, x2)),
-    yMin: Math.round(Math.min(y1, y2)),
-    yMax: Math.round(Math.max(y1, y2)),
+  // Degenerate (near-zero-area) drags — including the micro-drag a plain
+  // click emits alongside plotly_click — must not create ROIs.
+  if (Math.abs(x2 - x1) < 2 && Math.abs(y2 - y1) < 2) return
+  const p1 = mapDisplayToOriginal(Math.min(x1, x2), Math.min(y1, y2))
+  const p2 = mapDisplayToOriginal(Math.max(x1, x2), Math.max(y1, y2))
+  const xMin = Math.round(p1.x), xMax = Math.round(p2.x)
+  const yMin = Math.round(p1.y), yMax = Math.round(p2.y)
+  const base = {
+    xMin, xMax, yMin, yMax,
+    coordType: detectorCoordMode.value === 'qchi' ? 'qchi' : 'pixel',
     multiplier: 1,
     intensity: null,
     pixelCount: null,
     label: '',
+  }
+  if (detectorCoordMode.value === 'qchi') {
+    if (!detectorPoni.value) {
+      consoleLogs.detector.push(t('analysis.detector.poniHint'))
+      return
+    }
+    try {
+      const res = await analysisDetectorRoiWindow({
+        poniFileId: detectorPoni.value.fileId,
+        xMin, xMax, yMin, yMax,
+        shape: detectorMeta.value?.shape || undefined,
+      })
+      const w = res.data || {}
+      detectorRois.value.push({
+        ...base,
+        qMin: w.qMin, qMax: w.qMax,
+        azimuthMin: w.azimuthMin, azimuthMax: w.azimuthMax,
+      })
+    } catch (err) {
+      consoleLogs.detector.push(t('logs.common.error', { message: err.response?.data?.detail || err.message }))
+    }
+    return
+  }
+  detectorRois.value.push({ ...base })
+}
+
+// Recorded detector ROIs drawn on the display grid. q/χ rows render as
+// their TRUE sector (wedge) outline computed from the PONI geometry — the
+// region actually integrated; only pixel-mode rows are rectangles.
+// The currently selected region (q range × χ range from the slice curves)
+// is drawn as the cyan wedge so the user sees exactly which pixels 记录为 ROI
+// will select.
+const detectorShapes = computed(() => {
+  const shapes = []
+  const wedgePath = (poly) => {
+    const pts = poly
+      .map(p => mapOriginalToDisplay(p[0], p[1]))
+      .filter(p => Number.isFinite(p.x) && Number.isFinite(p.y))
+    if (pts.length < 3) return null
+    return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ') + ' Z'
+  }
+  detectorRois.value.forEach((r) => {
+    if (r.coordType === 'qchi') {
+      const poly = r.wedgePolygon
+      const path = Array.isArray(poly) ? wedgePath(poly) : null
+      if (path) {
+        shapes.push({
+          type: 'path', xref: 'x', yref: 'y', path,
+          line: { color: '#EAB308', width: 2 },
+          fillcolor: 'rgba(234, 179, 8, 0.14)',
+        })
+      }
+      return
+    }
+    if (r.xMin == null || r.xMax == null || r.yMin == null || r.yMax == null) return
+    const a = mapOriginalToDisplay(Math.min(r.xMin, r.xMax), Math.min(r.yMin, r.yMax))
+    const b = mapOriginalToDisplay(Math.max(r.xMin, r.xMax), Math.max(r.yMin, r.yMax))
+    shapes.push({
+      type: 'rect', xref: 'x', yref: 'y',
+      x0: a.x, x1: b.x, y0: a.y, y1: b.y,
+      line: { color: '#EAB308', width: 2 },
+      fillcolor: 'rgba(234, 179, 8, 0.08)',
+    })
   })
+  const wedge = detectorWedge.value?.polygon
+  if (Array.isArray(wedge) && wedge.length >= 3) {
+    const path = wedgePath(wedge)
+    if (path) {
+      shapes.push({
+        type: 'path', xref: 'x', yref: 'y', path,
+        line: { color: '#22D3EE', width: 2 },
+        fillcolor: 'rgba(34, 211, 238, 0.10)',
+      })
+    }
+  }
+  return shapes
+})
+
+// ROI index labels at the centre of each box (mirrors the cake labels).
+const detectorRoiLabels = computed(() => {
+  return detectorRois.value.map((r, i) => {
+    if (r.xMin == null || r.xMax == null || r.yMin == null || r.yMax == null) return null
+    const c = mapOriginalToDisplay((r.xMin + r.xMax) / 2, (r.yMin + r.yMax) / 2)
+    return { x: c.x, y: c.y, text: String(i + 1) }
+  }).filter(Boolean)
+})
+
+// ===================== DETECTOR INTEGRATION SLICES + REGION SELECT =====================
+// Click the detector image to set the integration CENTER; pyFAI radial (q-I)
+// and azimuthal (ψ-I) slice curves are generated around it (same idea as the
+// cake tab's slice card). The user then DRAG-SELECTS a q range on the q-I
+// curve and a χ range on the ψ-I curve — the two ranges together define the
+// ROI region (shown as the cyan wedge on the image) — and records it into
+// the ROI table for intensity extraction.
+const detectorAnchor = ref(null)          // integration center { x, y, intensity, q, psiDeg }
+const detectorIntP = reactive({
+  azimuthHalf: 5, radialHalf: 0.35, npt: 500,          // q-I slice window
+  radialHalfR: 0.05, azimuthHalfR: 30, nptR: 150,      // ψ-I slice window
+  nptRadR: 50,
+  excludeEmptyBins: true,
+})
+const detectorIntData = ref(null)         // last integration curves
+// Ranges drag-selected on the curves: [lo, hi] in Å⁻¹ / degrees.
+const detectorSelQ = ref(null)
+const detectorSelPsi = ref(null)
+// Outline of the combined selection (q range × χ range) in pixel coords.
+const detectorWedge = ref(null)
+const detectorQChartRef = ref(null)
+const detectorPsiChartRef = ref(null)
+
+// Center marker on the heatmap (white point).
+const detectorAnchorOverlay = computed(() => {
+  if (!detectorAnchor.value) return null
+  const c = mapOriginalToDisplay(detectorAnchor.value.x, detectorAnchor.value.y)
+  return [{ x: c.x, y: c.y }]
+})
+
+async function onDetectorPointClicked(point) {
+  if (!detectorPoni.value || !detectorImageFileId.value) return
+  // A stray micro-drag also fires plotly_click; ignore clicks that arrive
+  // with a selection in progress (they are handled by region-selected).
+  const p = mapDisplayToOriginal(point.x, point.y)
+  try {
+    // snap=false: the click point itself is the integration center — no
+    // peak-snapping, the user decides what to select on the curves.
+    const res = await analysisDetectorClick({
+      fileId: detectorImageFileId.value,
+      poniFileId: detectorPoni.value.fileId,
+      x: Math.round(p.x), y: Math.round(p.y),
+      snap: false,
+      minIntensity: detectorSaturationMin.value ?? undefined,
+      maxIntensity: detectorSaturationMax.value ?? undefined,
+    })
+    detectorAnchor.value = res.data || null
+    clearDetectorSelection()
+    // A pick with the card closed reopens it (like the cake slice card).
+    if (!detectorPeakVisible.value) {
+      detectorPeakVisible.value = true
+      persistPeakCard()
+    }
+    consoleLogs.detector.push(t('logs.analysis.centerPicked', {
+      x: detectorAnchor.value.x, y: detectorAnchor.value.y,
+      q: detectorAnchor.value.q?.toFixed(5) ?? '?',
+      psi: detectorAnchor.value.psiDeg?.toFixed(2) ?? '?',
+    }))
+    runDetectorIntegration()
+  } catch (err) {
+    consoleLogs.detector.push(t('logs.common.error', { message: err.response?.data?.detail || err.message }))
+  }
+}
+
+async function runDetectorIntegration() {
+  if (!detectorAnchor.value || !detectorImageFileId.value || !detectorPoni.value) return
+  try {
+    const a = detectorAnchor.value
+    const res = await analysisDetectorIntegrate({
+      fileId: detectorImageFileId.value,
+      poniFileId: detectorPoni.value.fileId,
+      x: a.x, y: a.y,
+      azimuthHalf: detectorIntP.azimuthHalf,
+      radialHalf: detectorIntP.radialHalf,
+      npt: detectorIntP.npt,
+      radialHalfR: detectorIntP.radialHalfR,
+      azimuthHalfR: detectorIntP.azimuthHalfR,
+      nptR: detectorIntP.nptR,
+      nptRadR: detectorIntP.nptRadR,
+      excludeEmptyBins: detectorIntP.excludeEmptyBins,
+      minIntensity: detectorSaturationMin.value ?? undefined,
+      maxIntensity: detectorSaturationMax.value ?? undefined,
+    })
+    detectorIntData.value = res.data || null
+    await nextTick()
+    drawDetectorCharts()
+  } catch (err) {
+    consoleLogs.detector.push(t('logs.common.error', { message: err.response?.data?.detail || err.message }))
+  }
+}
+
+// Fetch the pixel outline of the currently selected q×χ region so it can be
+// overlaid on the image and used as the ROI's drawn box.
+async function updateDetectorWedge() {
+  const q = detectorSelQ.value
+  const psi = detectorSelPsi.value
+  if (!q || !psi || !detectorPoni.value) { detectorWedge.value = null; return }
+  try {
+    const res = await analysisDetectorWedge({
+      poniFileId: detectorPoni.value.fileId,
+      shape: detectorMeta.value?.shape || undefined,
+      qMin: q[0], qMax: q[1],
+      azimuthMin: psi[0], azimuthMax: psi[1],
+    })
+    detectorWedge.value = res.data || null
+  } catch (err) {
+    detectorWedge.value = null
+    consoleLogs.detector.push(t('logs.common.error', { message: err.response?.data?.detail || err.message }))
+  }
+}
+
+function clearDetectorSelection() {
+  detectorSelQ.value = null
+  detectorSelPsi.value = null
+  detectorWedge.value = null
+  if (detectorIntData.value) drawDetectorCharts()
+}
+
+// ---- Recorded q/χ ROIs render as their true sector outline -------------
+// Fetch (and cache per window key) the wedge polygon for every qchi ROI row
+// lacking one; numeric edits change the key and trigger a refetch.
+async function ensureDetectorRoiWedges() {
+  if (!detectorPoni.value || !detectorMeta.value?.shape) return
+  for (const roi of detectorRois.value) {
+    if (roi.coordType !== 'qchi') continue
+    if (roi.qMin == null || roi.qMax == null || roi.azimuthMin == null || roi.azimuthMax == null) continue
+    if (!(roi.qMax > roi.qMin)) continue
+    const key = `${roi.qMin}|${roi.qMax}|${roi.azimuthMin}|${roi.azimuthMax}`
+    if (roi.wedgeKey === key) continue
+    roi.wedgeKey = key
+    roi.wedgePolygon = null
+    try {
+      const res = await analysisDetectorWedge({
+        poniFileId: detectorPoni.value.fileId,
+        shape: detectorMeta.value.shape,
+        qMin: roi.qMin, qMax: roi.qMax,
+        azimuthMin: roi.azimuthMin, azimuthMax: roi.azimuthMax,
+      })
+      roi.wedgePolygon = res.data?.polygon || null
+    } catch {
+      roi.wedgePolygon = null  // keep the bbox-free display; user can retry by editing
+    }
+  }
+}
+// Watch only the coordinate fields (cheap string key — no deep traversal of
+// the wedge polygons themselves, which would refire this watcher).
+watch(
+  () => detectorRois.value.map(r => `${r.coordType}|${r.qMin}|${r.qMax}|${r.azimuthMin}|${r.azimuthMax}`).join(';'),
+  () => { ensureDetectorRoiWedges() },
+)
+
+// Box-select on the slice curves defines the range. Rebound on EVERY draw:
+// Plotly.purge (清除中心) tears down the div's emitters, so a bind-once flag
+// would go stale and leave the charts dead after the next center click.
+// A single CLICK also works: it seeds a default-width range centred on the
+// clicked position, which the user can then refine by dragging.
+function bindChartRangeSelect(el, onRange, defaultWidth) {
+  if (!el || typeof el.on !== 'function') return
+  try { el.removeAllListeners && el.removeAllListeners('plotly_selected') } catch { /* not plotted yet */ }
+  try { el.removeAllListeners && el.removeAllListeners('plotly_click') } catch { /* not plotted yet */ }
+  el.on('plotly_selected', (ev) => {
+    const r = ev?.range?.x
+    if (Array.isArray(r) && r.length === 2 && Number.isFinite(r[0]) && Number.isFinite(r[1]) && Math.abs(r[1] - r[0]) > 1e-12) {
+      onRange([Math.min(r[0], r[1]), Math.max(r[0], r[1])])
+    }
+  })
+  el.on('plotly_click', (ev) => {
+    const v = ev?.points?.[0]?.x
+    if (Number.isFinite(v)) onRange([v - defaultWidth / 2, v + defaultWidth / 2])
+  })
+}
+
+function drawDetectorCharts() {
+  const d = detectorIntData.value
+  if (!d) return
+  const mkTraces = (xs, ys, current, color) => {
+    const valid = (ys || []).filter(v => v != null)
+    const lo = valid.length ? Math.min(...valid) : 0
+    const hi = valid.length ? Math.max(...valid) : 1
+    const traces = [{
+      x: xs, y: ys, mode: 'lines', type: 'scatter',
+      line: { color, width: 2 }, connectgaps: false,
+    }]
+    if (current != null) traces.push({
+      x: [current, current], y: [lo, hi], mode: 'lines',
+      line: { color: '#EF4444', dash: 'dash', width: 1.5 },
+    })
+    return traces
+  }
+  // Selected range renders as a shaded band spanning the full y extent.
+  const mkShapes = (sel) => {
+    if (!sel) return []
+    return [{
+      type: 'rect', xref: 'x', yref: 'paper',
+      x0: sel[0], x1: sel[1], y0: 0, y1: 1,
+      line: { color: '#10B981', width: 1.5 },
+      fillcolor: 'rgba(16, 185, 129, 0.14)',
+    }]
+  }
+  const layout = (xTitle, sel) => ({
+    margin: { t: 8, b: 34, l: 48, r: 8 },
+    height: 200,
+    // NOTE: no fixedrange here — plotly disables the drag layer entirely
+    // (select included) when every axis of the subplot is fixedrange, which
+    // made the curves impossible to interact with. Zoom/pan stay off via
+    // dragmode:'select' + scrollZoom:false + doubleClick:false.
+    xaxis: { title: xTitle, titlefont: { size: 10 } },
+    yaxis: { title: 'I', titlefont: { size: 10 } },
+    showlegend: false,
+    // dragmode select = the range-drawing tool on the curves.
+    dragmode: 'select',
+    hovermode: 'closest',
+    shapes: mkShapes(sel),
+    paper_bgcolor: '#FFFFFF', plot_bgcolor: '#FFFFFF',
+    font: { color: '#262432', size: 11 },
+  })
+  const config = { responsive: true, displayModeBar: false, scrollZoom: false, doubleClick: false }
+
+  const qEl = detectorQChartRef.value
+  if (qEl) {
+    Plotly.react(qEl, mkTraces(d.qValues, d.iQ, d.currentQ, '#2499F8'), layout('q (Å⁻¹)', detectorSelQ.value), config)
+    bindChartRangeSelect(qEl, r => {
+      detectorSelQ.value = r
+      drawDetectorCharts()
+      updateDetectorWedge()
+    }, 0.04)
+  }
+  const psiEl = detectorPsiChartRef.value
+  if (psiEl) {
+    Plotly.react(psiEl, mkTraces(d.psiValues, d.iPsi, d.currentPsi, '#27AE60'), layout('ψ (°)', detectorSelPsi.value), config)
+    bindChartRangeSelect(psiEl, r => {
+      detectorSelPsi.value = r
+      drawDetectorCharts()
+      updateDetectorWedge()
+    }, 10)
+  }
+}
+
+// Record the selected region (q range × χ range from the curves) as a ROI
+// row for the intensity pipeline. The wedge outline's pixel bbox seeds the
+// drawn box so the overlay shows where the region sits.
+function recordDetectorWedgeRoi() {
+  const q = detectorSelQ.value
+  const psi = detectorSelPsi.value
+  const a = detectorAnchor.value
+  if (!q || !psi || !a) return
+  let xMin = a.x, xMax = a.x, yMin = a.y, yMax = a.y
+  const poly = detectorWedge.value?.polygon
+  if (Array.isArray(poly) && poly.length) {
+    const xs = poly.map(p => p[0])
+    const ys = poly.map(p => p[1])
+    xMin = Math.floor(Math.min(...xs)); xMax = Math.ceil(Math.max(...xs))
+    yMin = Math.floor(Math.min(...ys)); yMax = Math.ceil(Math.max(...ys))
+  }
+  detectorRois.value.push({
+    coordType: 'qchi',
+    xMin, xMax, yMin, yMax,
+    qMin: q[0], qMax: q[1],
+    azimuthMin: psi[0], azimuthMax: psi[1],
+    multiplier: 1, intensity: null, pixelCount: null,
+    label: `q=${((q[0] + q[1]) / 2).toFixed(3)}`,
+  })
+  consoleLogs.detector.push(t('logs.analysis.roiRecorded', { n: detectorRois.value.length }))
+}
+
+function clearDetectorAnchor() {
+  detectorAnchor.value = null
+  detectorIntData.value = null
+  clearDetectorSelection()
+  if (detectorQChartRef.value) Plotly.purge(detectorQChartRef.value)
+  if (detectorPsiChartRef.value) Plotly.purge(detectorPsiChartRef.value)
 }
 
 // ===================== ROI MANAGEMENT =====================
@@ -1993,7 +2802,16 @@ const addRoi = () => {
 }
 
 const addDetectorRoi = () => {
-  detectorRois.value.push({ xMin: 0, xMax: 100, yMin: 0, yMax: 100, multiplier: 1, intensity: null, pixelCount: null, label: '' })
+  const [rows, cols] = detectorMeta.value?.shape || [100, 100]
+  detectorRois.value.push({
+    coordType: detectorCoordMode.value === 'qchi' ? 'qchi' : 'pixel',
+    // Pixel box (kept in both modes: integration input for pixel rows,
+    // label-placement bbox for q/χ rows).
+    xMin: 0, xMax: Math.round(cols * 0.25), yMin: 0, yMax: Math.round(rows * 0.25),
+    // Physical window (q/χ rows: the sector actually displayed/integrated).
+    qMin: 0, qMax: 1, azimuthMin: -180, azimuthMax: 180,
+    multiplier: 1, intensity: null, pixelCount: null, label: '',
+  })
 }
 
 // CSV field escaping — labels may contain commas/quotes.
@@ -2130,31 +2948,69 @@ const calculateIntensity = async () => {
 }
 
 const calculateDetectorIntensity = async () => {
+  // Rows are integrated by their OWN coordinate type: q/χ rows through the
+  // PONI geometry (sector regions), pixel rows as plain boxes — so mixing
+  // rows recorded in different modes still yields correct numbers per row.
+  const qchiRows = detectorRois.value.filter(r => r.coordType === 'qchi')
+  const pixelRows = detectorRois.value.filter(r => r.coordType !== 'qchi')
+  if (qchiRows.length && !detectorPoni.value) {
+    consoleLogs.detector.push(t('analysis.detector.poniHint'))
+    taskStatus.detector = 'error'
+    return
+  }
+  if (!qchiRows.length && !pixelRows.length) return
   taskStatus.detector = 'running'
   consoleLogs.detector = [t('logs.analysis.calculatingIntensity')]
   try {
-    const regions = detectorRois.value.map(r => ({
-      xMin: r.xMin, xMax: r.xMax, yMin: r.yMin, yMax: r.yMax, multiplier: r.multiplier ?? 1.0,
-    }))
     const bgPayload = { mode: detectorBgMode.value }
     if (detectorBgMode.value === 'fixed') bgPayload.fixedValue = detectorBgValue.value
     if (detectorBgMode.value === 'neighbor') { bgPayload.side = detectorBgSide.value; bgPayload.width = detectorBgWidth.value }
 
-    const res = await analysisCalculateIntensity({
-      fileId: detectorImageFileId.value,
-      regions,
+    const mkRegion = r => ({
+      qMin: r.qMin, qMax: r.qMax, azimuthMin: r.azimuthMin, azimuthMax: r.azimuthMax,
+      xMin: r.xMin, xMax: r.xMax, yMin: r.yMin, yMax: r.yMax,
+      multiplier: r.multiplier ?? 1.0,
+    })
+    const common = {
       backgroundMode: 0,
       background: bgPayload,
-      coordinateType: 'pixel',
       minIntensity: detectorSaturationMin.value ?? undefined,
       maxIntensity: detectorSaturationMax.value ?? undefined,
-    })
-    const results = res.data?.results || []
-    results.forEach((r, i) => {
-      if (detectorRois.value[i]) {
-        detectorRois.value[i].intensity = r.totalIntensity
-        detectorRois.value[i].pixelCount = r.pixelCount
-      }
+    }
+    const requests = []
+    if (qchiRows.length) {
+      requests.push(analysisCalculateIntensity({
+        fileId: detectorImageFileId.value,
+        regions: qchiRows.map(mkRegion),
+        coordinateType: 'pyfai',
+        poniFileId: detectorPoni.value.fileId,
+        ...common,
+      }).then(res => ({ rows: qchiRows, results: res.data?.results || [], pyfai: true })))
+    }
+    if (pixelRows.length) {
+      requests.push(analysisCalculateIntensity({
+        fileId: detectorImageFileId.value,
+        regions: pixelRows.map(mkRegion),
+        coordinateType: 'pixel',
+        ...common,
+      }).then(res => ({ rows: pixelRows, results: res.data?.results || [], pyfai: false })))
+    }
+    const groups = await Promise.all(requests)
+    groups.forEach(({ rows, results, pyfai }) => {
+      results.forEach((r, i) => {
+        const row = rows[i]
+        if (!row) return
+        row.intensity = r.totalIntensity
+        row.pixelCount = r.pixelCount
+        // Echo the resolved physical window back into the row (e.g. rows
+        // whose q window was degenerate fell back to their pixel box).
+        if (pyfai && r.region && r.region.qMax > r.region.qMin) {
+          row.qMin = r.region.qMin
+          row.qMax = r.region.qMax
+          row.azimuthMin = r.region.azimuthMin
+          row.azimuthMax = r.region.azimuthMax
+        }
+      })
     })
     consoleLogs.detector.push(t('logs.analysis.intensityDone'))
     taskStatus.detector = 'completed'
@@ -2397,6 +3253,8 @@ const exportImage = async (format) => {
 onBeforeUnmount(() => {
   if (qSliceContainer.value) Plotly.purge(qSliceContainer.value)
   if (azSliceContainer.value) Plotly.purge(azSliceContainer.value)
+  if (detectorQChartRef.value) Plotly.purge(detectorQChartRef.value)
+  if (detectorPsiChartRef.value) Plotly.purge(detectorPsiChartRef.value)
   if (sliceResizeObserver) {
     sliceResizeObserver.disconnect()
     sliceResizeObserver = null
